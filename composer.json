@@ -1,0 +1,36 @@
+{
+    "name": "woohoolabs/worm",
+    "description": "Woohoo Labs. Worm ORM",
+    "type": "library",
+    "keywords": ["Woohoo Labs.", "Worm", "ORM", "Object Relational Mapper"],
+    "homepage": "http://worm.woohoolabs.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name":"Máté Kocsis",
+            "email":"kocsismate@woohoolabs.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/woohoolabs/worm/issues",
+        "source": "https://github.com/woohoolabs/worm"
+    },
+    "require": {
+        "php":"^5.5.0||^7.0.0"
+    },
+    "require-dev": {
+        "phpunit/PHPUnit": "^4.4.0||^5.0.0",
+        "squizlabs/php_codesniffer": "^2.1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "WoohooLabs\\Worm\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WoohooLabsTest\\Worm\\": "tests/",
+            "WoohooLabs\\Worm\\Examples\\": "examples/"
+        }
+    }
+}
