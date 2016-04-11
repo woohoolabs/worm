@@ -7,5 +7,5 @@ use WoohooLabs\Worm\Worm;
 $worm = new Worm(PdoConnection::create("", "", "", "", "", ""));
 $worm
     ->query(new UserModel())
-    ->where("", "=", "")
+    ->where("name", "=", "John", "and")
     ->getList();
