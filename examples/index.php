@@ -1,7 +1,7 @@
 <?php
 
-use WoohooLabs\Worm\Examples\Model\UserModel;
 use WoohooLabs\Worm\Connection\PdoConnection;
+use WoohooLabs\Worm\Examples\Model\UserModel;
 use WoohooLabs\Worm\Query\ConditionBuilder;
 use WoohooLabs\Worm\Worm;
 

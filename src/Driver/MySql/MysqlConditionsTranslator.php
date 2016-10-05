@@ -14,11 +14,11 @@ class MysqlConditionsTranslator
         for ($i = 0; $i < $count; $i++) {
             $condition = $conditionArray[$i];
 
-            if (isset($condition["simple"]) ) {
+            if (isset($condition["simple"])) {
                 $sql .= $this->translateSimpleCondition($condition["simple"]);
-            } elseif (isset($condition["raw"]) ) {
+            } elseif (isset($condition["raw"])) {
                 $sql .= $this->translateRawCondition($condition["raw"]);
-            } elseif (isset($condition["nested"]) ) {
+            } elseif (isset($condition["nested"])) {
                 $sql .= "(" . $this->translateNestedCondition($condition["nested"]) . ")";
             }
 
