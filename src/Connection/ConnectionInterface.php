@@ -1,9 +1,24 @@
 <?php
 namespace WoohooLabs\Worm\Connection;
 
+use Exception;
+use WoohooLabs\Worm\Driver\TranslatorInterface;
+
 interface ConnectionInterface
 {
-    public function query();
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return mixed
+     */
+    public function queryAll($sql, array $params = []);
+
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return mixed
+     */
+    public function query($sql, array $params = []);
 
     public function execute();
 
@@ -21,4 +36,10 @@ interface ConnectionInterface
      * @return bool
      */
     public function rollback();
+
+    /**
+     * @return TranslatorInterface
+     * @throws Exception
+     */
+    public function getTranslator();
 }

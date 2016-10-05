@@ -1,6 +1,6 @@
 <?php
 namespace WoohooLabs\Worm\Model;
 
-abstract class AbstractModel
+abstract class AbstractModel implements ModelInterface
 {
 }

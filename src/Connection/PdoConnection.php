@@ -1,7 +1,12 @@
 <?php
 namespace WoohooLabs\Worm\Connection;
 
+use Exception;
 use PDO;
+use Traversable;
+use WoohooLabs\Worm\Driver\Mysql\MysqlConditionsTranslator;
+use WoohooLabs\Worm\Driver\Mysql\MysqlTranslator;
+use WoohooLabs\Worm\Driver\TranslatorInterface;
 
 class PdoConnection implements ConnectionInterface
 {
@@ -23,7 +28,8 @@ class PdoConnection implements ConnectionInterface
         array $options = []
     ) {
         $dsn = "$driver:host=$host; dbname=$database";
-        $self = new self($dsn, $username, $password, $options);
+        $customOptions = [];
+        $self = new self($dsn, $username, $password, array_merge($options, $customOptions));
 
         return $self;
     }
@@ -36,9 +42,36 @@ class PdoConnection implements ConnectionInterface
         }
     }
 
-    public function query()
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return mixed
+     */
+    public function queryAll($sql, array $params = [])
     {
-        $this->pdo->query("");
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($params);
+
+        return $statement->fetchAll();
+    }
+
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return Traversable|array
+     */
+    public function query($sql, array $params = [])
+    {
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($params);
+
+        if ($statement->nextRowset() === false) {
+            return [];
+        }
+
+        while ($statement->nextRowset()) {
+            yield $statement->fetch();
+        }
     }
 
     public function execute()
@@ -59,5 +92,18 @@ class PdoConnection implements ConnectionInterface
     public function rollback()
     {
         return $this->pdo->rollBack();
+    }
+
+    /**
+     * @return TranslatorInterface
+     * @throws Exception
+     */
+    public function getTranslator()
+    {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === "mysql") {
+            return new MysqlTranslator(new MysqlConditionsTranslator());
+        }
+
+        throw new Exception("Driver (" . $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) . ") is not supported!");
     }
 }
