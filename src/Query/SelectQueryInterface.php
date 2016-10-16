@@ -1,7 +1,6 @@
 <?php
 namespace WoohooLabs\Worm\Query;
 
-use Closure;
 use WoohooLabs\Worm\Connection\ConnectionInterface;
 
 interface SelectQueryInterface
