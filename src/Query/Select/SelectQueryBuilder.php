@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Query;
+namespace WoohooLabs\Worm\Query\Select;
 
 use Closure;
 use WoohooLabs\Worm\Connection\ConnectionInterface;
+use WoohooLabs\Worm\Query\Condition\ConditionBuilder;
+use WoohooLabs\Worm\Query\Condition\ConditionsInterface;
 
 class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInterface
 {
@@ -77,7 +79,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
     {
         $this->connection = $connection;
         $this->where = new ConditionBuilder();
-        $this->having = new ConditionBuilder;
+        $this->having = new ConditionBuilder();
     }
 
     public function select(array $fields): SelectQueryBuilderInterface
@@ -194,10 +196,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function execute()
+    public function execute(): array
     {
         $sql = $this->connection->getDriver()->translateSelectQuery($this);
 
@@ -224,7 +223,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this->join;
     }
 
-    public function getWhere(): ConditionBuilder
+    public function getWhere(): ConditionsInterface
     {
         return $this->where;
     }
@@ -234,7 +233,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this->groupBy;
     }
 
-    public function getHaving(): ConditionBuilder
+    public function getHaving(): ConditionsInterface
     {
         return $this->having;
     }

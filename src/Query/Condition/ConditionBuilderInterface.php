@@ -1,5 +1,5 @@
 <?php
-namespace WoohooLabs\Worm\Query;
+namespace WoohooLabs\Worm\Query\Condition;
 
 use Closure;
 

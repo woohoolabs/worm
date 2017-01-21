@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Query;
+namespace WoohooLabs\Worm\Query\Select;
 
 use Closure;
 
@@ -18,6 +18,10 @@ interface SelectQueryBuilderInterface
     public function whereNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface;
 
     public function join(string $table, Closure $condition, string $type = "INNER"): SelectQueryBuilderInterface;
+
+    public function leftJoin(string $table, Closure $condition): SelectQueryBuilderInterface;
+
+    public function rightJoin(string $table, Closure $condition): SelectQueryBuilderInterface;
 
     public function having(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface;
 
@@ -41,8 +45,5 @@ interface SelectQueryBuilderInterface
      */
     public function offset($offset): SelectQueryBuilderInterface;
 
-    /**
-     * @return mixed
-     */
-    public function execute();
+    public function execute(): array;
 }

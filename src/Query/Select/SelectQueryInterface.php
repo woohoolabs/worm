@@ -1,25 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Query;
+namespace WoohooLabs\Worm\Query\Select;
 
-use WoohooLabs\Worm\Connection\ConnectionInterface;
+use WoohooLabs\Worm\Query\Condition\ConditionsInterface;
+use WoohooLabs\Worm\Query\QueryInterface;
 
-interface SelectQueryInterface
+interface SelectQueryInterface extends QueryInterface
 {
-    public function getConnection(): ConnectionInterface;
-
     public function getSelect(): array;
 
     public function getFrom(): string;
 
     public function getJoin(): array;
 
-    public function getWhere(): ConditionBuilder;
+    public function getWhere(): ConditionsInterface;
 
     public function getGroupBy(): array;
 
-    public function getHaving(): ConditionBuilder;
+    public function getHaving(): ConditionsInterface;
 
     public function getOrderBy(): array;
 

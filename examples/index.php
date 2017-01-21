@@ -5,7 +5,7 @@ require "../vendor/autoload.php";
 
 use WoohooLabs\Worm\Connection\MySqlPdoConnection;
 use WoohooLabs\Worm\Examples\Model\StudentModel;
-use WoohooLabs\Worm\Query\ConditionBuilder;
+use WoohooLabs\Worm\Query\Condition\ConditionBuilder;
 use WoohooLabs\Worm\Worm;
 
 $worm = new Worm(
@@ -20,7 +20,7 @@ $worm = new Worm(
 );
 
 $result = $worm
-    ->queryModel(new StudentModel())
+    ->selectModel(new StudentModel())
     ->where("first_name", "=", "Nino", "and")
     ->whereNested(
         function (ConditionBuilder $condition) {

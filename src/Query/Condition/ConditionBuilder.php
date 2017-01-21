@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Query;
+namespace WoohooLabs\Worm\Query\Condition;
 
 use Closure;
 
@@ -42,10 +42,7 @@ class ConditionBuilder implements ConditionBuilderInterface, ConditionsInterface
     public function addNested(Closure $condition, string $connector = "and"): ConditionBuilderInterface
     {
         $conditionBuilder = new ConditionBuilder();
-        $result = $condition($conditionBuilder);
-        if ($result) {
-            $conditionBuilder = $result;
-        }
+        $condition($conditionBuilder);
 
         $this->conditions[] = [
             "nested" => [
