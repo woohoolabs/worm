@@ -35,10 +35,10 @@ class MySqlPdoConnection extends AbstractPdoConnection
 
     public function getDriver(): DriverInterface
     {
-        return new Driver(
-            new MySqlSelectTranslator(new MySqlConditionsTranslator()),
-            new MySqlInsertTranslator()
-        );
+        $selectTranslator = new MySqlSelectTranslator(new MySqlConditionsTranslator());
+        $insertTranslator = new MySqlInsertTranslator($selectTranslator);
+
+        return new Driver($selectTranslator, $insertTranslator);
     }
 
     private static function setCharset(MySqlPdoConnection $connection, string $charset, string $collation)
