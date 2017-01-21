@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Driver\Mysql;
 
-use WoohooLabs\Worm\Query\ConditionsInterface;
+use WoohooLabs\Worm\Query\Condition\ConditionsInterface;
 
-class MysqlConditionsTranslator
+class MySqlConditionsTranslator
 {
     public function translateConditions(ConditionsInterface $conditions)
     {

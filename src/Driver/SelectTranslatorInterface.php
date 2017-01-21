@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Driver;
 
-use WoohooLabs\Worm\Query\SelectQueryInterface;
+use WoohooLabs\Worm\Query\Select\SelectQueryInterface;
 
-interface TranslatorInterface
+interface SelectTranslatorInterface
 {
     public function translateSelectQuery(SelectQueryInterface $query): string;
 }

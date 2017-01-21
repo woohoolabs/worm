@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Connection;
 
-use WoohooLabs\Worm\Driver\Mysql\MysqlConditionsTranslator;
-use WoohooLabs\Worm\Driver\Mysql\MysqlSelectTranslator;
-use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
+use WoohooLabs\Worm\Driver\Driver;
+use WoohooLabs\Worm\Driver\DriverInterface;
+use WoohooLabs\Worm\Driver\Mysql\MySqlConditionsTranslator;
+use WoohooLabs\Worm\Driver\Mysql\MySqlInsertTranslator;
+use WoohooLabs\Worm\Driver\Mysql\MySqlSelectTranslator;
 
 class MySqlPdoConnection extends AbstractPdoConnection
 {
@@ -31,9 +33,12 @@ class MySqlPdoConnection extends AbstractPdoConnection
         return $self;
     }
 
-    public function getDriver(): SelectTranslatorInterface
+    public function getDriver(): DriverInterface
     {
-        return new MysqlSelectTranslator(new MysqlConditionsTranslator());
+        return new Driver(
+            new MySqlSelectTranslator(new MySqlConditionsTranslator()),
+            new MySqlInsertTranslator()
+        );
     }
 
     private static function setCharset(MySqlPdoConnection $connection, string $charset, string $collation)

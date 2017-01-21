@@ -6,7 +6,6 @@ namespace WoohooLabs\Worm\Connection;
 use PDO;
 use Traversable;
 use WoohooLabs\Worm\Logger\Logger;
-use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
 
 abstract class AbstractPdoConnection implements ConnectionInterface
 {
@@ -21,8 +20,6 @@ abstract class AbstractPdoConnection implements ConnectionInterface
      * @var Logger
      */
     private $logger;
-
-    abstract public function getDriver(): SelectTranslatorInterface;
 
     protected function __construct(
         string $dsn,

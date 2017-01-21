@@ -1,17 +1,17 @@
 <?php
 namespace WoohooLabs\Worm\Driver\Mysql;
 
-use WoohooLabs\Worm\Driver\TranslatorInterface;
-use WoohooLabs\Worm\Query\SelectQueryInterface;
+use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
+use WoohooLabs\Worm\Query\Select\SelectQueryInterface;
 
-class MysqlTranslator implements TranslatorInterface
+class MySqlSelectTranslator implements SelectTranslatorInterface
 {
     /**
-     * @var MysqlConditionsTranslator;
+     * @var MySqlConditionsTranslator;
      */
     private $conditionsTranslator;
 
-    public function __construct(MysqlConditionsTranslator $conditionsTranslator)
+    public function __construct(MySqlConditionsTranslator $conditionsTranslator)
     {
         $this->conditionsTranslator = $conditionsTranslator;
     }

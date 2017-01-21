@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Connection;
 
 use Traversable;
-use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
+use WoohooLabs\Worm\Driver\DriverInterface;
 
 interface ConnectionInterface
 {
@@ -20,5 +20,5 @@ interface ConnectionInterface
 
     public function rollback(): bool;
 
-    public function getDriver(): SelectTranslatorInterface;
+    public function getDriver(): DriverInterface;
 }
