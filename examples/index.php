@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 require "../vendor/autoload.php";
 
-use WoohooLabs\Worm\Connection\PdoConnection;
+use WoohooLabs\Worm\Connection\MySqlPdoConnection;
 use WoohooLabs\Worm\Examples\Model\StudentModel;
 use WoohooLabs\Worm\Query\ConditionBuilder;
 use WoohooLabs\Worm\Worm;
 
 $worm = new Worm(
-    PdoConnection::create(
+    MySqlPdoConnection::create(
         "mysql",
         "mysql",
         (int) getenv("MYSQL_PORT"),
@@ -29,6 +29,7 @@ $result = $worm
     )
     ->execute();
 
+echo "Result Set:<br/>";
 echo "<pre>";
 print_r($result);
 echo "</pre>";

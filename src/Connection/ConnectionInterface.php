@@ -3,43 +3,22 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Connection;
 
-use Exception;
-use WoohooLabs\Worm\Driver\TranslatorInterface;
+use Traversable;
+use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
 
 interface ConnectionInterface
 {
-    /**
-     * @return mixed
-     */
-    public function queryAll(string $sql, array $params = []);
+    public function queryAll(string $sql, array $params = []): array;
 
-    /**
-     * @return mixed
-     */
-    public function query(string $sql, array $params = []);
+    public function query(string $sql, array $params = []): Traversable;
 
-    /**
-     * @return mixed
-     */
-    public function execute(string $sql, array $params = []);
+    public function execute(string $sql, array $params = []): bool;
 
-    /**
-     * @return bool
-     */
     public function beginTransaction(): bool;
 
-    /**
-     * @return bool
-     */
     public function commit(): bool;
 
-    /**
-     * @return bool
-     */
     public function rollback(): bool;
 
-    /**
-     * @throws Exception
-     */
-    public function getTranslator(): TranslatorInterface;
+    public function getDriver(): SelectTranslatorInterface;
 }

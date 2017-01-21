@@ -2,8 +2,7 @@
     "name": "woohoolabs/worm",
     "description": "Woohoo Labs. Worm ORM",
     "type": "library",
-    "keywords": ["Woohoo Labs.", "Worm", "ORM", "Object Relational Mapper"],
-    "homepage": "http://worm.woohoolabs.com",
+    "keywords": ["Woohoo Labs.", "Worm", "ORM", "Object Relational Mapper", "Data Mapper"],
     "license": "MIT",
     "authors": [
         {
@@ -29,8 +28,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "WoohooLabs\\Worm\\Tests\\": "tests/",
-            "WoohooLabs\\Worm\\Examples\\": "examples/"
+            "WoohooLabs\\Worm\\Examples\\": "examples/",
+            "WoohooLabs\\Worm\\Tests\\": "tests/"
         }
     },
     "scripts": {

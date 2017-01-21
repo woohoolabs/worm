@@ -199,7 +199,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
      */
     public function execute()
     {
-        $sql = $this->connection->getTranslator()->translateSelectQuery($this);
+        $sql = $this->connection->getDriver()->translateSelectQuery($this);
 
         return $this->connection->queryAll($sql);
     }
