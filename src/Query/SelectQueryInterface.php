@@ -1,57 +1,35 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Query;
 
 use WoohooLabs\Worm\Connection\ConnectionInterface;
 
 interface SelectQueryInterface
 {
-    /**
-     * @return ConnectionInterface
-     */
-    public function getConnection();
+    public function getConnection(): ConnectionInterface;
+
+    public function getSelect(): array;
+
+    public function getFrom(): string;
+
+    public function getJoin(): array;
+
+    public function getWhere(): ConditionBuilder;
+
+    public function getGroupBy(): array;
+
+    public function getHaving(): ConditionBuilder;
+
+    public function getOrderBy(): array;
 
     /**
-     * @return array
-     */
-    public function getSelect();
-
-    /**
-     * @return string
-     */
-    public function getFrom();
-
-    /**
-     * @return array
-     */
-    public function getJoin();
-
-    /**
-     * @return ConditionBuilder
-     */
-    public function getWhere();
-
-    /**
-     * @return array
-     */
-    public function getGroupBy();
-
-    /**
-     * @return ConditionBuilder
-     */
-    public function getHaving();
-
-    /**
-     * @return array
-     */
-    public function getOrderBy();
-
-    /**
-     * @return array
+     * @return int|null
      */
     public function getLimit();
 
     /**
-     * @return array
+     * @return int|null
      */
     public function getOffset();
 }

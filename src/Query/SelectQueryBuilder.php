@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Query;
 
 use Closure;
@@ -78,93 +80,52 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         $this->having = new ConditionBuilder;
     }
 
-    /**
-     * @param array $fields
-     * @return $this
-     */
-    public function select(array $fields)
+    public function select(array $fields): SelectQueryBuilderInterface
     {
         $this->select = $fields;
 
         return $this;
     }
 
-    /**
-     * @param string $table
-     * @return $this
-     */
-    public function from($table)
+    public function from(string $table): SelectQueryBuilderInterface
     {
         $this->from = $table;
 
         return $this;
     }
 
-    /**
-     * @param string $operand1
-     * @param string $operator
-     * @param string|array $operand2
-     * @param string $connector
-     * @return $this
-     */
-    public function where($operand1, $operator, $operand2, $connector = "and")
+    public function where(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface
     {
         $this->where->add($operand1, $operator, $operand2, $connector);
 
         return $this;
     }
 
-    /**
-     * @param string $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function whereRaw($condition, array $params = [], $connector = "and")
+    public function whereRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface
     {
         $this->where->addRaw($condition, $params, $connector);
 
         return $this;
     }
 
-    /**
-     * @param Closure $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function whereNested(Closure $condition, $connector = "and")
+    public function whereNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface
     {
         $this->where->addNested($condition, $connector);
 
         return $this;
     }
 
-    /**
-     * @param string $table
-     * @param Closure $condition
-     * @return $this
-     */
-    public function leftJoin($table, Closure $condition)
+    public function leftJoin(string $table, Closure $condition): SelectQueryBuilderInterface
     {
         return $this->join($table, $condition, "LEFT");
     }
 
-    /**
-     * @param string $table
-     * @param Closure $condition
-     * @return $this
-     */
-    public function rightJoin($table, Closure $condition)
+    public function rightJoin(string $table, Closure $condition): SelectQueryBuilderInterface
     {
         return $this->join($table, $condition, "RIGHT");
     }
 
-    /**
-     * @param string $table
-     * @param Closure $condition
-     * @param string $type
-     * @return $this
-     */
-    public function join($table, Closure $condition, $type = "INNER")
+    public function join(string $table, Closure $condition, string $type = "INNER"): SelectQueryBuilderInterface
     {
         $this->join[] = [
             "type" => $type,
@@ -175,56 +136,35 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this;
     }
 
-    /**
-     * @param string $operand1
-     * @param string $operator
-     * @param string|array $operand2
-     * @param string $connector
-     * @return $this
-     */
-    public function having($operand1, $operator, $operand2, $connector = "and")
+    public function having(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface
     {
         $this->having->add($operand1, $operator, $operand2, $connector);
 
         return $this;
     }
 
-    /**
-     * @param string $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function havingRaw($condition, array $params = [], $connector = "and")
+    public function havingRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface
     {
         $this->having->addRaw($condition, $params, $connector);
 
         return $this;
     }
 
-    /**
-     * @param Closure $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function havingNested(Closure $condition, $connector = "and")
+    public function havingNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface
     {
         $this->having->addNested($condition, $connector);
 
         return $this;
     }
 
-    /**
-     * @param string $attribute
-     * @return $this
-     */
-    public function groupBy($attribute)
+    public function groupBy(string $attribute): SelectQueryBuilderInterface
     {
-        $this->groupBy[$attribute];
+        $this->groupBy[] = $attribute;
 
         return $this;
     }
 
-    public function groupByAttributes(array $attributes)
+    public function groupByAttributes(array $attributes): SelectQueryBuilderInterface
     {
         foreach ($attributes as $attribute) {
             $this->groupBy($attribute);
@@ -233,34 +173,21 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this;
     }
 
-    /**
-     * @param string $attribute
-     * @param string $direction
-     * @return $this
-     */
-    public function orderBy($attribute, $direction = "ASC")
+    public function orderBy(string $attribute, string $direction = "ASC"): SelectQueryBuilderInterface
     {
         $this->orderBy[] = ["attribute" => $attribute, "direction" => $direction];
 
         return $this;
     }
 
-    /**
-     * @param int|null $limit
-     * @return $this
-     */
-    public function limit($limit)
+    public function limit($limit): SelectQueryBuilderInterface
     {
         $this->limit = $limit;
 
         return $this;
     }
 
-    /**
-     * @param int|null $offset
-     * @return $this
-     */
-    public function offset($offset)
+    public function offset($offset): SelectQueryBuilderInterface
     {
         $this->offset = $offset;
 
@@ -273,69 +200,46 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
     public function execute()
     {
         $sql = $this->connection->getTranslator()->translateSelectQuery($this);
+
         return $this->connection->queryAll($sql);
     }
 
-    /**
-     * @return array
-     */
-    public function getSelect()
+    public function getSelect(): array
     {
         return $this->select;
     }
 
-    /**
-     * @return string
-     */
-    public function getFrom()
+    public function getFrom(): string
     {
         return $this->from;
     }
 
-    /**
-     * @return array
-     */
-    public function getAggregate()
+    public function getAggregate(): array
     {
         return $this->aggregate;
     }
 
-    /**
-     * @return array
-     */
-    public function getJoin()
+    public function getJoin(): array
     {
         return $this->join;
     }
 
-    /**
-     * @return ConditionBuilder
-     */
-    public function getWhere()
+    public function getWhere(): ConditionBuilder
     {
         return $this->where;
     }
 
-    /**
-     * @return array
-     */
-    public function getGroupBy()
+    public function getGroupBy(): array
     {
         return $this->groupBy;
     }
 
-    /**
-     * @return ConditionBuilder
-     */
-    public function getHaving()
+    public function getHaving(): ConditionBuilder
     {
         return $this->having;
     }
 
-    /**
-     * @return array
-     */
-    public function getOrderBy()
+    public function getOrderBy(): array
     {
         return $this->orderBy;
     }
@@ -356,18 +260,12 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this->offset;
     }
 
-    /**
-     * @return array
-     */
-    public function getUnion()
+    public function getUnion(): array
     {
         return $this->union;
     }
 
-    /**
-     * @return ConnectionInterface
-     */
-    public function getConnection()
+    public function getConnection(): ConnectionInterface
     {
         return $this->connection;
     }

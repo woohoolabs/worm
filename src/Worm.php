@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm;
 
 use WoohooLabs\Worm\Connection\ConnectionInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Query\SelectQueryBuilder;
+use WoohooLabs\Worm\Query\SelectQueryBuilderInterface;
 
 class Worm
 {
@@ -17,19 +20,12 @@ class Worm
         $this->connection = $connection;
     }
 
-    /**
-     * @return \WoohooLabs\Worm\Query\SelectQueryBuilderInterface
-     */
-    public function query()
+    public function query(): SelectQueryBuilderInterface
     {
         return new SelectQueryBuilder($this->connection);
     }
 
-    /**
-     * @param \WoohooLabs\Worm\Model\ModelInterface $model
-     * @return \WoohooLabs\Worm\Query\SelectQueryBuilderInterface
-     */
-    public function queryModel(ModelInterface $model)
+    public function queryModel(ModelInterface $model): SelectQueryBuilderInterface
     {
         $queryBuilder = new SelectQueryBuilder($this->connection);
         $queryBuilder->from($model->getTable());

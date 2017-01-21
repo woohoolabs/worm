@@ -1,10 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Query;
 
 interface ConditionsInterface
 {
-    /**
-     * @return array
-     */
-    public function getConditions();
+    public function getConditions(): array;
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Connection;
 
 use Exception;
@@ -13,54 +15,61 @@ class PdoConnection implements ConnectionInterface
     /**
      * @var \PDO
      */
-    protected $pdo;
+    private $pdo;
+
+    private $fetchStyle = PDO::FETCH_ASSOC;
 
     public static function create(
-        $driver,
-        $host,
-        $port,
-        $database,
-        $username,
-        $password,
-        $charset = "utf-8",
-        $collation = "utf8_unicode_ci",
-        $prefix = "",
+        string $driver,
+        string $host,
+        int $port,
+        string $database,
+        string $username,
+        string $password,
+        string $charset = "utf8mb4",
+        string $collation = "utf8mb4_unicode_ci",
+        string $prefix = "",
         array $options = []
-    ) {
-        $dsn = "$driver:host=$host; dbname=$database";
-        $customOptions = [];
-        $self = new self($dsn, $username, $password, array_merge($options, $customOptions));
+    ): ConnectionInterface {
+        $dsn = "$driver:host=$host; dbname=$database;port=$port;charset=$charset";
 
-        return $self;
+        $defaultOptions = [
+            PDO::ATTR_CASE => PDO::CASE_NATURAL,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
+            PDO::ATTR_STRINGIFY_FETCHES => false,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ];
+
+        return new self($dsn, $username, $password, array_merge($defaultOptions, $options));
     }
 
-    protected function __construct($dsn, $username, $password, array $options)
+    protected function __construct(string $dsn, string $username, string $password, array $options)
     {
         $this->pdo = new PDO($dsn, $username, $password, $options);
+
         foreach ($options as $key => $option) {
             $this->pdo->setAttribute($key, $option);
         }
     }
 
     /**
-     * @param string $sql
-     * @param array $params
      * @return mixed
      */
-    public function queryAll($sql, array $params = [])
+    public function queryAll(string $sql, array $params = [])
     {
+        echo "<pre>" . $sql . "</pre>";
+
         $statement = $this->pdo->prepare($sql);
         $statement->execute($params);
 
-        return $statement->fetchAll();
+        return $statement->fetchAll($this->fetchStyle);
     }
 
     /**
-     * @param string $sql
-     * @param array $params
      * @return Traversable|array
      */
-    public function query($sql, array $params = [])
+    public function query(string $sql, array $params = [])
     {
         $statement = $this->pdo->prepare($sql);
         $statement->execute($params);
@@ -70,35 +79,36 @@ class PdoConnection implements ConnectionInterface
         }
 
         while ($statement->nextRowset()) {
-            yield $statement->fetch();
+            yield $statement->fetch($this->fetchStyle);
         }
     }
 
-    public function execute()
+    public function execute(string $sql, array $params = [])
     {
-        $this->pdo->exec("");
+        $statement = $this->pdo->prepare($sql);
+
+        return $statement->execute($params);
     }
 
-    public function beginTransaction()
+    public function beginTransaction(): bool
     {
         return $this->pdo->beginTransaction();
     }
 
-    public function commit()
+    public function commit(): bool
     {
         return $this->pdo->commit();
     }
 
-    public function rollback()
+    public function rollback(): bool
     {
         return $this->pdo->rollBack();
     }
 
     /**
-     * @return TranslatorInterface
      * @throws Exception
      */
-    public function getTranslator()
+    public function getTranslator(): TranslatorInterface
     {
         if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === "mysql") {
             return new MysqlTranslator(new MysqlConditionsTranslator());

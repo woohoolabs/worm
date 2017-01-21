@@ -1,20 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Model;
 
 interface ModelInterface
 {
-    /**
-     * @return string
-     */
-    public function getTable();
+    public function getTable(): string;
 
-    /**
-     * @return string
-     */
-    public function getPrimaryKey();
+    public function getPrimaryKey(): string;
 
-    /**
-     * @return array
-     */
-    public function getRelationships();
+    public function getRelationships(): array;
 }

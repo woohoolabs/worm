@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Driver\Mysql;
 
 use WoohooLabs\Worm\Query\ConditionsInterface;
@@ -14,6 +16,9 @@ class MysqlConditionsTranslator
         for ($i = 0; $i < $count; $i++) {
             $condition = $conditionArray[$i];
 
+            if ($i) {
+                $sql .= " ";
+            }
             if (isset($condition["simple"])) {
                 $sql .= $this->translateSimpleCondition($condition["simple"]);
             } elseif (isset($condition["raw"])) {
@@ -23,20 +28,16 @@ class MysqlConditionsTranslator
             }
 
             if ($i < $count - 1 && isset($condition["operator"])) {
-                $sql .= $condition["operator"];
+                $sql .= " " . $condition["operator"];
             }
         }
 
         return $sql;
     }
 
-    /**
-     * @param array $condition
-     * @return string
-     */
-    private function translateSimpleCondition(array $condition)
+    private function translateSimpleCondition(array $condition): string
     {
-        $sql = $condition["operand1"] . " = " . $condition["operator"];
+        $sql = "`" . $condition["operand1"] . "` " . $condition["operator"] . " ";
 
         if (is_array($condition["operand2"])) {
             $sql .= "(" . implode(",", $condition["operand2"]) . ")";
@@ -49,20 +50,12 @@ class MysqlConditionsTranslator
         return $sql;
     }
 
-    /**
-     * @param array $condition
-     * @return string
-     */
-    private function translateRawCondition(array $condition)
+    private function translateRawCondition(array $condition): string
     {
         return $condition["condition"];
     }
 
-    /**
-     * @param array $condition
-     * @return string
-     */
-    private function translateNestedCondition(array $condition)
+    private function translateNestedCondition(array $condition): string
     {
         return $this->translateConditions($condition["condition"]);
     }

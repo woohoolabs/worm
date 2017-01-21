@@ -5,26 +5,9 @@ use Closure;
 
 interface ConditionBuilderInterface
 {
-    /**
-     * @param string $operand1
-     * @param string $operator
-     * @param string|array $operand2
-     * @param string $connector
-     * @return $this
-     */
-    public function add($operand1, $operator, $operand2, $connector = "and");
+    public function add(string $operand1, string $operator, string $operand2, string $connector = "and"): ConditionBuilderInterface;
 
-    /**
-     * @param string $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function addRaw($condition, array $params = [], $connector = "and");
+    public function addRaw(string $condition, array $params = [], string $connector = "and"): ConditionBuilderInterface;
 
-    /**
-     * @param Closure $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function addNested(Closure $condition, $connector = "and");
+    public function addNested(Closure $condition, string $connector = "and"): ConditionBuilderInterface;
 }

@@ -1,106 +1,45 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Query;
 
 use Closure;
 
 interface SelectQueryBuilderInterface
 {
-    /**
-     * @param array $fields
-     * @return $this
-     */
-    public function select(array $fields);
+    public function select(array $fields): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $table
-     * @return $this
-     */
-    public function from($table);
+    public function from(string $table): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $operand1
-     * @param string $operator
-     * @param string|array $operand2
-     * @param string $connector
-     * @return $this
-     */
-    public function where($operand1, $operator, $operand2, $connector = "and");
+    public function where(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function whereRaw($condition, array $params = [], $connector = "and");
+    public function whereRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface;
 
-    /**
-     * @param Closure $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function whereNested(Closure $condition, $connector = "and");
+    public function whereNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $table
-     * @param Closure $condition
-     * @param string $type
-     * @return $this
-     */
-    public function join($table, Closure $condition, $type = "INNER");
+    public function join(string $table, Closure $condition, string $type = "INNER"): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $operand1
-     * @param string $operator
-     * @param string|array $operand2
-     * @param string $connector
-     * @return $this
-     */
-    public function having($operand1, $operator, $operand2, $connector = "and");
+    public function having(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function havingRaw($condition, array $params = [], $connector = "and");
+    public function havingRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface;
 
-    /**
-     * @param Closure $condition
-     * @param string $connector
-     * @return $this
-     */
-    public function havingNested(Closure $condition, $connector = "and");
+    public function havingNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $attribute
-     * @return $this
-     */
-    public function groupBy($attribute);
+    public function groupBy(string $attribute): SelectQueryBuilderInterface;
 
-    /**
-     * @param array $attributes
-     * @return $this
-     */
-    public function groupByAttributes(array $attributes);
+    public function groupByAttributes(array $attributes): SelectQueryBuilderInterface;
 
-    /**
-     * @param string $attribute
-     * @param string $direction
-     * @return $this
-     */
-    public function orderBy($attribute, $direction = "ASC");
+    public function orderBy(string $attribute, string $direction = "ASC"): SelectQueryBuilderInterface;
 
     /**
      * @param int|null $limit
-     * @return $this
      */
-    public function limit($limit);
+    public function limit($limit): SelectQueryBuilderInterface;
 
     /**
      * @param int|null $offset
-     * @return $this
      */
-    public function offset($offset);
+    public function offset($offset): SelectQueryBuilderInterface;
 
     /**
      * @return mixed

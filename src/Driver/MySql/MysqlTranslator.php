@@ -16,7 +16,7 @@ class MysqlTranslator implements TranslatorInterface
         $this->conditionsTranslator = $conditionsTranslator;
     }
 
-    public function translateSelectQuery(SelectQueryInterface $query)
+    public function translateSelectQuery(SelectQueryInterface $query): string
     {
         $sql = [
             "SELECT" => $this->translateSelect($query),
@@ -30,7 +30,7 @@ class MysqlTranslator implements TranslatorInterface
             "OFFSET" => $this->translateOffset($query),
         ];
 
-        array_filter(
+        $sql = array_filter(
             $sql,
             function ($item) {
                 return empty($item) === false;
@@ -38,18 +38,14 @@ class MysqlTranslator implements TranslatorInterface
         );
 
         $text = "";
-        foreach ($sql as $name => $text) {
-            $text .= $name . "\n    " . $text . "\n";
+        foreach ($sql as $name => $value) {
+            $text .= $name . "\n    " . $value . "\n";
         }
 
         return $text;
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateSelect(SelectQueryInterface $query)
+    private function translateSelect(SelectQueryInterface $query): string
     {
         if (empty($query->getSelect())) {
             $sql = "*";
@@ -60,77 +56,45 @@ class MysqlTranslator implements TranslatorInterface
         return $sql;
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateFrom(SelectQueryInterface $query)
+    private function translateFrom(SelectQueryInterface $query): string
     {
-        return $query->getFrom();
+        return "`" . $query->getFrom() . "`";
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateJoin(SelectQueryInterface $query)
+    private function translateJoin(SelectQueryInterface $query): string
     {
         $sql = "";
 
         return $sql;
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateWhere(SelectQueryInterface $query)
+    private function translateWhere(SelectQueryInterface $query): string
     {
         return $this->conditionsTranslator->translateConditions($query->getWhere());
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateGroupBy(SelectQueryInterface $query)
+    private function translateGroupBy(SelectQueryInterface $query): string
     {
         return implode(",", $query->getGroupBy());
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateHaving(SelectQueryInterface $query)
+    private function translateHaving(SelectQueryInterface $query): string
     {
         return $this->conditionsTranslator->translateConditions($query->getHaving());
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateOrderBy(SelectQueryInterface $query)
+    private function translateOrderBy(SelectQueryInterface $query): string
     {
         return implode(",", $query->getOrderBy());
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateLimit(SelectQueryInterface $query)
+    private function translateLimit(SelectQueryInterface $query): string
     {
-        return $query->getLimit();
+        return $query->getLimit() !== null ? (string) $query->getLimit() : "";
     }
 
-    /**
-     * @param SelectQueryInterface $query
-     * @return string
-     */
-    private function translateOffset(SelectQueryInterface $query)
+    private function translateOffset(SelectQueryInterface $query): string
     {
-        return $query->getOffset();
+        return $query->getOffset() !== null ? (string) $query->getOffset() : "";
     }
 }

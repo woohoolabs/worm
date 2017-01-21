@@ -1,17 +1,34 @@
 <?php
+declare(strict_types=1);
+
+require "../vendor/autoload.php";
 
 use WoohooLabs\Worm\Connection\PdoConnection;
-use WoohooLabs\Worm\Examples\Model\UserModel;
+use WoohooLabs\Worm\Examples\Model\StudentModel;
 use WoohooLabs\Worm\Query\ConditionBuilder;
 use WoohooLabs\Worm\Worm;
 
-$worm = new Worm(PdoConnection::create("mysql", "localhost", "", "", "", ""));
-$worm
-    ->query(new UserModel())
-    ->where("name", "=", "John", "and")
+$worm = new Worm(
+    PdoConnection::create(
+        "mysql",
+        "mysql",
+        (int) getenv("MYSQL_PORT"),
+        getenv("MYSQL_DATABASE"),
+        getenv("MYSQL_USER"),
+        getenv("MYSQL_PASSWORD")
+    )
+);
+
+$result = $worm
+    ->queryModel(new StudentModel())
+    ->where("first_name", "=", "Nino", "and")
     ->whereNested(
         function (ConditionBuilder $condition) {
-            $condition->add("name", "=", "John", "and");
+            $condition->add("last_name", "=", "Fillmer", "and");
         }
     )
-    ->getList();
+    ->execute();
+
+echo "<pre>";
+print_r($result);
+echo "</pre>";
