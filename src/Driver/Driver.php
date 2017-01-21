@@ -33,6 +33,6 @@ class Driver implements DriverInterface
 
     public function translateInsertQuery(InsertQueryInterface $query): string
     {
-        return $this->insertTranslator->translateInsertQuery($query, $this->selectTranslator);
+        return $this->insertTranslator->translateInsertQuery($query);
     }
 }
