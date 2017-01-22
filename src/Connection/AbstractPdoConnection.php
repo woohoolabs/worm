@@ -118,11 +118,17 @@ abstract class AbstractPdoConnection implements ConnectionInterface
     private function executePreparedStatement(PDOStatement $statement, string $sql, array $params): bool
     {
         foreach ($params as $key => $value) {
-            $statement->bindValue(
-                is_string($key) ? $key : $key + 1,
-                $value,
-                is_int($value) || is_float($value) ? PDO::PARAM_INT : PDO::PARAM_STR
-            );
+            if ($value === null) {
+                $bindType = PDO::PARAM_NULL;
+            } elseif (is_int($value) || is_float($value)) {
+                $bindType = PDO::PARAM_INT;
+            } else {
+                $bindType = PDO::PARAM_STR;
+            }
+
+            $bindKey = is_string($key) ? $key : $key + 1;
+
+            $statement->bindValue($bindKey, $value, $bindType);
         }
 
         $result = $statement->execute();

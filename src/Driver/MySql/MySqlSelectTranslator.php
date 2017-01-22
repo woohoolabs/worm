@@ -60,11 +60,23 @@ class MySqlSelectTranslator implements SelectTranslatorInterface
 
     private function translateFrom(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        if ($query->getFrom() === "") {
+        $from = $query->getFrom();
+
+        if (empty($from)) {
             return new TranslatedQuerySegment();
         }
 
-        return new TranslatedQuerySegment("`" . $query->getFrom() . "`");
+        $alias = empty($from["alias"]) ? "" : " AS " . $from["alias"];
+
+        if ($from["type"] === "subquery") {
+            $subselectSegment = $this->translateSelect($from["from"]);
+            $subselect = $subselectSegment->getSql();
+
+            return new TranslatedQuerySegment("($subselect)$alias", $subselectSegment->getParams());
+        }
+
+        $table = $query->getFrom()["from"];
+        return new TranslatedQuerySegment("`$table`$alias");
     }
 
     private function translateJoin(SelectQueryInterface $query): TranslatedQuerySegment

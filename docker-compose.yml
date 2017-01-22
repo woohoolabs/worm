@@ -20,7 +20,7 @@ services:
 
   php-fpm:
     image: woohoolabs/php:3.1.4
-    container_name: php-fpm
+    container_name: worm-php-fpm
     networks:
       - worm
     volumes:

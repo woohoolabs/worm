@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-require "../vendor/autoload.php";
+require __DIR__ . "/../vendor/autoload.php";
 
 use WoohooLabs\Worm\Connection\MySqlPdoConnection;
-use WoohooLabs\Worm\Examples\Model\StudentModel;
 use WoohooLabs\Worm\Query\Condition\ConditionBuilder;
 use WoohooLabs\Worm\Worm;
 
@@ -25,13 +24,25 @@ $worm = new Worm(
 );
 
 $result = $worm
-    ->queryModel(new StudentModel())
-    ->where("first_name", "=", "Nino", "and")
-    ->whereNested(
-        function (ConditionBuilder $condition) {
-            $condition->addColumnToValueComparison("last_name", "=", "Fillmer", "and");
+    ->query()
+    ->from("students", "s")
+    ->where(
+        function (ConditionBuilder $where) {
+            $where
+                ->raw("last_name LIKE ?", ["%a%"])
+                ->and()
+                ->nested(
+                    function (ConditionBuilder $where) {
+                        $where
+                            ->is("birthday", null, "s")
+                            ->or()
+                            ->is("gender", null, "s");
+                    }
+                );
         }
     )
+    ->limit(10)
+    ->offset(0)
     ->execute();
 
 echo "Query Log:<br/>";

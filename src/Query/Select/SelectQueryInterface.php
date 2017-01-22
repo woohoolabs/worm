@@ -10,7 +10,7 @@ interface SelectQueryInterface extends QueryInterface
 {
     public function getSelect(): array;
 
-    public function getFrom(): string;
+    public function getFrom(): array;
 
     public function getJoin(): array;
 

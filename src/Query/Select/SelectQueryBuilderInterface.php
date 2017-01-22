@@ -9,13 +9,11 @@ interface SelectQueryBuilderInterface
 {
     public function select(array $fields): SelectQueryBuilderInterface;
 
-    public function from(string $table): SelectQueryBuilderInterface;
+    public function from(string $table, string $alias = ""): SelectQueryBuilderInterface;
 
-    public function where(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface;
+    public function fromSubquery(Closure $subquery, string $alias): SelectQueryBuilderInterface;
 
-    public function whereRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface;
-
-    public function whereNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface;
+    public function where(Closure $condition): SelectQueryBuilderInterface;
 
     public function join(string $table, Closure $condition, string $type = "INNER"): SelectQueryBuilderInterface;
 

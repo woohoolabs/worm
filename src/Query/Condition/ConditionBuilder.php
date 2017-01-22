@@ -24,239 +24,211 @@ class ConditionBuilder implements ConditionBuilderInterface, ConditionsInterface
         $this->connection = $connection;
     }
 
-    public function addColumnToValueComparison(
+    public function columnToValue(
         string $column,
         string $operator,
         $value,
-        string $connector = "and"
+        string $columnPrefix = ""
     ): ConditionBuilderInterface {
         $this->conditions[] = [
             "type" => "column-value",
-            "condition" => [
-                "column" => $column,
-                "operator" => $operator,
-                "value" => $value
-            ],
-            "operator" => $connector
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "operator" => $operator,
+            "value" => $value,
         ];
 
         return $this;
     }
 
-    public function addColumnToColumnComparison(
+    public function columnToColumn(
         string $column1,
         string $operator,
         string $column2,
-        string $connector = "and"
+        string $column1Prefix = "",
+        string $column2Prefix = ""
     ): ConditionBuilderInterface {
         $this->conditions[] = [
             "type" => "column-column",
-            "condition" => [
-                "column1" => $column1,
-                "operator" => $operator,
-                "column2" => $column2
-            ],
-            "operator" => $connector
+            "prefix1" => $column1Prefix,
+            "column1" => $column1,
+            "operator" => $operator,
+            "prefix2" => $column2Prefix,
+            "column2" => $column2,
         ];
 
         return $this;
     }
 
-    public function addColumnToFunctionComparison(
+    public function columnToFunction(
         string $column,
         string $operator,
         string $function,
         array $params = [],
-        string $connector = "and"
-    ): ConditionBuilderInterface
-    {
+        string $columnPrefix = ""
+    ): ConditionBuilderInterface {
         $this->conditions[] = [
             "type" => "column-function",
-            "condition" => [
-                "column" => $column,
-                "operator" => $operator,
-                "function" => $function
-            ],
-            "operator" => $connector
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "operator" => $operator,
+            "function" => $function
         ];
 
         return $this;
     }
 
-    public function addFunctionToFunctionComparison(
+    public function functionToFunction(
         string $function1,
         string $operator,
         string $function2,
-        string $connector = "and"
+        array $params = []
     ): ConditionBuilderInterface
     {
         $this->conditions[] = [
             "type" => "function-function",
-            "condition" => [
-                "function1" => $function1,
-                "operator" => $operator,
-                "function2" => $function2
-            ],
-            "operator" => $connector
-        ];
-    }
-
-    public function addIsComparison(
-        string $column,
-        string $value,
-        string $connector = "and"
-    ): ConditionBuilderInterface {
-        $this->conditions[] = [
-            "type" => "is",
-            "condition" => [
-                "column" => $column,
-                "value" => $value,
-                "not" => false,
-            ],
-            "operator" => $connector
+            "function1" => $function1,
+            "operator" => $operator,
+            "function2" => $function2,
+            "params" => $params,
         ];
 
         return $this;
     }
 
-
-    public function addIsNotComparison(
-        string $column,
-        string $value,
-        string $connector = "and"
-    ): ConditionBuilderInterface {
-        $this->conditions[] = [
-            "type" => "is",
-            "condition" => [
-                "column" => $column,
-                "value" => $value,
-                "not" => true,
-            ],
-            "operator" => $connector
-        ];
-
-        return $this;
-    }
-
-    public function addInValuesCondition(
-        string $column,
-        array $values,
-        string $connector = "and"
-    ): ConditionBuilderInterface {
-        $this->conditions[] = [
-            "type" => "in-values",
-            "condition" => [
-                "column" => $column,
-                "values" => $values,
-                "not" => false,
-            ],
-            "operator" => $connector
-        ];
-
-        return $this;
-    }
-
-    public function addNotInValuesCondition(
-        string $column,
-        array $values,
-        string $connector = "and"
-    ): ConditionBuilderInterface {
-        $this->conditions[] = [
-            "type" => "in-values",
-            "condition" => [
-                "column" => $column,
-                "values" => $values,
-                "not" => true,
-            ],
-            "operator" => $connector
-        ];
-
-        return $this;
-    }
-
-    public function addInSubselectCondition(
-        string $column,
-        Closure $subselect,
-        string $connector = "and"
-    ): ConditionBuilderInterface
+    public function is(string $column, $value, string $columnPrefix = ""): ConditionBuilderInterface
     {
         $this->conditions[] = [
-            "type" => "in-subselect",
-            "condition" => [
-                "column" => $column,
-                "subselect" => $subselect,
-                "not" => false,
-            ],
-            "operator" => $connector
+            "type" => "is",
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "value" => $value,
+            "not" => false,
         ];
+
+        return $this;
     }
 
-    public function addNotInSubselectCondition(
-        string $column,
-        Closure $subselect,
-        string $connector = "and"
-    ): ConditionBuilderInterface
+    public function isNot(string $column, $value, string $columnPrefix = ""): ConditionBuilderInterface
     {
         $this->conditions[] = [
+            "type" => "is",
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "value" => $value,
+            "not" => true,
+        ];
+
+        return $this;
+    }
+
+    public function inValues(string $column, array $values, string $columnPrefix = ""): ConditionBuilderInterface
+    {
+        $this->conditions[] = [
+            "type" => "in-values",
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "values" => $values,
+            "not" => false,
+        ];
+
+        return $this;
+    }
+
+    public function notInValues(string $column, array $values, string $columnPrefix = ""): ConditionBuilderInterface
+    {
+        $this->conditions[] = [
+            "type" => "in-values",
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "values" => $values,
+            "not" => true,
+        ];
+
+        return $this;
+    }
+
+    public function inSubselect(
+        string $column,
+        Closure $subselect,
+        string $columnPrefix = ""
+    ): ConditionBuilderInterface {
+        $this->conditions[] = [
             "type" => "in-subselect",
-            "condition" => [
-                "column" => $column,
-                "subselect" => $subselect,
-                "not" => true,
-            ],
-            "operator" => $connector
+            "prefix" => $columnPrefix,
+            "column" => $column,
+            "subselect" => $subselect,
+            "not" => false,
         ];
     }
 
-    public function addRawComparison(
-        string $condition,
-        array $params = [],
-        string $connector = "and"
+    public function notInSubselect(
+        string $column,
+        Closure $subselect,
+        string $columnPrefix = ""
     ): ConditionBuilderInterface {
+        $this->conditions[] = [
+            "type" => "in-subselect",
+            "column" => $column,
+            "subselect" => $subselect,
+            "not" => true,
+        ];
+    }
+
+    public function raw(string $condition, array $params = []): ConditionBuilderInterface
+    {
         $this->conditions[] = [
             "type" => "raw",
-            "condition" => [
-                "condition" => $condition,
-                "params" => $params
-            ],
-            "operator" => $connector
+            "condition" => $condition,
+            "params" => $params,
         ];
 
         return $this;
     }
 
-    public function addNestedCondition(Closure $condition, string $connector = "and"): ConditionBuilderInterface
+    public function nested(Closure $condition): ConditionBuilderInterface
     {
         $conditionBuilder = new ConditionBuilder($this->connection);
         $condition($conditionBuilder);
 
         $this->conditions[] = [
             "type" => "nested",
-            "condition" => [
-                "condition" => $conditionBuilder,
-            ],
-            "operator" => $connector
+            "condition" => $conditionBuilder,
         ];
 
         return $this;
     }
 
-    public function addSubselectCondition(
-        string $operator,
-        Closure $subselect,
-        string $connector = "and"
-    ): ConditionBuilderInterface {
+    public function subselect(string $operator, Closure $subselect): ConditionBuilderInterface
+    {
         $subselectBuilder = new SelectQueryBuilder($this->connection);
 
         $subselect($subselectBuilder);
 
         $this->conditions[] = [
             "type" => "subselect",
-            "condition" => [
-                "condition" => $subselectBuilder,
-                "operator" => $operator,
-            ],
-            "operator" => $connector
+            "condition" => $subselectBuilder,
+            "operator" => $operator,
+        ];
+
+        return $this;
+    }
+
+    public function and(): ConditionBuilderInterface
+    {
+        return $this->operator("AND");
+    }
+
+    public function or(): ConditionBuilderInterface
+    {
+        return $this->operator("OR");
+    }
+
+    public function operator(string $operator): ConditionBuilderInterface
+    {
+        $this->conditions[] = [
+            "type" => "operator",
+            "operator" => $operator,
         ];
 
         return $this;

@@ -7,76 +7,65 @@ use Closure;
 
 interface ConditionBuilderInterface
 {
-    public function addColumnToValueComparison(
+    public function columnToValue(
         string $column,
         string $operator,
         $value,
-        string $connector = "and"
+        string $columnPrefix = ""
     ): ConditionBuilderInterface;
 
-    public function addColumnToColumnComparison(
+    public function columnToColumn(
         string $column1,
         string $operator,
         string $column2,
-        string $connector = "and"
+        string $column1Prefix = "",
+        string $column2Prefix = ""
     ): ConditionBuilderInterface;
 
-    public function addColumnToFunctionComparison(
+    public function columnToFunction(
         string $column,
         string $operator,
         string $function,
         array $params = [],
-        string $connector = "and"
+        string $columnPrefix = ""
     ): ConditionBuilderInterface;
 
-    public function addFunctionToFunctionComparison(
+    public function functionToFunction(
         string $function1,
         string $operator,
         string $function2,
-        string $connector = "and"
+        array $params = []
     ): ConditionBuilderInterface;
 
-    public function addIsComparison(
-        string $column,
-        string $value,
-        string $connector = "and"
-    ): ConditionBuilderInterface;
+    public function is(string $column, $value, string $columnPrefix = ""): ConditionBuilderInterface;
 
-    public function addIsNotComparison(
-        string $column,
-        string $value,
-        string $connector = "and"
-    ): ConditionBuilderInterface;
+    public function isNot(string $column, $value, string $columnPrefix = ""): ConditionBuilderInterface;
 
-    public function addInValuesCondition(
-        string $column,
-        array $values,
-        string $connector = "and"
-    ): ConditionBuilderInterface;
+    public function inValues(string $column, array $values, string $columnPrefix = ""): ConditionBuilderInterface;
 
-    public function addNotInValuesCondition(
-        string $column,
-        array $value,
-        string $connector = "and"
-    ): ConditionBuilderInterface;
+    public function notInValues(string $column, array $value, string $columnPrefix = ""): ConditionBuilderInterface;
 
-    public function addInSubselectCondition(
+    public function inSubselect(
         string $column,
         Closure $subselect,
-        string $connector = "and"
+        string $columnPrefix = ""
     ): ConditionBuilderInterface;
 
-    public function addRawComparison(
-        string $condition,
-        array $params = [],
-        string $connector = "and"
-    ): ConditionBuilderInterface;
-
-    public function addNestedCondition(Closure $condition, string $connector = "and"): ConditionBuilderInterface;
-
-    public function addSubselectCondition(
-        string $operator,
+    public function notInSubselect(
+        string $column,
         Closure $subselect,
-        string $connector = "and"
+        string $columnPrefix = ""
     ): ConditionBuilderInterface;
+
+    public function raw(string $condition, array $params = []): ConditionBuilderInterface;
+
+    public function nested(Closure $condition): ConditionBuilderInterface;
+
+    public function subselect(string $operator, Closure $subselect): ConditionBuilderInterface;
+
+    public function and(): ConditionBuilderInterface;
+
+    public function or(): ConditionBuilderInterface;
+
+    public function operator(string $operator): ConditionBuilderInterface;
 }
