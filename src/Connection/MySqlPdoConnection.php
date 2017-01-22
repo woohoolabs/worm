@@ -21,14 +21,14 @@ class MySqlPdoConnection extends AbstractPdoConnection
         string $charset = "utf8mb4",
         string $collation = "utf8mb4_unicode_ci",
         array $modes = [],
-        array $options = []
+        array $options = [],
+        bool $isLogging
     ): ConnectionInterface {
         $dsn = "$driver:host=$host;dbname=$database;port=$port;charset=$charset";
 
-        $self = new self($dsn, $username, $password, $options);
-
-        self::setCharset($self, $charset, $collation);
-        self::setModes($self, $modes);
+        $self = new MySqlPdoConnection($dsn, $username, $password, $options, $isLogging);
+        $self->setCharset($charset, $collation);
+        $self->setModes($modes);
 
         return $self;
     }
@@ -41,17 +41,17 @@ class MySqlPdoConnection extends AbstractPdoConnection
         return new Driver($selectTranslator, $insertTranslator);
     }
 
-    private static function setCharset(MySqlPdoConnection $connection, string $charset, string $collation)
+    private function setCharset(string $charset, string $collation)
     {
         if (empty($charset)) {
             return;
         }
 
         $collation = $collation ? $collation : "";
-        $connection->execute("SET NAMES '$charset' COLLATE '$collation'");
+        $this->execute("SET NAMES '$charset' COLLATE '$collation'");
     }
 
-    private static function setModes(MySqlPdoConnection $connection, array $modes)
+    private function setModes(array $modes)
     {
         if (empty($modes)) {
             $modes = [
@@ -66,6 +66,6 @@ class MySqlPdoConnection extends AbstractPdoConnection
         }
 
         $modesString = implode(",", $modes);
-        $connection->execute("SET SESSION SQL_MODE='$modesString'");
+        $this->execute("SET SESSION SQL_MODE='$modesString'");
     }
 }

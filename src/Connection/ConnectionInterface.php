@@ -21,4 +21,8 @@ interface ConnectionInterface
     public function rollback(): bool;
 
     public function getDriver(): DriverInterface;
+
+    public function getLastInsertedId();
+
+    public function getLog(): array;
 }

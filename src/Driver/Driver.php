@@ -26,12 +26,12 @@ class Driver implements DriverInterface
         $this->insertTranslator = $insertTranslator;
     }
 
-    public function translateSelectQuery(SelectQueryInterface $query): string
+    public function translateSelectQuery(SelectQueryInterface $query): TranslatedQuerySegment
     {
         return $this->selectTranslator->translateSelectQuery($query);
     }
 
-    public function translateInsertQuery(InsertQueryInterface $query): string
+    public function translateInsertQuery(InsertQueryInterface $query): TranslatedQuerySegment
     {
         return $this->insertTranslator->translateInsertQuery($query);
     }

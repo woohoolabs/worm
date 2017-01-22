@@ -7,5 +7,5 @@ use WoohooLabs\Worm\Query\Insert\InsertQueryInterface;
 
 interface InsertTranslatorInterface
 {
-    public function translateInsertQuery(InsertQueryInterface $query): string;
+    public function translateInsertQuery(InsertQueryInterface $query): TranslatedQuerySegment;
 }

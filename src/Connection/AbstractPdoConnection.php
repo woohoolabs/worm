@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Connection;
 
 use PDO;
+use PDOStatement;
 use Traversable;
 use WoohooLabs\Worm\Logger\Logger;
 
@@ -26,7 +27,7 @@ abstract class AbstractPdoConnection implements ConnectionInterface
         string $username,
         string $password,
         array $options,
-        Logger $logger = null
+        bool $isLogging
     ) {
         $this->pdo = new PDO($dsn, $username, $password, $options);
 
@@ -34,17 +35,13 @@ abstract class AbstractPdoConnection implements ConnectionInterface
             $this->pdo->setAttribute($key, $option);
         }
 
-        $this->logger = $logger ? $logger : new Logger(false);
+        $this->logger = new Logger($isLogging);
     }
 
     public function queryAll(string $sql, array $params = []): array
     {
-        echo "<pre>" . $sql . "</pre>";
-
         $statement = $this->pdo->prepare($sql);
-        $result = $statement->execute($params);
-
-        $this->logger->log($sql, $result);
+        $this->executePreparedStatement($statement, $sql, $params);
 
         return $statement->fetchAll($this->fetchStyle);
     }
@@ -52,9 +49,7 @@ abstract class AbstractPdoConnection implements ConnectionInterface
     public function query(string $sql, array $params = []): Traversable
     {
         $statement = $this->pdo->prepare($sql);
-        $result = $statement->execute($params);
-
-        $this->logger->log($sql, $result);
+        $this->executePreparedStatement($statement, $sql, $params);
 
         if ($statement->nextRowset() === false) {
             return [];
@@ -69,7 +64,7 @@ abstract class AbstractPdoConnection implements ConnectionInterface
     {
         $statement = $this->pdo->prepare($sql);
 
-        return $statement->execute($params);
+        return $this->executePreparedStatement($statement, $sql, $params);
     }
 
     public function beginTransaction(): bool
@@ -99,6 +94,11 @@ abstract class AbstractPdoConnection implements ConnectionInterface
         return $result;
     }
 
+    public function getLastInsertedId($name = null)
+    {
+        return $this->pdo->lastInsertId($name);
+    }
+
     public function getLog(): array
     {
         return $this->logger->getLog();
@@ -113,5 +113,22 @@ abstract class AbstractPdoConnection implements ConnectionInterface
             PDO::ATTR_STRINGIFY_FETCHES => false,
             PDO::ATTR_EMULATE_PREPARES => false,
         ];
+    }
+
+    private function executePreparedStatement(PDOStatement $statement, string $sql, array $params): bool
+    {
+        foreach ($params as $key => $value) {
+            $statement->bindValue(
+                is_string($key) ? $key : $key + 1,
+                $value,
+                is_int($value) || is_float($value) ? PDO::PARAM_INT : PDO::PARAM_STR
+            );
+        }
+
+        $result = $statement->execute();
+
+        $this->logger->log($sql, $result, $params);
+
+        return $result;
     }
 }

@@ -15,19 +15,29 @@ $worm = new Worm(
         (int) getenv("MYSQL_PORT"),
         getenv("MYSQL_DATABASE"),
         getenv("MYSQL_USER"),
-        getenv("MYSQL_PASSWORD")
+        getenv("MYSQL_PASSWORD"),
+        "utf8mb4",
+        "utf8mb4_unicode_ci",
+        [],
+        [],
+        true
     )
 );
 
 $result = $worm
-    ->selectModel(new StudentModel())
+    ->queryModel(new StudentModel())
     ->where("first_name", "=", "Nino", "and")
     ->whereNested(
         function (ConditionBuilder $condition) {
-            $condition->add("last_name", "=", "Fillmer", "and");
+            $condition->addColumnToValueComparison("last_name", "=", "Fillmer", "and");
         }
     )
     ->execute();
+
+echo "Query Log:<br/>";
+echo "<pre>";
+print_r($worm->getLog());
+echo "</pre>";
 
 echo "Result Set:<br/>";
 echo "<pre>";

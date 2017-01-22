@@ -8,7 +8,7 @@ class Logger
     /**
      * @var array
      */
-    private $log;
+    private $log = [];
 
     /**
      * @var bool
@@ -17,17 +17,21 @@ class Logger
 
     public function __construct(bool $isEnabled)
     {
-        $this->log = [];
         $this->isEnabled = $isEnabled;
     }
 
-    public function log(string $query, $result)
+    public function log(string $query, bool $result, array $params = [])
     {
         if ($this->isEnabled === false) {
             return;
         }
 
-        $this->log[] = "[" . date("Y-m-d H:i:s") . "] Result: $result, query: $query";
+        $this->log[] = [
+            "time" => date("Y-m-d H:i:s"),
+            "query" => "$query",
+            "params" => $params,
+            "result" => $result,
+        ];
     }
 
     public function getLog(): array

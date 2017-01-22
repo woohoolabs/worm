@@ -7,5 +7,5 @@ use WoohooLabs\Worm\Query\Select\SelectQueryInterface;
 
 interface SelectTranslatorInterface
 {
-    public function translateSelectQuery(SelectQueryInterface $query): string;
+    public function translateSelectQuery(SelectQueryInterface $query): TranslatedQuerySegment;
 }

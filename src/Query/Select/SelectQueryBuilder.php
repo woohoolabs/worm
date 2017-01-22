@@ -78,8 +78,8 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
-        $this->where = new ConditionBuilder();
-        $this->having = new ConditionBuilder();
+        $this->where = new ConditionBuilder($this->connection);
+        $this->having = new ConditionBuilder($this->connection);
     }
 
     public function select(array $fields): SelectQueryBuilderInterface
@@ -98,21 +98,21 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
 
     public function where(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface
     {
-        $this->where->add($operand1, $operator, $operand2, $connector);
+        $this->where->addColumnToValueComparison($operand1, $operator, $operand2, $connector);
 
         return $this;
     }
 
     public function whereRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface
     {
-        $this->where->addRaw($condition, $params, $connector);
+        $this->where->addRawComparison($condition, $params, $connector);
 
         return $this;
     }
 
     public function whereNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface
     {
-        $this->where->addNested($condition, $connector);
+        $this->where->addNestedCondition($condition, $connector);
 
         return $this;
     }
@@ -132,7 +132,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         $this->join[] = [
             "type" => $type,
             "table" => $table,
-            "on" => $condition(new ConditionBuilder()),
+            "on" => $condition(new ConditionBuilder($this->connection)),
         ];
 
         return $this;
@@ -140,21 +140,21 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
 
     public function having(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface
     {
-        $this->having->add($operand1, $operator, $operand2, $connector);
+        $this->having->addColumnToValueComparison($operand1, $operator, $operand2, $connector);
 
         return $this;
     }
 
     public function havingRaw(string $condition, array $params = [], string $connector = "and"): SelectQueryBuilderInterface
     {
-        $this->having->addRaw($condition, $params, $connector);
+        $this->having->addRawComparison($condition, $params, $connector);
 
         return $this;
     }
 
     public function havingNested(Closure $condition, string $connector = "and"): SelectQueryBuilderInterface
     {
-        $this->having->addNested($condition, $connector);
+        $this->having->addNestedCondition($condition, $connector);
 
         return $this;
     }
@@ -198,9 +198,9 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
 
     public function execute(): array
     {
-        $sql = $this->connection->getDriver()->translateSelectQuery($this);
+        $query = $this->connection->getDriver()->translateSelectQuery($this);
 
-        return $this->connection->queryAll($sql);
+        return $this->connection->queryAll($query->getSql(), $query->getParams());
     }
 
     public function getSelect(): array

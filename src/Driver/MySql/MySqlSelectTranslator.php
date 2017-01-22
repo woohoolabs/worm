@@ -1,7 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace WoohooLabs\Worm\Driver\Mysql;
 
 use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
+use WoohooLabs\Worm\Driver\TranslatedQuerySegment;
 use WoohooLabs\Worm\Query\Select\SelectQueryInterface;
 
 class MySqlSelectTranslator implements SelectTranslatorInterface
@@ -16,9 +19,10 @@ class MySqlSelectTranslator implements SelectTranslatorInterface
         $this->conditionsTranslator = $conditionsTranslator;
     }
 
-    public function translateSelectQuery(SelectQueryInterface $query): string
+    public function translateSelectQuery(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        $sql = [
+        /** @var TranslatedQuerySegment[] $segments */
+        $segments = [
             "SELECT" => $this->translateSelect($query),
             "FROM" => $this->translateFrom($query),
             "JOIN" => $this->translateJoin($query),
@@ -30,71 +34,83 @@ class MySqlSelectTranslator implements SelectTranslatorInterface
             "OFFSET" => $this->translateOffset($query),
         ];
 
-        $sql = array_filter(
-            $sql,
-            function ($item) {
-                return empty($item) === false;
+        $query = new TranslatedQuerySegment();
+        foreach ($segments as $name => $segment) {
+            if (empty($segment->getSql())) {
+                continue;
             }
-        );
 
-        $text = "";
-        foreach ($sql as $name => $value) {
-            $text .= $name . "\n    " . $value . "\n";
+            $query->add(
+                $name . "\n    " . $segment->getSql() . "\n",
+                $segment->getParams()
+            );
         }
 
-        return $text;
+        return $query;
     }
 
-    private function translateSelect(SelectQueryInterface $query): string
+    private function translateSelect(SelectQueryInterface $query): TranslatedQuerySegment
     {
         if (empty($query->getSelect())) {
-            $sql = "*";
-        } else {
-            $sql = implode(",", $query);
+            return new TranslatedQuerySegment("*");
         }
 
-        return $sql;
+        return new TranslatedQuerySegment(implode(",", $query));
     }
 
-    private function translateFrom(SelectQueryInterface $query): string
+    private function translateFrom(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        return "`" . $query->getFrom() . "`";
+        if ($query->getFrom() === "") {
+            return new TranslatedQuerySegment();
+        }
+
+        return new TranslatedQuerySegment("`" . $query->getFrom() . "`");
     }
 
-    private function translateJoin(SelectQueryInterface $query): string
+    private function translateJoin(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        $sql = "";
+        if (empty($query->getJoin())) {
+            return new TranslatedQuerySegment();
+        }
 
-        return $sql;
+        return new TranslatedQuerySegment();
     }
 
-    private function translateWhere(SelectQueryInterface $query): string
+    private function translateWhere(SelectQueryInterface $query): TranslatedQuerySegment
     {
         return $this->conditionsTranslator->translateConditions($query->getWhere());
     }
 
-    private function translateGroupBy(SelectQueryInterface $query): string
+    private function translateGroupBy(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        return implode(",", $query->getGroupBy());
+        return new TranslatedQuerySegment(implode(",", $query->getGroupBy()));
     }
 
-    private function translateHaving(SelectQueryInterface $query): string
+    private function translateHaving(SelectQueryInterface $query): TranslatedQuerySegment
     {
         return $this->conditionsTranslator->translateConditions($query->getHaving());
     }
 
-    private function translateOrderBy(SelectQueryInterface $query): string
+    private function translateOrderBy(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        return implode(",", $query->getOrderBy());
+        return new TranslatedQuerySegment(implode(",", $query->getOrderBy()));
     }
 
-    private function translateLimit(SelectQueryInterface $query): string
+    private function translateLimit(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        return $query->getLimit() !== null ? (string) $query->getLimit() : "";
+        if ($query->getLimit() === null) {
+            return new TranslatedQuerySegment();
+        }
+
+        return new TranslatedQuerySegment("?", [$query->getLimit()]);
     }
 
-    private function translateOffset(SelectQueryInterface $query): string
+    private function translateOffset(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        return $query->getOffset() !== null ? (string) $query->getOffset() : "";
+        if ($query->getOffset() === null) {
+            return new TranslatedQuerySegment();
+        }
+
+        return new TranslatedQuerySegment("?", [$query->getOffset()]);
     }
 }

@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Driver\Mysql;
 
+use WoohooLabs\Worm\Driver\TranslatedQuerySegment;
 use WoohooLabs\Worm\Query\Condition\ConditionsInterface;
 
 class MySqlConditionsTranslator
 {
-    public function translateConditions(ConditionsInterface $conditions)
+    public function translateConditions(ConditionsInterface $conditions): TranslatedQuerySegment
     {
-        $sql = "";
+        $querySegment = new TranslatedQuerySegment();
 
         $conditionArray = $conditions->getConditions();
         $count = count($conditionArray);
@@ -17,46 +18,94 @@ class MySqlConditionsTranslator
             $condition = $conditionArray[$i];
 
             if ($i) {
-                $sql .= " ";
+                $querySegment->add(" ");
             }
-            if (isset($condition["simple"])) {
-                $sql .= $this->translateSimpleCondition($condition["simple"]);
-            } elseif (isset($condition["raw"])) {
-                $sql .= $this->translateRawCondition($condition["raw"]);
-            } elseif (isset($condition["nested"])) {
-                $sql .= "(" . $this->translateNestedCondition($condition["nested"]) . ")";
+
+            switch ($condition["type"]) {
+                case "column-value":
+                    $this->translateColumnToValueCondition($querySegment, $condition["condition"]);
+                    break;
+                case "column-column":
+                    $this->translateColumnToColumnCondition($querySegment, $condition["condition"]);
+                    break;
+                case "is":
+                    $this->translateIsCondition($querySegment, $condition["condition"]);
+                    break;
+                case "in-values":
+                    $this->translateInValues($querySegment, $condition["condition"]);
+                    break;
+                case "raw":
+                    $this->translateRawCondition($querySegment, $condition["condition"]);
+                    break;
+                case "nested":
+                    $this->translateNestedCondition($querySegment, $condition["condition"]);
+                    break;
+                case "subselect":
+                    $this->translateSubselectCondition($querySegment, $condition["condition"]);
+                    break;
             }
 
             if ($i < $count - 1 && isset($condition["operator"])) {
-                $sql .= " " . $condition["operator"];
+                $querySegment->add(" " . $condition["operator"]);
             }
         }
 
-        return $sql;
+        return $querySegment;
     }
 
-    private function translateSimpleCondition(array $condition): string
+    private function translateColumnToValueCondition(TranslatedQuerySegment $querySegment, array $condition)
     {
-        $sql = "`" . $condition["operand1"] . "` " . $condition["operator"] . " ";
+        $column = $condition["column"];
+        $operator = $condition["operator"];
+        $value = $condition["value"];
 
-        if (is_array($condition["operand2"])) {
-            $sql .= "(" . implode(",", $condition["operand2"]) . ")";
-        } elseif (is_string($condition["operand2"])) {
-            $sql .= "'" . $condition["operand2"] . "'";
-        } else {
-            $sql .= $condition["operand2"];
-        }
-
-        return $sql;
+        $querySegment->add("`$column` $operator ?", [$value]);
     }
 
-    private function translateRawCondition(array $condition): string
+    private function translateIsCondition(TranslatedQuerySegment $querySegment, array $condition)
     {
-        return $condition["condition"];
+        $column = $condition["column"];
+        $negation = $condition["not"] ? " NOT" : "";
+        $value = $condition["value"];
+
+        $querySegment->add("`$column` IS$negation $value");
     }
 
-    private function translateNestedCondition(array $condition): string
+    private function translateInValues(TranslatedQuerySegment $querySegment, array $condition)
     {
-        return $this->translateConditions($condition["condition"]);
+        $column = $condition["column"];
+        $negation = $condition["not"] ? "NOT " : "";
+        $values = $condition["values"];
+        $valuePattern = $params = implode(",", array_fill(0, count($values), "?"));
+
+        $querySegment->add("`$column` ${negation}IN ($valuePattern)", $values);
+    }
+
+    private function translateColumnToColumnCondition(TranslatedQuerySegment $querySegment, array $condition)
+    {
+        $column1 = $condition["column1"];
+        $operator = $condition["operator"];
+        $column2 = $condition["column2"];
+
+        $querySegment->add("`$column1` $operator `$column2`");
+    }
+
+    private function translateRawCondition(TranslatedQuerySegment $querySegment, array $condition)
+    {
+        $querySegment->add($condition["condition"], $condition["params"]);
+    }
+
+    private function translateNestedCondition(TranslatedQuerySegment $querySegment, array $condition)
+    {
+        $nestedSegment = $this->translateConditions($condition["condition"]);
+
+        $querySegment->add("(" . $nestedSegment->getSql() . ")", $nestedSegment->getParams());
+    }
+
+    private function translateSubselectCondition(TranslatedQuerySegment $querySegment, array $condition)
+    {
+        $subselectSegment = $this->translateConditions($condition["condition"]);
+
+        $querySegment->add("(" . $subselectSegment->getSql() . ")", $subselectSegment->getParams());
     }
 }

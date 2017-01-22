@@ -20,16 +20,21 @@ class Worm
         $this->connection = $connection;
     }
 
-    public function select(): SelectQueryBuilderInterface
+    public function query(): SelectQueryBuilderInterface
     {
         return new SelectQueryBuilder($this->connection);
     }
 
-    public function selectModel(ModelInterface $model): SelectQueryBuilderInterface
+    public function queryModel(ModelInterface $model): SelectQueryBuilderInterface
     {
         $queryBuilder = new SelectQueryBuilder($this->connection);
         $queryBuilder->from($model->getTable());
 
         return $queryBuilder;
+    }
+
+    public function getLog(): array
+    {
+        return $this->connection->getLog();
     }
 }

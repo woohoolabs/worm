@@ -8,7 +8,7 @@ use WoohooLabs\Worm\Query\Select\SelectQueryInterface;
 
 interface DriverInterface
 {
-    public function translateSelectQuery(SelectQueryInterface $query): string;
+    public function translateSelectQuery(SelectQueryInterface $query): TranslatedQuerySegment;
 
-    public function translateInsertQuery(InsertQueryInterface $query): string;
+    public function translateInsertQuery(InsertQueryInterface $query): TranslatedQuerySegment;
 }
