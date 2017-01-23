@@ -14,4 +14,8 @@ interface InsertQueryBuilderInterface
     public function select(Closure $select): InsertQueryBuilderInterface;
 
     public function execute(): bool;
+
+    public function getSql(): string;
+
+    public function getParams(): array;
 }

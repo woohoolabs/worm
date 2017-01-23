@@ -63,7 +63,17 @@ class InsertQueryBuilder implements InsertQueryBuilderInterface, InsertQueryInte
     {
         $sql = $this->connection->getDriver()->translateInsertQuery($this);
 
-        return $this->connection->execute($sql);
+        return $this->connection->execute($sql->getSql(), $sql->getParams());
+    }
+
+    public function getSql(): string
+    {
+        return $this->connection->getDriver()->translateInsertQuery($this)->getSql();
+    }
+
+    public function getParams(): array
+    {
+        return $this->connection->getDriver()->translateInsertQuery($this)->getParams();
     }
 
     public function getConnection(): ConnectionInterface

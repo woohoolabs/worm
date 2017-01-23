@@ -16,6 +16,11 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
     protected $connection;
 
     /**
+     * @var bool
+     */
+    protected $distinct = false;
+
+    /**
      * @var array
      */
     protected $select = [];
@@ -89,26 +94,67 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this;
     }
 
+    public function distinct(bool $isDistinct = true): SelectQueryBuilderInterface
+    {
+        $this->distinct = $isDistinct;
+
+        return $this;
+    }
+
     public function from(string $table, string $alias = ""): SelectQueryBuilderInterface
     {
         $this->from = [
             "type" => "table",
-            "from" => $table,
+            "table" => $table,
             "alias" => $alias,
         ];
 
         return $this;
     }
 
-    public function fromSubquery(Closure $subquery, string $alias = ""): SelectQueryBuilderInterface
+    public function fromSubquery(Closure $subquery, string $alias): SelectQueryBuilderInterface
     {
         $queryBuilder = new SelectQueryBuilder($this->connection);
         $subquery($queryBuilder);
 
         $this->from = [
             "type" => "subquery",
-            "from" => $queryBuilder,
+            "table" => $queryBuilder,
             "alias" => $alias,
+        ];
+
+        return $this;
+    }
+
+    public function leftJoin(string $table, string $alias = ""): SelectQueryBuilderInterface
+    {
+        return $this->join($table, $alias, "LEFT");
+    }
+
+    public function rightJoin(string $table, string $alias = ""): SelectQueryBuilderInterface
+    {
+        return $this->join($table, $alias, "RIGHT");
+    }
+
+    public function join(string $table, string $alias = "", string $type = ""): SelectQueryBuilderInterface
+    {
+        $this->join[] = [
+            "type" => $type,
+            "table" => $table,
+            "alias" => $alias,
+        ];
+
+        return $this;
+    }
+
+    public function on(Closure $on = null): SelectQueryBuilderInterface
+    {
+        $queryBuilder = new ConditionBuilder($this->connection);
+        $on($queryBuilder);
+
+        $this->join[] = [
+            "type" => "on",
+            "on" => $queryBuilder,
         ];
 
         return $this;
@@ -117,27 +163,6 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
     public function where(Closure $condition): SelectQueryBuilderInterface
     {
         $condition($this->where);
-
-        return $this;
-    }
-
-    public function leftJoin(string $table, Closure $condition): SelectQueryBuilderInterface
-    {
-        return $this->join($table, $condition, "LEFT");
-    }
-
-    public function rightJoin(string $table, Closure $condition): SelectQueryBuilderInterface
-    {
-        return $this->join($table, $condition, "RIGHT");
-    }
-
-    public function join(string $table, Closure $condition, string $type = "INNER"): SelectQueryBuilderInterface
-    {
-        $this->join[] = [
-            "type" => $type,
-            "table" => $table,
-            "on" => $condition(new ConditionBuilder($this->connection)),
-        ];
 
         return $this;
     }
@@ -207,9 +232,24 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this->connection->queryAll($query->getSql(), $query->getParams());
     }
 
+    public function getSql(): string
+    {
+        return $this->connection->getDriver()->translateSelectQuery($this)->getSql();
+    }
+
+    public function getParams(): array
+    {
+        return $this->connection->getDriver()->translateSelectQuery($this)->getParams();
+    }
+
     public function getSelect(): array
     {
         return $this->select;
+    }
+
+    public function isDistinct(): bool
+    {
+        return $this->distinct;
     }
 
     public function getFrom(): array
@@ -222,7 +262,7 @@ class SelectQueryBuilder implements SelectQueryBuilderInterface, SelectQueryInte
         return $this->aggregate;
     }
 
-    public function getJoin(): array
+    public function getJoins(): array
     {
         return $this->join;
     }

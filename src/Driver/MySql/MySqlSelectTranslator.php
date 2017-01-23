@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Driver\Mysql;
 
+use WoohooLabs\Worm\Driver\AbstractQueryTranslator;
 use WoohooLabs\Worm\Driver\SelectTranslatorInterface;
 use WoohooLabs\Worm\Driver\TranslatedQuerySegment;
 use WoohooLabs\Worm\Query\Select\SelectQueryInterface;
 
-class MySqlSelectTranslator implements SelectTranslatorInterface
+class MySqlSelectTranslator extends AbstractQueryTranslator implements SelectTranslatorInterface
 {
     /**
      * @var MySqlConditionsTranslator;
@@ -21,49 +22,42 @@ class MySqlSelectTranslator implements SelectTranslatorInterface
 
     public function translateSelectQuery(SelectQueryInterface $query): TranslatedQuerySegment
     {
-        /** @var TranslatedQuerySegment[] $segments */
-        $segments = [
-            "SELECT" => $this->translateSelect($query),
-            "FROM" => $this->translateFrom($query),
-            "JOIN" => $this->translateJoin($query),
-            "WHERE" => $this->translateWhere($query),
-            "GROUP BY" => $this->translateGroupBy($query),
-            "HAVING" => $this->translateHaving($query),
-            "ORDER BY" => $this->translateOrderBy($query),
-            "LIMIT" => $this->translateLimit($query),
-            "OFFSET" => $this->translateOffset($query),
-        ];
-
-        $query = new TranslatedQuerySegment();
-        foreach ($segments as $name => $segment) {
-            if (empty($segment->getSql())) {
-                continue;
-            }
-
-            $query->add(
-                $name . "\n    " . $segment->getSql() . "\n",
-                $segment->getParams()
-            );
-        }
-
-        return $query;
+        return $this->compileTranslatedQuerySegments(
+            [
+                $this->translateSelect($query),
+                $this->translateFrom($query),
+                $this->translateJoins($query),
+                $this->translateWhere($query),
+                $this->translateGroupBy($query),
+                $this->translateHaving($query),
+                $this->translateOrderBy($query),
+                $this->translateLimit($query),
+                $this->translateOffset($query),
+            ]
+        );
     }
 
-    private function translateSelect(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateSelect(SelectQueryInterface $query): array
     {
+        $distinct = $query->isDistinct() ? " DISTINCT" : "";
+
         if (empty($query->getSelect())) {
-            return new TranslatedQuerySegment("*");
+            return [
+                $this->createTranslatedQuerySegment("SELECT$distinct", "*")
+            ];
         }
 
-        return new TranslatedQuerySegment(implode(",", $query));
+        return [
+            $this->createTranslatedQuerySegment("SELECT$distinct", implode(",", $query->getSelect()))
+        ];
     }
 
-    private function translateFrom(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateFrom(SelectQueryInterface $query): array
     {
         $from = $query->getFrom();
 
         if (empty($from)) {
-            return new TranslatedQuerySegment();
+            return [];
         }
 
         $alias = empty($from["alias"]) ? "" : " AS " . $from["alias"];
@@ -72,57 +66,132 @@ class MySqlSelectTranslator implements SelectTranslatorInterface
             $subselectSegment = $this->translateSelect($from["from"]);
             $subselect = $subselectSegment->getSql();
 
-            return new TranslatedQuerySegment("($subselect)$alias", $subselectSegment->getParams());
+            return [
+                $this->createTranslatedQuerySegment("FROM", "($subselect)$alias", $subselectSegment->getParams())
+            ];
         }
 
-        $table = $query->getFrom()["from"];
-        return new TranslatedQuerySegment("`$table`$alias");
+        $table = $from["table"];
+
+        return [
+            $this->createTranslatedQuerySegment("FROM", "`$table`$alias")
+        ];
     }
 
-    private function translateJoin(SelectQueryInterface $query): TranslatedQuerySegment
+    /**
+     * @param SelectQueryInterface $query
+     * @return TranslatedQuerySegment[]
+     */
+    private function translateJoins(SelectQueryInterface $query): array
     {
-        if (empty($query->getJoin())) {
-            return new TranslatedQuerySegment();
+        $joins = $query->getJoins();
+
+        if (empty($joins)) {
+            return [];
         }
 
-        return new TranslatedQuerySegment();
+        $segments = [];
+        $params = [];
+        foreach ($joins as $join) {
+            if ($join["on"]) {
+                $conditionSegment = $this->conditionsTranslator->translateConditions($join["on"]);
+                $params = $conditionSegment->getParams();
+
+                $on = $conditionSegment->getSql();
+
+                $segments[] = $this->createTranslatedQuerySegment("ON", "$on", $params);
+            } else {
+                $type = $join["type"] ? $join["type"] : "";
+                $table = $join["table"];
+                $alias = empty($join["alias"]) ? "" : " AS " . $join["alias"];
+
+                $segments[] = $this->createTranslatedQuerySegment("${type}JOIN", "`${table}`${alias}", $params);
+            }
+        }
+
+        return $segments;
     }
 
-    private function translateWhere(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateWhere(SelectQueryInterface $query): array
     {
-        return $this->conditionsTranslator->translateConditions($query->getWhere());
+        if (empty($query->getWhere()->getConditions())) {
+            return [];
+        }
+
+        $result = $this->conditionsTranslator->translateConditions($query->getWhere());
+
+        return [
+            $this->createTranslatedQuerySegment("WHERE", $result->getSql(), $result->getParams())
+        ];
     }
 
-    private function translateGroupBy(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateGroupBy(SelectQueryInterface $query): array
     {
-        return new TranslatedQuerySegment(implode(",", $query->getGroupBy()));
+        if (empty($query->getGroupBy())) {
+            return [];
+        }
+
+        return [
+            $this->createTranslatedQuerySegment("GROUP BY", implode(",", $query->getGroupBy()))
+        ];
     }
 
-    private function translateHaving(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateHaving(SelectQueryInterface $query): array
     {
-        return $this->conditionsTranslator->translateConditions($query->getHaving());
+        if (empty($query->getHaving()->getConditions())) {
+            return [];
+        }
+
+        $result = $this->conditionsTranslator->translateConditions($query->getHaving());
+
+        return [
+            $this->createTranslatedQuerySegment("HAVING", $result->getSql(), $result->getParams())
+        ];
     }
 
-    private function translateOrderBy(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateOrderBy(SelectQueryInterface $query): array
     {
-        return new TranslatedQuerySegment(implode(",", $query->getOrderBy()));
+        if (empty($query->getOrderBy())) {
+            return [];
+        }
+
+        $querySegment = new TranslatedQuerySegment();
+        $count = count($query->getOrderBy());
+        foreach ($query->getOrderBy() as $i => $orderBy) {
+            $attribute = $orderBy["attribute"];
+            $direction = $orderBy["direction"] ? " " . $orderBy["direction"] : "";
+
+            $querySegment->add("${attribute}${direction}");
+
+            if ($i < $count - 1) {
+                $querySegment->add(", ");
+            }
+        }
+
+        return [
+            $this->createTranslatedQuerySegment("ORDER BY", $querySegment->getSql())
+        ];
     }
 
-    private function translateLimit(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateLimit(SelectQueryInterface $query): array
     {
         if ($query->getLimit() === null) {
-            return new TranslatedQuerySegment();
+            return [];
         }
 
-        return new TranslatedQuerySegment("?", [$query->getLimit()]);
+        return [
+            $this->createTranslatedQuerySegment("LIMIT", "?", [$query->getLimit()])
+        ];
     }
 
-    private function translateOffset(SelectQueryInterface $query): TranslatedQuerySegment
+    private function translateOffset(SelectQueryInterface $query): array
     {
         if ($query->getOffset() === null) {
-            return new TranslatedQuerySegment();
+            return [];
         }
 
-        return new TranslatedQuerySegment("?", [$query->getOffset()]);
+        return [
+            $this->createTranslatedQuerySegment("OFFSET", "?", [$query->getOffset()])
+        ];
     }
 }

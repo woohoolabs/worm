@@ -9,17 +9,21 @@ interface SelectQueryBuilderInterface
 {
     public function select(array $fields): SelectQueryBuilderInterface;
 
+    public function distinct(bool $isDistinct = true): SelectQueryBuilderInterface;
+
     public function from(string $table, string $alias = ""): SelectQueryBuilderInterface;
 
     public function fromSubquery(Closure $subquery, string $alias): SelectQueryBuilderInterface;
 
     public function where(Closure $condition): SelectQueryBuilderInterface;
 
-    public function join(string $table, Closure $condition, string $type = "INNER"): SelectQueryBuilderInterface;
+    public function leftJoin(string $table, string $alias = ""): SelectQueryBuilderInterface;
 
-    public function leftJoin(string $table, Closure $condition): SelectQueryBuilderInterface;
+    public function rightJoin(string $table, string $alias = ""): SelectQueryBuilderInterface;
 
-    public function rightJoin(string $table, Closure $condition): SelectQueryBuilderInterface;
+    public function join(string $table, string $alias = "", string $type = ""): SelectQueryBuilderInterface;
+
+    public function on(Closure $condition): SelectQueryBuilderInterface;
 
     public function having(string $operand1, string $operator, string $operand2, string $connector = "and"): SelectQueryBuilderInterface;
 
@@ -44,4 +48,8 @@ interface SelectQueryBuilderInterface
     public function offset($offset): SelectQueryBuilderInterface;
 
     public function execute(): array;
+
+    public function getSql(): string;
+
+    public function getParams(): array;
 }

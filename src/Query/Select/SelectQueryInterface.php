@@ -10,9 +10,11 @@ interface SelectQueryInterface extends QueryInterface
 {
     public function getSelect(): array;
 
+    public function isDistinct(): bool;
+
     public function getFrom(): array;
 
-    public function getJoin(): array;
+    public function getJoins(): array;
 
     public function getWhere(): ConditionsInterface;
 
