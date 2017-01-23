@@ -24,7 +24,9 @@ class MySqlSelectTranslator extends AbstractQueryTranslator implements SelectTra
     {
         return $this->compileTranslatedQuerySegments(
             [
-                $this->translateSelect($query),
+                [
+                    $this->translateSelect($query)
+                ],
                 $this->translateFrom($query),
                 $this->translateJoins($query),
                 $this->translateWhere($query),
@@ -37,19 +39,15 @@ class MySqlSelectTranslator extends AbstractQueryTranslator implements SelectTra
         );
     }
 
-    private function translateSelect(SelectQueryInterface $query): array
+    private function translateSelect(SelectQueryInterface $query): TranslatedQuerySegment
     {
         $distinct = $query->isDistinct() ? " DISTINCT" : "";
 
         if (empty($query->getSelect())) {
-            return [
-                $this->createTranslatedQuerySegment("SELECT$distinct", "*")
-            ];
+            return $this->createTranslatedQuerySegment("SELECT$distinct", "*");
         }
 
-        return [
-            $this->createTranslatedQuerySegment("SELECT$distinct", implode(",", $query->getSelect()))
-        ];
+        return $this->createTranslatedQuerySegment("SELECT$distinct", implode(",", $query->getSelect()));
     }
 
     private function translateFrom(SelectQueryInterface $query): array
