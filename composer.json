@@ -15,7 +15,8 @@
         "source": "https://github.com/woohoolabs/worm"
     },
     "require": {
-        "php":"^7.0.0"
+        "php": "^7.0.0",
+        "woohoolabs/larva": "dev-master"
     },
     "require-dev": {
         "phpunit/PHPUnit": "^5.4.0",

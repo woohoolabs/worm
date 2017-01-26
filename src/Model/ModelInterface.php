@@ -9,5 +9,8 @@ interface ModelInterface
 
     public function getPrimaryKey(): string;
 
+    /**
+     * @return callable[]
+     */
     public function getRelationships(): array;
 }

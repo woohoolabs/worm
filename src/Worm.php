@@ -3,26 +3,21 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm;
 
-use WoohooLabs\Worm\Connection\ConnectionInterface;
+use WoohooLabs\Larva\Connection\ConnectionInterface;
+use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
+use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
-use WoohooLabs\Worm\Query\Select\SelectQueryBuilder;
-use WoohooLabs\Worm\Query\Select\SelectQueryBuilderInterface;
 
 class Worm
 {
     /**
-     * @var \WoohooLabs\Worm\Connection\ConnectionInterface
+     * @var \WoohooLabs\Larva\Connection\ConnectionInterface
      */
     private $connection;
 
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
-    }
-
-    public function query(): SelectQueryBuilderInterface
-    {
-        return new SelectQueryBuilder($this->connection);
     }
 
     public function queryModel(ModelInterface $model): SelectQueryBuilderInterface
