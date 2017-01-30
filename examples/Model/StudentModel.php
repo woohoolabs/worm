@@ -28,7 +28,7 @@ class StudentModel extends AbstractModel
     public function getRelationships(): array
     {
         return [
-            "classes" => function() {
+            "classes" => function () {
                 return new HasManyThroughRelationship(
                     ClassStudentModel::class,
                     "student_id",

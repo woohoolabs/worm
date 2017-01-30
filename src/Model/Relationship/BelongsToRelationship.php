@@ -65,7 +65,7 @@ class BelongsToRelationship extends AbstractRelationship
 
     public function matchEntities(array $entities, string $relationshipName, array $relatedEntities): array
     {
-         return $entities;
+        return $entities;
     }
 
     public function getRelatedModel(): string
