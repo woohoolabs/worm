@@ -4,32 +4,32 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm;
 
 use WoohooLabs\Larva\Connection\ConnectionInterface;
-use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
-use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
+use WoohooLabs\Worm\Execution\Executor;
 use WoohooLabs\Worm\Model\ModelInterface;
+use WoohooLabs\Worm\Query\SelectQueryBuilder;
 
 class Worm
 {
     /**
-     * @var \WoohooLabs\Larva\Connection\ConnectionInterface
+     * @var ConnectionInterface
      */
     private $connection;
+
+    /**
+     * @var Executor
+     */
+    private $executor;
 
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
+        $this->executor = new Executor();
     }
 
-    public function queryModel(ModelInterface $model): SelectQueryBuilderInterface
+    public function queryModel(ModelInterface $model): SelectQueryBuilder
     {
-        $queryBuilder = new SelectQueryBuilder($this->connection);
-        $queryBuilder->from($model->getTable());
+        $queryBuilder = new SelectQueryBuilder($model, $this->connection, $this->executor);
 
         return $queryBuilder;
-    }
-
-    public function getLog(): array
-    {
-        return $this->connection->getLog();
     }
 }

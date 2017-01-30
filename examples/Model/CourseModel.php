@@ -5,20 +5,18 @@ namespace WoohooLabs\Worm\Examples\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
 
-class ClassStudentModel extends AbstractModel
+class CourseModel extends AbstractModel
 {
-    public static $id;
-    public static $class_id;
-    public static $student_id;
+    public $id;
 
     public function getTable(): string
     {
-        return "classes_students";
+        return "courses";
     }
 
     public function getPrimaryKey(): string
     {
-        return self::$id;
+        return $this->id;
     }
 
     public function getRelationships(): array

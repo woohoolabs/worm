@@ -4,6 +4,7 @@ declare(strict_types=1);
 require __DIR__ . "/../vendor/autoload.php";
 
 use WoohooLabs\Larva\Connection\MySqlPdoConnection;
+use WoohooLabs\Worm\Examples\Model\StudentModel;
 use WoohooLabs\Worm\Worm;
 
 $worm = new Worm(
@@ -21,3 +22,13 @@ $worm = new Worm(
         true
     )
 );
+
+$result1 = $worm
+    ->queryModel(new StudentModel())
+    ->withAllRelationships()
+    ->fetchById(1);
+
+echo "<pre>";
+echo "<h1>RESULT SET 1:</h1>";
+print_r($result1);
+echo "</pre>";

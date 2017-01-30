@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-**Woohoo Labs. Worm ORM is an efficient and minimal ORM enabling data mapping.**
+**Woohoo Labs. Worm is an efficient and minimal ORM enabling data mapping.**
 
 ## Table of Contents
 

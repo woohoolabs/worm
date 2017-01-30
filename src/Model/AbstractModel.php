@@ -3,20 +3,17 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model;
 
-use WoohooLabs\Worm\Connection\ConnectionInterface;
-use WoohooLabs\Worm\Query\Select\SelectQueryBuilder;
-
 abstract class AbstractModel implements ModelInterface
 {
-    /**
-     * @param string[] $relationships
-     */
-    public function query(ConnectionInterface $connection, array $relationships = []): SelectQueryBuilder
+    public function __construct()
     {
-        $queryBuilder = new SelectQueryBuilder($connection);
-        $queryBuilder
-            ->from($this->getTable());
+        $variables = get_object_vars($this);
+        foreach ($variables as $variable => $value) {
+            if ($value !== null) {
+                continue;
+            }
 
-        return $queryBuilder;
+            $this->$variable = $variable;
+        }
     }
 }
