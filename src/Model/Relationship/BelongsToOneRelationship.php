@@ -10,22 +10,22 @@ use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\ModelContainer;
 use WoohooLabs\Worm\Model\ModelInterface;
 
-class BelongsToRelationship extends AbstractRelationship
+class BelongsToOneRelationship extends AbstractRelationship
 {
     /**
      * @var string
      */
-    private $relatedModel;
+    protected $relatedModel;
 
     /**
      * @var string
      */
-    private $foreignKey;
+    protected $foreignKey;
 
     /**
      * @var string
      */
-    private $referencedKey;
+    protected $referencedKey;
 
     public function __construct(string $relatedModel, string $foreignKey, string $referencedKey)
     {
@@ -42,8 +42,7 @@ class BelongsToRelationship extends AbstractRelationship
     ): SelectQueryBuilderInterface {
         $relatedModel = $container->get($this->relatedModel);
 
-        $queryBuilder = new SelectQueryBuilder($connection);
-        $queryBuilder
+        return SelectQueryBuilder::create($connection)
             ->fields(["`" . $relatedModel->getTable() . "`.*"])
             ->from($relatedModel->getTable())
             ->join($model->getTable())
@@ -59,13 +58,13 @@ class BelongsToRelationship extends AbstractRelationship
                 }
             )
             ->where($this->getWhereCondition($model, $entities));
-
-        return $queryBuilder;
     }
 
-    public function matchEntities(array $entities, string $relationshipName, array $relatedEntities): array
+    public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array
     {
-        return $entities;
+        $relatedEntities = $this->getEntityMapForOne($relatedEntities, $this->referencedKey);
+
+        return $this->insertRelationship($entities, $relationshipName, $relatedEntities, $this->foreignKey);
     }
 
     public function getRelatedModel(): string

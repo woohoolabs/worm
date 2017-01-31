@@ -42,8 +42,7 @@ class HasManyRelationship extends AbstractRelationship
     ): SelectQueryBuilderInterface {
         $relatedModel = $container->get($this->relatedModel);
 
-        $queryBuilder = new SelectQueryBuilder($connection);
-        $queryBuilder
+        return SelectQueryBuilder::create($connection)
             ->fields(["`" . $relatedModel->getTable() . "`.*"])
             ->from($relatedModel->getTable())
             ->join($model->getTable())
@@ -59,13 +58,13 @@ class HasManyRelationship extends AbstractRelationship
                 }
             )
             ->where($this->getWhereCondition($model, $entities));
-
-        return $queryBuilder;
     }
 
-    public function matchEntities(array $entities, string $relationshipName, array $relatedEntities): array
+    public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array
     {
-        return $entities;
+        $relatedEntities = $this->getEntityMapForMany($relatedEntities, $this->foreignKey);
+
+        return $this->insertRelationship($entities, $relationshipName, $relatedEntities, $this->referencedKey);
     }
 
     public function getRelatedModel(): string

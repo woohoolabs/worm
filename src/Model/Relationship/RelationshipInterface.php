@@ -17,5 +17,5 @@ interface RelationshipInterface
         array $entities
     ): SelectQueryBuilderInterface;
 
-    public function matchEntities(array $entities, string $relationshipName, array $relatedEntities): array;
+    public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array;
 }

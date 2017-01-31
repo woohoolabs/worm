@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Examples\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
-use WoohooLabs\Worm\Model\Relationship\BelongsToRelationship;
+use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
 
 class ClassModel extends AbstractModel
 {
@@ -25,7 +25,7 @@ class ClassModel extends AbstractModel
     {
         return [
             "courses" => function () {
-                return new BelongsToRelationship(CourseModel::class, $this->course_id, "id");
+                return new BelongsToOneRelationship(CourseModel::class, $this->course_id, "id");
             }
         ];
     }

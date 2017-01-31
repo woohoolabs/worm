@@ -63,6 +63,13 @@ class HasOneRelationship extends AbstractRelationship
         return $queryBuilder;
     }
 
+    public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array
+    {
+        $relatedEntities = $this->getEntityMapForOne($relatedEntities, $this->foreignKey);
+
+        return $this->insertRelationship($entities, $relationshipName, $relatedEntities, $this->referencedKey);
+    }
+
     public function getRelatedModel(): string
     {
         return $this->relatedModel;

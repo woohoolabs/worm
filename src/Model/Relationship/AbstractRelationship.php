@@ -25,4 +25,49 @@ abstract class AbstractRelationship implements RelationshipInterface
             $where->inValues($model->getPrimaryKey(), $values, $model->getTable());
         };
     }
+
+    protected function getEntityMapForOne(array $entities, string $field)
+    {
+        $entityMap = [];
+        foreach ($entities as $entity) {
+            if (isset($entity[$field]) === false) {
+                continue;
+            }
+
+            $entityMap[$entity[$field]] = $entity;
+        }
+
+        return $entityMap;
+    }
+
+    protected function getEntityMapForMany(array $entities, string $field)
+    {
+        $entityMap = [];
+        foreach ($entities as $entity) {
+            if (isset($entity[$field]) === false) {
+                continue;
+            }
+
+            $entityMap[$entity[$field]][] = $entity;
+        }
+
+        return $entityMap;
+    }
+
+    protected function insertRelationship(
+        array $entities,
+        string $relationshipName,
+        array $relatedEntities,
+        string $field
+    ): array {
+        foreach ($entities as $key => $entity) {
+            if (isset($relatedEntities[$entity[$field]]) === false) {
+                continue;
+            }
+
+            $entities[$key][$relationshipName] = $relatedEntities[$entity[$field]];
+        }
+
+        return $entities;
+    }
 }

@@ -60,7 +60,7 @@ class Executor
 
             $relationshipQuery = $relationshipModel->getRelationship($model, $this->container, $connection, $entities);
             $relatedEntities = $relationshipQuery->fetchAll();
-            $entities = $relationshipModel->matchEntities($entities, $relationshipName, $relatedEntities);
+            $entities = $relationshipModel->matchRelationship($entities, $relationshipName, $relatedEntities);
         }
 
         return $entities;

@@ -93,26 +93,11 @@ class HasManyThroughRelationship extends AbstractRelationship
         return $queryBuilder;
     }
 
-    public function matchEntities(array $entities, string $relationshipName, array $relatedEntities): array
+    public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array
     {
-        $entityMap = [];
-        foreach ($entities as $entity) {
-            if (isset($entity["id"]) === false) {
-                continue;
-            }
+        $relatedEntities = $this->getEntityMapForMany($relatedEntities, $this->foreignKey1);
 
-            $entityMap[$entity["id"]] = $entity;
-        }
-
-        foreach ($relatedEntities as $relatedEntity) {
-            if (isset($entityMap[$relatedEntity[$this->foreignKey1]]) === false) {
-                continue;
-            }
-
-            $entityMap[$relatedEntity[$this->foreignKey1]][$relationshipName][] = $relatedEntity;
-        }
-
-        return array_values($entityMap);
+        return $this->insertRelationship($entities, $relationshipName, $relatedEntities, "id");
     }
 
     public function getJunctionModel(): string
