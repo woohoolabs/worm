@@ -15,17 +15,17 @@ class HasOneRelationship extends AbstractRelationship
     /**
      * @var string
      */
-    private $relatedModel;
+    protected $relatedModel;
 
     /**
      * @var string
      */
-    private $foreignKey;
+    protected $foreignKey;
 
     /**
      * @var string
      */
-    private $referencedKey;
+    protected $referencedKey;
 
     public function __construct(string $relatedModel, string $foreignKey, string $referencedKey)
     {
