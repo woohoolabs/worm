@@ -42,9 +42,8 @@ class HasOneRelationship extends AbstractRelationship
     ): SelectQueryBuilderInterface {
         $relatedModel = $container->get($this->relatedModel);
 
-        $queryBuilder = new SelectQueryBuilder($connection);
-        $queryBuilder
-            ->fields(["`" . $relatedModel->getTable() . "`.*"])
+        return SelectQueryBuilder::create($connection)
+            ->selectColumn("*", $relatedModel->getTable())
             ->from($relatedModel->getTable())
             ->join($model->getTable())
             ->on(
@@ -59,8 +58,6 @@ class HasOneRelationship extends AbstractRelationship
                 }
             )
             ->where($this->getWhereCondition($model, $entities));
-
-        return $queryBuilder;
     }
 
     public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array

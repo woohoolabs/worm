@@ -43,7 +43,7 @@ class BelongsToOneRelationship extends AbstractRelationship
         $relatedModel = $container->get($this->relatedModel);
 
         return SelectQueryBuilder::create($connection)
-            ->fields(["`" . $relatedModel->getTable() . "`.*"])
+            ->selectColumn("*", $relatedModel->getTable())
             ->from($relatedModel->getTable())
             ->join($model->getTable())
             ->on(

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Execution;
 
-use Traversable;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
@@ -26,14 +25,7 @@ class Executor
         SelectQueryBuilderInterface $selectQueryBuilder,
         array $relationships
     ): array {
-        $model = $this->container->get($model);
-
-        $entities = $this->fetchRelationships(
-            $selectQueryBuilder->getConnection(),
-            $model,
-            $selectQueryBuilder->fetchAll(),
-            array_flip($relationships)
-        );
+        $entities = $this->createEntities($model, $selectQueryBuilder, $relationships);
 
         return empty($entities) ? [] : $entities[0];
     }
@@ -42,11 +34,27 @@ class Executor
         ModelInterface $model,
         SelectQueryBuilderInterface $selectQueryBuilder,
         array $relationships
-    ): Traversable {
-        return $selectQueryBuilder->fetch();
+    ): array {
+        return $this->createEntities($model, $selectQueryBuilder, $relationships);
     }
 
-    private function fetchRelationships(
+    private function createEntities(
+        ModelInterface $model,
+        SelectQueryBuilderInterface $selectQueryBuilder,
+        array $relationships
+    ): array {
+        $model = $this->container->get($model);
+        $entities = $selectQueryBuilder->fetchAll();
+
+        return $this->matchRelationships(
+            $selectQueryBuilder->getConnection(),
+            $model,
+            $entities,
+            array_flip($relationships)
+        );
+    }
+
+    private function matchRelationships(
         ConnectionInterface $connection,
         ModelInterface $model,
         array $entities,

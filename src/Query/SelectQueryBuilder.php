@@ -55,9 +55,23 @@ class SelectQueryBuilder
         return $this;
     }
 
-    public function fields(array $fields): SelectQueryBuilder
+    public function select(array $select): SelectQueryBuilder
     {
-        $this->queryBuilder->fields($fields);
+        $this->queryBuilder->select($select);
+
+        return $this;
+    }
+
+    public function selectExpression(string $expression, string $alias = ""): SelectQueryBuilder
+    {
+        $this->queryBuilder->selectExpression($expression, $alias);
+
+        return $this;
+    }
+
+    public function selectColumn(string $column, string $prefix = "", string $alias = ""): SelectQueryBuilder
+    {
+        $this->queryBuilder->selectColumn($column, $prefix, $alias);
 
         return $this;
     }

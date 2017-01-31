@@ -30,7 +30,7 @@ class HasManyThroughRelationship extends AbstractRelationship
     /**
      * @var string
      */
-    private $referencedModel;
+    private $relatedModel;
 
     /**
      * @var string
@@ -47,7 +47,7 @@ class HasManyThroughRelationship extends AbstractRelationship
         $this->junctionModel = $junctionModel;
         $this->foreignKey1 = $foreignKey1;
         $this->foreignKey2 = $foreignKey2;
-        $this->referencedModel = $referencedModel;
+        $this->relatedModel = $referencedModel;
         $this->referencedKey = $referencedKey;
     }
 
@@ -58,21 +58,21 @@ class HasManyThroughRelationship extends AbstractRelationship
         array $entities
     ): SelectQueryBuilderInterface {
         $junctionModel = $container->get($this->junctionModel);
-        $referencedModel = $container->get($this->referencedModel);
+        $relatedModel = $container->get($this->relatedModel);
 
-        $queryBuilder = new SelectQueryBuilder($connection);
-        $queryBuilder
-            ->fields(["`" . $referencedModel->getTable() . "`.*", "`" . $junctionModel->getTable() . "`.`" . $this->foreignKey1 . "`"])
-            ->from($referencedModel->getTable())
+        return SelectQueryBuilder::create($connection)
+            ->selectColumn("*", $relatedModel->getTable())
+            ->selectColumn("*", $junctionModel->getTable())
+            ->from($relatedModel->getTable())
             ->join($junctionModel->getTable())
             ->on(
-                function (ConditionBuilderInterface $on) use ($junctionModel, $referencedModel) {
+                function (ConditionBuilderInterface $on) use ($junctionModel, $relatedModel) {
                     $on->columnToColumn(
                         $this->foreignKey2,
                         "=",
                         $this->referencedKey,
                         $junctionModel->getTable(),
-                        $referencedModel->getTable()
+                        $relatedModel->getTable()
                     );
                 }
             )
@@ -89,8 +89,6 @@ class HasManyThroughRelationship extends AbstractRelationship
                 }
             )
             ->where($this->getWhereCondition($model, $entities));
-
-        return $queryBuilder;
     }
 
     public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array
@@ -115,9 +113,9 @@ class HasManyThroughRelationship extends AbstractRelationship
         return $this->foreignKey2;
     }
 
-    public function getReferencedModel(): string
+    public function getRelatedModel(): string
     {
-        return $this->referencedModel;
+        return $this->relatedModel;
     }
 
     public function getReferencedKey(): string
