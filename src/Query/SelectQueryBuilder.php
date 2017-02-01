@@ -41,20 +41,6 @@ class SelectQueryBuilder
         $this->queryBuilder->from($model->getTable());
     }
 
-    public function withAllRelationships(): SelectQueryBuilder
-    {
-        $this->relationships = array_keys($this->model->getRelationships());
-
-        return $this;
-    }
-
-    public function withRelationships(array $relationships): SelectQueryBuilder
-    {
-        $this->relationships = $relationships;
-
-        return $this;
-    }
-
     public function select(array $select): SelectQueryBuilder
     {
         $this->queryBuilder->select($select);
@@ -72,6 +58,27 @@ class SelectQueryBuilder
     public function selectColumn(string $column, string $prefix = "", string $alias = ""): SelectQueryBuilder
     {
         $this->queryBuilder->selectColumn($column, $prefix, $alias);
+
+        return $this;
+    }
+
+    public function distinct(bool $isDistinct = true): SelectQueryBuilder
+    {
+        $this->queryBuilder->distinct($isDistinct);
+
+        return $this;
+    }
+
+    public function withAllRelationships(): SelectQueryBuilder
+    {
+        $this->relationships = array_keys($this->model->getRelationships());
+
+        return $this;
+    }
+
+    public function withRelationships(array $relationships): SelectQueryBuilder
+    {
+        $this->relationships = $relationships;
 
         return $this;
     }
@@ -104,9 +111,31 @@ class SelectQueryBuilder
         return $this;
     }
 
-    public function orderBy(string $attribute, string $direction = "ASC")
+    public function orderBy(string $attribute, string $direction = "ASC"): SelectQueryBuilder
     {
         $this->queryBuilder->orderBy($attribute, $direction);
+
+        return $this;
+    }
+
+    /**
+     * @param int|null $limit
+     */
+    public function limit($limit): SelectQueryBuilder
+    {
+        $this->queryBuilder->limit($limit);
+
+        return $this;
+    }
+
+    /**
+     * @param int|null $offset
+     */
+    public function offset($offset): SelectQueryBuilder
+    {
+        $this->queryBuilder->offset($offset);
+
+        return $this;
     }
 
     public function getQueryBuilder(): SelectQueryBuilderInterface
@@ -125,5 +154,17 @@ class SelectQueryBuilder
             ->limit(1);
 
         return $this->executor->fetchOne($this->model, $this->queryBuilder, $this->relationships);
+    }
+
+    public function fetchFirst(): array
+    {
+        $this->queryBuilder->limit(1);
+
+        return $this->executor->fetchOne($this->model, $this->queryBuilder, $this->relationships);
+    }
+
+    public function fetchAll(): array
+    {
+        return $this->executor->fetchAll($this->model, $this->queryBuilder, $this->relationships);
     }
 }

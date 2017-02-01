@@ -20,7 +20,7 @@ class Executor
         return empty($entities) ? [] : $entities[0];
     }
 
-    public function fetchCollection(
+    public function fetchAll(
         ModelInterface $model,
         SelectQueryBuilderInterface $selectQueryBuilder,
         array $relationships
