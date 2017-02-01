@@ -10,16 +10,6 @@ use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 class Executor
 {
-    /**
-     * @var ModelContainer
-     */
-    private $container;
-
-    public function __construct()
-    {
-        $this->container = new ModelContainer();
-    }
-
     public function fetchOne(
         ModelInterface $model,
         SelectQueryBuilderInterface $selectQueryBuilder,
@@ -43,7 +33,6 @@ class Executor
         SelectQueryBuilderInterface $selectQueryBuilder,
         array $relationships
     ): array {
-        $model = $this->container->get($model);
         $entities = $selectQueryBuilder->fetchAll();
 
         return $this->matchRelationships(
@@ -66,7 +55,7 @@ class Executor
             /** @var RelationshipInterface $relationshipModel */
             $relationshipModel = $relationshipClosure();
 
-            $relationshipQuery = $relationshipModel->getRelationship($model, $this->container, $connection, $entities);
+            $relationshipQuery = $relationshipModel->getRelationship($model, $connection, $entities);
             $relatedEntities = $relationshipQuery->fetchAll();
             $entities = $relationshipModel->matchRelationship($entities, $relationshipName, $relatedEntities);
         }

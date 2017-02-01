@@ -7,13 +7,12 @@ use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
-use WoohooLabs\Worm\Execution\ModelContainer;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 class HasManyThroughRelationship extends AbstractRelationship
 {
     /**
-     * @var string
+     * @var ModelInterface
      */
     private $junctionModel;
 
@@ -28,7 +27,7 @@ class HasManyThroughRelationship extends AbstractRelationship
     private $foreignKey2;
 
     /**
-     * @var string
+     * @var ModelInterface
      */
     private $relatedModel;
 
@@ -38,10 +37,10 @@ class HasManyThroughRelationship extends AbstractRelationship
     private $referencedKey;
 
     public function __construct(
-        string $junctionModel,
+        ModelInterface $junctionModel,
         string $foreignKey1,
         string $foreignKey2,
-        string $referencedModel,
+        ModelInterface $referencedModel,
         string $referencedKey
     ) {
         $this->junctionModel = $junctionModel;
@@ -53,38 +52,34 @@ class HasManyThroughRelationship extends AbstractRelationship
 
     public function getRelationship(
         ModelInterface $model,
-        ModelContainer $container,
         ConnectionInterface $connection,
         array $entities
     ): SelectQueryBuilderInterface {
-        $junctionModel = $container->get($this->junctionModel);
-        $relatedModel = $container->get($this->relatedModel);
-
         return SelectQueryBuilder::create($connection)
-            ->selectColumn("*", $relatedModel->getTable())
-            ->selectColumn("*", $junctionModel->getTable())
-            ->from($relatedModel->getTable())
-            ->join($junctionModel->getTable())
+            ->selectColumn("*", $this->relatedModel->getTable())
+            ->selectColumn("*", $this->junctionModel->getTable())
+            ->from($this->relatedModel->getTable())
+            ->join($this->junctionModel->getTable())
             ->on(
-                function (ConditionBuilderInterface $on) use ($junctionModel, $relatedModel) {
+                function (ConditionBuilderInterface $on) {
                     $on->columnToColumn(
                         $this->foreignKey2,
                         "=",
                         $this->referencedKey,
-                        $junctionModel->getTable(),
-                        $relatedModel->getTable()
+                        $this->junctionModel->getTable(),
+                        $this->relatedModel->getTable()
                     );
                 }
             )
             ->join($model->getTable())
             ->on(
-                function (ConditionBuilderInterface $on) use ($model, $junctionModel) {
+                function (ConditionBuilderInterface $on) use ($model) {
                     $on->columnToColumn(
                         $model->getPrimaryKey(),
                         "=",
                         $this->foreignKey1,
                         $model->getTable(),
-                        $junctionModel->getTable()
+                        $this->junctionModel->getTable()
                     );
                 }
             )
@@ -98,7 +93,7 @@ class HasManyThroughRelationship extends AbstractRelationship
         return $this->insertRelationship($entities, $relationshipName, $relatedEntities, "id");
     }
 
-    public function getJunctionModel(): string
+    public function getJunctionModel(): ModelInterface
     {
         return $this->junctionModel;
     }
@@ -113,7 +108,7 @@ class HasManyThroughRelationship extends AbstractRelationship
         return $this->foreignKey2;
     }
 
-    public function getRelatedModel(): string
+    public function getRelatedModel(): ModelInterface
     {
         return $this->relatedModel;
     }

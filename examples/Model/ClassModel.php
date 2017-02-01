@@ -11,6 +11,17 @@ class ClassModel extends AbstractModel
     public $id;
     public $course_id;
 
+    /**
+     * @var CourseModel
+     */
+    private $courseModel;
+
+    public function __construct(CourseModel $courseModel)
+    {
+        $this->courseModel = $courseModel;
+        parent::__construct();
+    }
+
     public function getTable(): string
     {
         return "classes";
@@ -25,8 +36,13 @@ class ClassModel extends AbstractModel
     {
         return [
             "courses" => function () {
-                return new BelongsToOneRelationship(CourseModel::class, $this->course_id, "id");
+                return new BelongsToOneRelationship($this->courseModel, $this->course_id, $this->courseModel->id);
             }
         ];
+    }
+
+    public function getCourseModel(): CourseModel
+    {
+        return $this->courseModel;
     }
 }

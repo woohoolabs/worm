@@ -7,13 +7,12 @@ use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
-use WoohooLabs\Worm\Execution\ModelContainer;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 class BelongsToOneRelationship extends AbstractRelationship
 {
     /**
-     * @var string
+     * @var ModelInterface
      */
     protected $relatedModel;
 
@@ -27,7 +26,7 @@ class BelongsToOneRelationship extends AbstractRelationship
      */
     protected $referencedKey;
 
-    public function __construct(string $relatedModel, string $foreignKey, string $referencedKey)
+    public function __construct(ModelInterface $relatedModel, string $foreignKey, string $referencedKey)
     {
         $this->relatedModel = $relatedModel;
         $this->foreignKey = $foreignKey;
@@ -36,24 +35,21 @@ class BelongsToOneRelationship extends AbstractRelationship
 
     public function getRelationship(
         ModelInterface $model,
-        ModelContainer $container,
         ConnectionInterface $connection,
         array $entities
     ): SelectQueryBuilderInterface {
-        $relatedModel = $container->get($this->relatedModel);
-
         return SelectQueryBuilder::create($connection)
-            ->selectColumn("*", $relatedModel->getTable())
-            ->from($relatedModel->getTable())
+            ->selectColumn("*", $this->relatedModel->getTable())
+            ->from($this->relatedModel->getTable())
             ->join($model->getTable())
             ->on(
-                function (ConditionBuilderInterface $on) use ($model, $relatedModel) {
+                function (ConditionBuilderInterface $on) use ($model) {
                     $on->columnToColumn(
                         $this->foreignKey,
                         "=",
                         $this->referencedKey,
                         $model->getTable(),
-                        $relatedModel->getTable()
+                        $this->relatedModel->getTable()
                     );
                 }
             )
@@ -67,7 +63,7 @@ class BelongsToOneRelationship extends AbstractRelationship
         return $this->insertRelationship($entities, $relationshipName, $relatedEntities, $this->foreignKey);
     }
 
-    public function getRelatedModel(): string
+    public function getRelatedModel(): ModelInterface
     {
         return $this->relatedModel;
     }
