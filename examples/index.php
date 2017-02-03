@@ -13,7 +13,6 @@ use WoohooLabs\Worm\Worm;
 $worm = new Worm(
     MySqlPdoConnection::create(
         "mysql",
-        "mysql",
         (int) getenv("MYSQL_PORT"),
         getenv("MYSQL_DATABASE"),
         getenv("MYSQL_USER"),
