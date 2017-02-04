@@ -18,7 +18,7 @@ services:
         depends_on:
             - php-fpm
 
-      php-fpm:
+    php-fpm:
         image: woohoolabs/php:3.1.4
         container_name: worm-php-fpm
         networks:
