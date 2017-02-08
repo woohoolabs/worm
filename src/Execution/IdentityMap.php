@@ -60,7 +60,7 @@ class IdentityMap
      */
     public function hasObject(string $type, $id): bool
     {
-        return isset($this->identityMap[$type][0][$id][0]);
+        return isset($this->identityMap[$type]["ids"][$id][0]);
     }
 
     /**
@@ -69,7 +69,7 @@ class IdentityMap
      */
     public function getObject(string $type, $id)
     {
-        return $this->identityMap[$type][0][$id][0] ?? null;
+        return $this->identityMap[$type]["ids"][$id][0] ?? null;
     }
 
     /**
@@ -103,7 +103,7 @@ class IdentityMap
             return;
         }
 
-        $this->identityMap[$type][0][$id] = [null, []];
+        $this->identityMap[$type]["ids"][$id] = [null, []];
     }
 
     public function getRelatedIds(string $type, $id, string $relationship): array
@@ -113,7 +113,7 @@ class IdentityMap
             return [];
         }
 
-        return $this->identityMap[$type][0][$id][1][$relationshipKey] ?? [];
+        return $this->identityMap[$type]["ids"][$id][1][$relationshipKey] ?? [];
     }
 
     public function addRelatedId(string $type, $id, string $relationship, string $relatedType, $relatedId)
@@ -127,7 +127,7 @@ class IdentityMap
             $relationshipKey = $this->setRelationship($type, $relationship, $relatedType);
         }
 
-        $this->identityMap[$type][0][$id][1][$relationshipKey][] = $relatedId;
+        $this->identityMap[$type]["ids"][$id][1][$relationshipKey][] = $relatedId;
     }
 
     public function getMap(): array
@@ -141,7 +141,7 @@ class IdentityMap
      */
     private function setObject(string $type, $id, $object)
     {
-        $this->identityMap[$type][0][$id][0] = $object;
+        $this->identityMap[$type]["ids"][$id][0] = $object;
     }
 
     /**
@@ -149,7 +149,7 @@ class IdentityMap
      */
     private function hasId(string $type, $id): bool
     {
-        return isset($this->identityMap[$type][0][$id]);
+        return isset($this->identityMap[$type]["ids"][$id]);
     }
 
     /**
@@ -157,14 +157,14 @@ class IdentityMap
      */
     private function getRelationshipKey(string $type, string $relationship)
     {
-        return $this->identityMap[$type][1][$relationship]["key"] ?? null;
+        return $this->identityMap[$type]["rels"][$relationship]["key"] ?? null;
     }
 
     private function setRelationship(string $type, string $relationship, string $relatedType): int
     {
-        $key = count($this->identityMap[$type][1][$relationship] ?? []);
+        $key = count($this->identityMap[$type]["rels"][$relationship] ?? []);
 
-        $this->identityMap[$type][1][$relationship] = [
+        $this->identityMap[$type]["rels"][$relationship] = [
             "key" => $key,
             "type" => $relatedType,
         ];

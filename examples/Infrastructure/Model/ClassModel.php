@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
-use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
 
 class ClassModel extends AbstractModel
 {

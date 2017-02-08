@@ -13,6 +13,11 @@ use WoohooLabs\Worm\Model\ModelInterface;
 class HasManyThroughRelationship extends AbstractRelationship
 {
     /**
+     * @var string
+     */
+    private $referencedKey1;
+
+    /**
      * @var ModelInterface
      */
     private $junctionModel;
@@ -35,22 +40,24 @@ class HasManyThroughRelationship extends AbstractRelationship
     /**
      * @var string
      */
-    private $referencedKey;
+    private $referencedKey2;
 
     public function __construct(
         ModelInterface $model,
+        string $referencedKey1,
         ModelInterface $junctionModel,
         string $foreignKey1,
         string $foreignKey2,
         ModelInterface $referencedModel,
-        string $referencedKey
+        string $referencedKey2
     ) {
         parent::__construct($model);
+        $this->referencedKey1 = $referencedKey1;
         $this->junctionModel = $junctionModel;
         $this->foreignKey1 = $foreignKey1;
         $this->foreignKey2 = $foreignKey2;
         $this->relatedModel = $referencedModel;
-        $this->referencedKey = $referencedKey;
+        $this->referencedKey2 = $referencedKey2;
     }
 
     public function getRelationship(
@@ -68,7 +75,7 @@ class HasManyThroughRelationship extends AbstractRelationship
                     $on->columnToColumn(
                         $this->foreignKey2,
                         "=",
-                        $this->referencedKey,
+                        $this->referencedKey2,
                         $this->junctionModel->getTable(),
                         $this->relatedModel->getTable()
                     );
@@ -78,7 +85,7 @@ class HasManyThroughRelationship extends AbstractRelationship
             ->on(
                 function (ConditionBuilderInterface $on) use ($model) {
                     $on->columnToColumn(
-                        $model->getPrimaryKey(),
+                        $this->referencedKey1,
                         "=",
                         $this->foreignKey1,
                         $model->getTable(),
@@ -101,9 +108,14 @@ class HasManyThroughRelationship extends AbstractRelationship
             $this->relatedModel,
             $relatedEntities,
             $this->foreignKey1,
-            "id",
+            $this->referencedKey1,
             $identityMap
         );
+    }
+
+    public function getReferencedKey1(): string
+    {
+        return $this->referencedKey1;
     }
 
     public function getJunctionModel(): ModelInterface
@@ -126,8 +138,8 @@ class HasManyThroughRelationship extends AbstractRelationship
         return $this->relatedModel;
     }
 
-    public function getReferencedKey(): string
+    public function getReferencedKey2(): string
     {
-        return $this->referencedKey;
+        return $this->referencedKey2;
     }
 }

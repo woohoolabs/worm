@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
-use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
 
 class StudentModel extends AbstractModel
 {
@@ -52,11 +51,12 @@ class StudentModel extends AbstractModel
         return [
             "classes" => function () {
                 return $this->hasManyThrough(
+                    $this->id,
                     $this->classStudentModel,
                     $this->classStudentModel->student_id,
                     $this->classStudentModel->class_id,
                     $this->classModel,
-                    $this->id
+                    "id"
                 );
             }
         ];

@@ -56,19 +56,21 @@ abstract class AbstractModel implements ModelInterface
     }
 
     protected function hasManyThrough(
+        string $referencedKey1,
         ModelInterface $junctionModel,
         string $foreignKey1,
         string $foreignKey2,
         ModelInterface $referencedModel,
-        string $referencedKey
+        string $referencedKey2
     ): HasManyThroughRelationship {
         return new HasManyThroughRelationship(
             $this,
+            $referencedKey1,
             $junctionModel,
             $foreignKey1,
             $foreignKey2,
             $referencedModel,
-            $referencedKey
+            $referencedKey2
         );
     }
 }
