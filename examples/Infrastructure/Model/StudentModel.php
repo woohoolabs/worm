@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Examples\Model;
+namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
 use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
@@ -42,14 +42,19 @@ class StudentModel extends AbstractModel
         return $this->id;
     }
 
+    public function isAutoIncremented(): bool
+    {
+        return true;
+    }
+
     public function getRelationships(): array
     {
         return [
             "classes" => function () {
-                return new HasManyThroughRelationship(
+                return $this->hasManyThrough(
                     $this->classStudentModel,
-                    "student_id",
-                    "class_id",
+                    $this->classStudentModel->student_id,
+                    $this->classStudentModel->class_id,
                     $this->classModel,
                     $this->id
                 );

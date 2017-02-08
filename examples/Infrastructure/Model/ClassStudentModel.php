@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Examples\Model;
+namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
 
 class ClassStudentModel extends AbstractModel
 {
-    public static $id;
-    public static $class_id;
-    public static $student_id;
+    public $id;
+    public $class_id;
+    public $student_id;
 
     public function getTable(): string
     {
@@ -18,7 +18,12 @@ class ClassStudentModel extends AbstractModel
 
     public function getPrimaryKey(): string
     {
-        return self::$id;
+        return $this->id;
+    }
+
+    public function isAutoIncremented(): bool
+    {
+        return true;
     }
 
     public function getRelationships(): array

@@ -2,6 +2,8 @@
 
 ADDED:
 
+- Identity Map
+
 CHANGED:
 
 FIXED:

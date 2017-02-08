@@ -5,6 +5,7 @@ namespace WoohooLabs\Worm;
 
 use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Worm\Execution\Executor;
+use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Query\SelectQueryBuilder;
 
@@ -23,7 +24,7 @@ class Worm
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
-        $this->executor = new Executor();
+        $this->executor = new Executor(new IdentityMap());
     }
 
     public function queryModel(ModelInterface $model): SelectQueryBuilder
@@ -31,5 +32,10 @@ class Worm
         $queryBuilder = new SelectQueryBuilder($model, $this->connection, $this->executor);
 
         return $queryBuilder;
+    }
+
+    public function getIdentityMap(): IdentityMap
+    {
+        return $this->executor->getIdentityMap();
     }
 }

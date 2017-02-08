@@ -7,6 +7,7 @@ use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
+use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 class BelongsToOneRelationship extends AbstractRelationship
@@ -26,8 +27,13 @@ class BelongsToOneRelationship extends AbstractRelationship
      */
     protected $referencedKey;
 
-    public function __construct(ModelInterface $relatedModel, string $foreignKey, string $referencedKey)
-    {
+    public function __construct(
+        ModelInterface $model,
+        ModelInterface $relatedModel,
+        string $foreignKey,
+        string $referencedKey
+    ) {
+        parent::__construct($model);
         $this->relatedModel = $relatedModel;
         $this->foreignKey = $foreignKey;
         $this->referencedKey = $referencedKey;
@@ -56,11 +62,21 @@ class BelongsToOneRelationship extends AbstractRelationship
             ->where($this->getWhereCondition($model, $entities));
     }
 
-    public function matchRelationship(array $entities, string $relationshipName, array $relatedEntities): array
-    {
-        $relatedEntities = $this->getEntityMapForOne($relatedEntities, $this->referencedKey);
-
-        return $this->insertRelationship($entities, $relationshipName, $relatedEntities, $this->foreignKey);
+    public function matchRelationship(
+        array $entities,
+        string $relationshipName,
+        array $relatedEntities,
+        IdentityMap $identityMap
+    ): array {
+        return $this->insertOneRelationship(
+            $entities,
+            $relationshipName,
+            $this->relatedModel,
+            $relatedEntities,
+            $this->referencedKey,
+            $this->foreignKey,
+            $identityMap
+        );
     }
 
     public function getRelatedModel(): ModelInterface

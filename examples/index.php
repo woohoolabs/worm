@@ -4,10 +4,10 @@ declare(strict_types=1);
 require __DIR__ . "/../vendor/autoload.php";
 
 use WoohooLabs\Larva\Connection\MySqlPdoConnection;
-use WoohooLabs\Worm\Examples\Model\ClassModel;
-use WoohooLabs\Worm\Examples\Model\ClassStudentModel;
-use WoohooLabs\Worm\Examples\Model\CourseModel;
-use WoohooLabs\Worm\Examples\Model\StudentModel;
+use WoohooLabs\Worm\Examples\Infrastructure\Model\ClassModel;
+use WoohooLabs\Worm\Examples\Infrastructure\Model\ClassStudentModel;
+use WoohooLabs\Worm\Examples\Infrastructure\Model\CourseModel;
+use WoohooLabs\Worm\Examples\Infrastructure\Model\StudentModel;
 use WoohooLabs\Worm\Worm;
 
 $worm = new Worm(

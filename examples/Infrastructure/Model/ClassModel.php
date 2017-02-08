@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Examples\Model;
+namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
 use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
@@ -32,11 +32,16 @@ class ClassModel extends AbstractModel
         return $this->id;
     }
 
+    public function isAutoIncremented(): bool
+    {
+        return true;
+    }
+
     public function getRelationships(): array
     {
         return [
             "courses" => function () {
-                return new BelongsToOneRelationship($this->courseModel, $this->course_id, $this->courseModel->id);
+                return $this->belongsToOne($this->courseModel, $this->course_id, $this->courseModel->id);
             }
         ];
     }

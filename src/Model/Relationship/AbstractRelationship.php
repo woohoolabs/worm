@@ -5,10 +5,21 @@ namespace WoohooLabs\Worm\Model\Relationship;
 
 use Closure;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
+use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 abstract class AbstractRelationship implements RelationshipInterface
 {
+    /**
+     * @var ModelInterface
+     */
+    protected $model;
+
+    public function __construct(ModelInterface $model)
+    {
+        $this->model = $model;
+    }
+
     protected function getWhereCondition(ModelInterface $model, array $entities): Closure
     {
         return function (ConditionBuilderInterface $where) use ($model, $entities) {
@@ -26,7 +37,67 @@ abstract class AbstractRelationship implements RelationshipInterface
         };
     }
 
-    protected function getEntityMapForOne(array $entities, string $field)
+    protected function insertOneRelationship(
+        array $entities,
+        string $relationshipName,
+        ModelInterface $relatedModel,
+        array $relatedEntities,
+        string $foreignKey,
+        string $field,
+        IdentityMap $identityMap
+    ): array {
+        $relatedEntityMap = $this->getEntityMapForOne($relatedEntities, $foreignKey);
+
+        foreach ($entities as $key => $entity) {
+            // Check if the entity has related entities
+            if (isset($relatedEntityMap[$entity[$field]]) === false) {
+                continue;
+            }
+
+            $relatedEntity = $relatedEntityMap[$entity[$field]];
+
+            // Add the related entity to the entity
+            $entities[$key][$relationshipName] = $relatedEntity;
+
+            // Add the related entity to the identity map
+            $this->addToEntityMap($entity, $relationshipName, $relatedModel, $relatedEntity, $identityMap);
+        }
+
+        return $entities;
+    }
+
+    protected function insertManyRelationship(
+        array $entities,
+        string $relationshipName,
+        ModelInterface $relatedModel,
+        array $relatedEntities,
+        string $foreignKey,
+        string $field,
+        IdentityMap $identityMap
+    ): array {
+        $relatedEntityMap = $this->getEntityMapForMany($relatedEntities, $foreignKey);
+
+        foreach ($entities as $key => $entity) {
+            // Check if the entity has related entities
+            if (isset($relatedEntityMap[$entity[$field]]) === false) {
+                continue;
+            }
+
+            $relationship = $relatedEntityMap[$entity[$field]];
+
+            // Add related entities to the entity
+            $entities[$key][$relationshipName] = $relationship;
+
+            // Add related entities to the identity map
+            foreach ($relationship as $relatedEntity) {
+                $this->addToEntityMap($entity, $relationshipName, $relatedModel, $relatedEntity, $identityMap);
+            }
+        }
+
+        return $entities;
+    }
+
+    private function getEntityMapForOne(array $entities, string $field)
     {
         $entityMap = [];
         foreach ($entities as $entity) {
@@ -40,7 +111,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         return $entityMap;
     }
 
-    protected function getEntityMapForMany(array $entities, string $field)
+    private function getEntityMapForMany(array $entities, string $field)
     {
         $entityMap = [];
         foreach ($entities as $entity) {
@@ -54,20 +125,30 @@ abstract class AbstractRelationship implements RelationshipInterface
         return $entityMap;
     }
 
-    protected function insertRelationship(
-        array $entities,
+    private function addToEntityMap(
+        array $entity,
         string $relationshipName,
-        array $relatedEntities,
-        string $field
-    ): array {
-        foreach ($entities as $key => $entity) {
-            if (isset($relatedEntities[$entity[$field]]) === false) {
-                continue;
-            }
-
-            $entities[$key][$relationshipName] = $relatedEntities[$entity[$field]];
+        ModelInterface $relatedModel,
+        array $relatedEntity,
+        IdentityMap $identityMap
+    ) {
+        // Check for the ID of the related entity
+        if (isset($relatedEntity[$relatedModel->getPrimaryKey()]) === false) {
+            return;
         }
 
-        return $entities;
+        $relatedEntityId = $relatedEntity[$relatedModel->getPrimaryKey()];
+
+        // Add related entity to the identity map
+        $identityMap->addId($relatedModel->getTable(), $relatedEntityId);
+
+        // Add relationship to the identity map
+        $identityMap->addRelatedId(
+            $this->model->getTable(),
+            $entity[$this->model->getPrimaryKey()],
+            $relationshipName,
+            $relatedModel->getTable(),
+            $relatedEntityId
+        );
     }
 }

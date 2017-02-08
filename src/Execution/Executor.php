@@ -10,6 +10,16 @@ use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 class Executor
 {
+    /**
+     * @var IdentityMap
+     */
+    private $identityMap;
+
+    public function __construct(IdentityMap $identityMap)
+    {
+        $this->identityMap = $identityMap;
+    }
+
     public function fetchOne(
         ModelInterface $model,
         SelectQueryBuilderInterface $selectQueryBuilder,
@@ -28,12 +38,25 @@ class Executor
         return $this->createEntities($model, $selectQueryBuilder, $relationships);
     }
 
+    public function getIdentityMap(): IdentityMap
+    {
+        return $this->identityMap;
+    }
+
     private function createEntities(
         ModelInterface $model,
         SelectQueryBuilderInterface $selectQueryBuilder,
         array $relationships
     ): array {
         $entities = $selectQueryBuilder->fetchAll();
+
+        foreach ($entities as $entity) {
+            if (isset($entity[$model->getPrimaryKey()]) === false) {
+                continue;
+            }
+
+            $this->identityMap->addId($model->getTable(), $entity[$model->getPrimaryKey()]);
+        }
 
         return $this->matchRelationships(
             $selectQueryBuilder->getConnection(),
@@ -57,7 +80,12 @@ class Executor
 
             $relationshipQuery = $relationshipModel->getRelationship($model, $connection, $entities);
             $relatedEntities = $relationshipQuery->fetchAll();
-            $entities = $relationshipModel->matchRelationship($entities, $relationshipName, $relatedEntities);
+            $entities = $relationshipModel->matchRelationship(
+                $entities,
+                $relationshipName,
+                $relatedEntities,
+                $this->identityMap
+            );
         }
 
         return $entities;

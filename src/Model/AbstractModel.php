@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model;
 
+use WoohooLabs\Worm\Model\Relationship\BelongsToManyRelationship;
+use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
+use WoohooLabs\Worm\Model\Relationship\HasManyRelationship;
+use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
+use WoohooLabs\Worm\Model\Relationship\HasOneRelationship;
+
 abstract class AbstractModel implements ModelInterface
 {
     public function __construct()
@@ -15,5 +21,54 @@ abstract class AbstractModel implements ModelInterface
 
             $this->$variable = $variable;
         }
+    }
+
+    protected function belongsToOne(
+        ModelInterface $relatedModel,
+        string $foreignKey,
+        string $referencedKey
+    ): BelongsToOneRelationship {
+        return new BelongsToOneRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+    }
+
+    protected function belongsToMany(
+        ModelInterface $relatedModel,
+        string $foreignKey,
+        string $referencedKey
+    ): BelongsToManyRelationship {
+        return new BelongsToManyRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+    }
+
+    protected function hasOne(
+        ModelInterface $relatedModel,
+        string $foreignKey,
+        string $referencedKey
+    ): HasOneRelationship {
+        return new HasOneRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+    }
+
+    protected function hasMany(
+        ModelInterface $relatedModel,
+        string $foreignKey,
+        string $referencedKey
+    ): HasManyRelationship {
+        return new HasManyRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+    }
+
+    protected function hasManyThrough(
+        ModelInterface $junctionModel,
+        string $foreignKey1,
+        string $foreignKey2,
+        ModelInterface $referencedModel,
+        string $referencedKey
+    ): HasManyThroughRelationship {
+        return new HasManyThroughRelationship(
+            $this,
+            $junctionModel,
+            $foreignKey1,
+            $foreignKey2,
+            $referencedModel,
+            $referencedKey
+        );
     }
 }

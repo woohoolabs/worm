@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Examples\Model;
+namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Model\AbstractModel;
 
@@ -17,6 +17,11 @@ class CourseModel extends AbstractModel
     public function getPrimaryKey(): string
     {
         return $this->id;
+    }
+
+    public function isAutoIncremented(): bool
+    {
+        return true;
     }
 
     public function getRelationships(): array
