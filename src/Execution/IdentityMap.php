@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Execution;
 
-use LogicException;
-
 class IdentityMap
 {
     /**
@@ -73,19 +71,12 @@ class IdentityMap
     }
 
     /**
-     * @param mixed $record
+     * @param mixed $id
      * @param callable $factory
      * @return object
-     * @throws LogicException
      */
-    public function createObject(string $type, string $idField, $record, callable $factory)
+    public function createObject(string $type, $id, callable $factory)
     {
-        if (isset($record[$idField]) === false) {
-            throw new LogicException("The record doesn't have an ID and can't be hydrated to an object!");
-        }
-
-        $id = $record[$idField];
-
         $object = $this->getObject($type, $id);
         if ($object) {
             return $object;
@@ -97,6 +88,14 @@ class IdentityMap
         return $object;
     }
 
+    /**
+     * @param mixed $id
+     */
+    public function hasId(string $type, $id): bool
+    {
+        return isset($this->identityMap[$type]["ids"][$id]);
+    }
+
     public function addId(string $type, $id)
     {
         if ($this->hasId($type, $id)) {
@@ -106,14 +105,11 @@ class IdentityMap
         $this->identityMap[$type]["ids"][$id] = [null, []];
     }
 
-    public function getRelatedIds(string $type, $id, string $relationship): array
+    public function hasRelatedId(string $type, $id, string $relationship, $relatedId): bool
     {
-        $relationshipKey = $this->getRelationshipKey($type, $relationship);
-        if ($relationshipKey === null) {
-            return [];
-        }
+        $relatedIds = $this->getRelatedIds($type, $id, $relationship);
 
-        return $this->identityMap[$type]["ids"][$id][1][$relationshipKey] ?? [];
+        return isset($relatedIds[$relatedId]);
     }
 
     public function addRelatedId(string $type, $id, string $relationship, string $relatedType, $relatedId)
@@ -127,7 +123,7 @@ class IdentityMap
             $relationshipKey = $this->setRelationship($type, $relationship, $relatedType);
         }
 
-        $this->identityMap[$type]["ids"][$id][1][$relationshipKey][] = $relatedId;
+        $this->identityMap[$type]["ids"][$id][1][$relationshipKey][$relatedId] = $relatedId;
     }
 
     public function getMap(): array
@@ -142,14 +138,6 @@ class IdentityMap
     private function setObject(string $type, $id, $object)
     {
         $this->identityMap[$type]["ids"][$id][0] = $object;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    private function hasId(string $type, $id): bool
-    {
-        return isset($this->identityMap[$type]["ids"][$id]);
     }
 
     /**
@@ -170,5 +158,15 @@ class IdentityMap
         ];
 
         return $key;
+    }
+
+    private function getRelatedIds(string $type, $id, string $relationship): array
+    {
+        $relationshipKey = $this->getRelationshipKey($type, $relationship);
+        if ($relationshipKey === null) {
+            return [];
+        }
+
+        return $this->identityMap[$type]["ids"][$id][1][$relationshipKey] ?? [];
     }
 }
