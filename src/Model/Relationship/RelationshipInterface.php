@@ -10,7 +10,7 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 interface RelationshipInterface
 {
-    public function getRelationship(
+    public function getQueryBuilder(
         ModelInterface $model,
         ConnectionInterface $connection,
         array $entities

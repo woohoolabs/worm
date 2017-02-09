@@ -3,14 +3,26 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model;
 
+use DomainException;
 use WoohooLabs\Worm\Model\Relationship\BelongsToManyRelationship;
 use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasOneRelationship;
+use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 abstract class AbstractModel implements ModelInterface
 {
+    /**
+     * @var array
+     */
+    private $relationships = [];
+
+    /**
+     * @return callable[]
+     */
+    abstract protected function getRelationships(): array;
+
     public function __construct()
     {
         $variables = get_object_vars($this);
@@ -21,6 +33,28 @@ abstract class AbstractModel implements ModelInterface
 
             $this->$variable = $variable;
         }
+    }
+
+    public function getRelationshipNames(): array
+    {
+        if (empty($this->relationships)) {
+            $this->relationships = $this->getRelationships();
+        }
+
+        return array_keys($this->relationships);
+    }
+
+    public function getRelationship(string $name): RelationshipInterface
+    {
+        if (isset($this->relationships[$name]) === false) {
+            throw new DomainException("Relationhip '$name' does not exist!");
+        }
+
+        if (is_callable($this->relationships[$name])) {
+            $this->relationships[$name] = $this->relationships[$name]();
+        }
+
+        return $this->relationships[$name];
     }
 
     protected function belongsToOne(

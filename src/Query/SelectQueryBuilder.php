@@ -71,7 +71,7 @@ class SelectQueryBuilder
 
     public function withAllRelationships(): SelectQueryBuilder
     {
-        $this->relationships = array_keys($this->model->getRelationships());
+        $this->relationships = $this->model->getRelationshipNames();
 
         return $this;
     }

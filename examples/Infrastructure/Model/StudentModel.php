@@ -46,7 +46,7 @@ class StudentModel extends AbstractModel
         return true;
     }
 
-    public function getRelationships(): array
+    protected function getRelationships(): array
     {
         return [
             "classes" => function () {
@@ -60,15 +60,5 @@ class StudentModel extends AbstractModel
                 );
             }
         ];
-    }
-
-    public function getClassStudentModel(): ClassStudentModel
-    {
-        return $this->classStudentModel;
-    }
-
-    public function getClassModel(): ClassModel
-    {
-        return $this->classModel;
     }
 }

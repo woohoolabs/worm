@@ -62,7 +62,7 @@ class Executor
             $selectQueryBuilder->getConnection(),
             $model,
             $entities,
-            array_flip($relationships)
+            $relationships
         );
     }
 
@@ -72,13 +72,13 @@ class Executor
         array $entities,
         array $relationships
     ): array {
-        $relationshipModels = array_intersect_key($model->getRelationships(), $relationships);
+        $relationshipModels = array_intersect($model->getRelationshipNames(), $relationships);
 
-        foreach ($relationshipModels as $relationshipName => $relationshipClosure) {
+        foreach ($relationshipModels as $relationshipName) {
             /** @var RelationshipInterface $relationshipModel */
-            $relationshipModel = $relationshipClosure();
+            $relationshipModel = $model->getRelationship($relationshipName);
 
-            $relationshipQuery = $relationshipModel->getRelationship($model, $connection, $entities);
+            $relationshipQuery = $relationshipModel->getQueryBuilder($model, $connection, $entities);
             $relatedEntities = $relationshipQuery->fetchAll();
             $entities = $relationshipModel->matchRelationship(
                 $entities,

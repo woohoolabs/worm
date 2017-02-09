@@ -36,17 +36,12 @@ class ClassModel extends AbstractModel
         return true;
     }
 
-    public function getRelationships(): array
+    protected function getRelationships(): array
     {
         return [
             "courses" => function () {
                 return $this->belongsToOne($this->courseModel, $this->course_id, $this->courseModel->id);
             }
         ];
-    }
-
-    public function getCourseModel(): CourseModel
-    {
-        return $this->courseModel;
     }
 }

@@ -39,7 +39,7 @@ class BelongsToOneRelationship extends AbstractRelationship
         $this->referencedKey = $referencedKey;
     }
 
-    public function getRelationship(
+    public function getQueryBuilder(
         ModelInterface $model,
         ConnectionInterface $connection,
         array $entities

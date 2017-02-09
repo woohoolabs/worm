@@ -60,7 +60,7 @@ class HasManyThroughRelationship extends AbstractRelationship
         $this->referencedKey2 = $referencedKey2;
     }
 
-    public function getRelationship(
+    public function getQueryBuilder(
         ModelInterface $model,
         ConnectionInterface $connection,
         array $entities

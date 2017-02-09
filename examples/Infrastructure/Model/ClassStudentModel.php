@@ -26,7 +26,7 @@ class ClassStudentModel extends AbstractModel
         return true;
     }
 
-    public function getRelationships(): array
+    protected function getRelationships(): array
     {
         return [];
     }

@@ -6,6 +6,8 @@ ADDED:
 
 CHANGED:
 
+- Optimized retrieval of relationships
+
 FIXED:
 
 - Many-to-Many relationships can reference other fields than primary keys
