@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model\Relationship;
 
-use Closure;
+use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
@@ -20,21 +20,19 @@ abstract class AbstractRelationship implements RelationshipInterface
         $this->model = $model;
     }
 
-    protected function getWhereCondition(ModelInterface $model, array $entities): Closure
+    protected function getWhereCondition(ModelInterface $model, array $entities): ConditionBuilderInterface
     {
-        return function (ConditionBuilderInterface $where) use ($model, $entities) {
-            $values = [];
-
-            foreach ($entities as $entity) {
-                if (isset($entity[$model->getPrimaryKey()]) === false) {
-                    continue;
-                }
-
-                $values[] = $entity[$model->getPrimaryKey()];
+        $values = [];
+        foreach ($entities as $entity) {
+            if (isset($entity[$model->getPrimaryKey()]) === false) {
+                continue;
             }
 
-            $where->inValues($model->getPrimaryKey(), $values, $model->getTable());
-        };
+            $values[] = $entity[$model->getPrimaryKey()];
+        }
+
+        return ConditionBuilder::create()
+            ->inValues($model->getPrimaryKey(), $values, $model->getTable());
     }
 
     protected function insertOneRelationship(

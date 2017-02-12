@@ -33,4 +33,6 @@ $result1 = $worm
 echo "<pre>";
 echo "<h1>RESULT SET 1:</h1>";
 print_r($result1);
+
+print_r($worm->getIdentityMap()->getMap());
 echo "</pre>";

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model\Relationship;
 
-use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
@@ -12,7 +11,6 @@ interface RelationshipInterface
 {
     public function getQueryBuilder(
         ModelInterface $model,
-        ConnectionInterface $connection,
         array $entities
     ): SelectQueryBuilderInterface;
 

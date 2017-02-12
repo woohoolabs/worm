@@ -24,7 +24,7 @@ class Worm
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
-        $this->executor = new Executor(new IdentityMap());
+        $this->executor = new Executor($connection, new IdentityMap());
     }
 
     public function queryModel(ModelInterface $model): SelectQueryBuilder
@@ -37,5 +37,10 @@ class Worm
     public function getIdentityMap(): IdentityMap
     {
         return $this->executor->getIdentityMap();
+    }
+
+    public function getConnection(): ConnectionInterface
+    {
+        return $this->connection;
     }
 }

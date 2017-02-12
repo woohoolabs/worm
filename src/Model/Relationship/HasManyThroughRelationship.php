@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model\Relationship;
 
-use WoohooLabs\Larva\Connection\ConnectionInterface;
-use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
+use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
@@ -62,36 +61,33 @@ class HasManyThroughRelationship extends AbstractRelationship
 
     public function getQueryBuilder(
         ModelInterface $model,
-        ConnectionInterface $connection,
         array $entities
     ): SelectQueryBuilderInterface {
-        return SelectQueryBuilder::create($connection)
+        return SelectQueryBuilder::create()
             ->selectColumn("*", $this->relatedModel->getTable())
             ->selectColumn("*", $this->junctionModel->getTable())
             ->from($this->relatedModel->getTable())
             ->join($this->junctionModel->getTable())
             ->on(
-                function (ConditionBuilderInterface $on) {
-                    $on->columnToColumn(
+                ConditionBuilder::create()
+                    ->columnToColumn(
                         $this->foreignKey2,
                         "=",
                         $this->referencedKey2,
                         $this->junctionModel->getTable(),
                         $this->relatedModel->getTable()
-                    );
-                }
+                    )
             )
             ->join($model->getTable())
             ->on(
-                function (ConditionBuilderInterface $on) use ($model) {
-                    $on->columnToColumn(
+                ConditionBuilder::create()
+                    ->columnToColumn(
                         $this->referencedKey1,
                         "=",
                         $this->foreignKey1,
                         $model->getTable(),
                         $this->junctionModel->getTable()
-                    );
-                }
+                    )
             )
             ->where($this->getWhereCondition($model, $entities));
     }

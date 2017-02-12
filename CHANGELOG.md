@@ -3,9 +3,11 @@
 ADDED:
 
 - Identity Map
+- Various methods to `SelectQueryBuilder` to reflect changes in Larva v0.3
 
 CHANGED:
 
+- Updated minimum Larva version requirement to v0.3.0
 - Optimized retrieval of relationships
 
 FIXED:

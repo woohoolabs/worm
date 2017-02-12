@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model;
 
-use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
-
 use DomainException;
+use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 interface ModelInterface
 {

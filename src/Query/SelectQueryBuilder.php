@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Query;
 
-use Closure;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
+use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder as LarvaSelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
@@ -83,9 +83,16 @@ class SelectQueryBuilder
         return $this;
     }
 
-    public function where(Closure $where): SelectQueryBuilder
+    public function where(ConditionBuilderInterface $where): SelectQueryBuilder
     {
         $this->queryBuilder->where($where);
+
+        return $this;
+    }
+
+    public function addWhereGroup(ConditionBuilderInterface $where): SelectQueryBuilder
+    {
+        $this->queryBuilder->addWhereGroup($where);
 
         return $this;
     }
@@ -104,9 +111,16 @@ class SelectQueryBuilder
         return $this;
     }
 
-    public function having(Closure $having): SelectQueryBuilder
+    public function having(ConditionBuilderInterface $having): SelectQueryBuilder
     {
         $this->queryBuilder->having($having);
+
+        return $this;
+    }
+
+    public function addHavingGroup(ConditionBuilderInterface $having): SelectQueryBuilder
+    {
+        $this->queryBuilder->addHavingGroup($having);
 
         return $this;
     }
@@ -138,6 +152,20 @@ class SelectQueryBuilder
         return $this;
     }
 
+    public function lockForShare(): SelectQueryBuilder
+    {
+        $this->queryBuilder->lockForShare();
+
+        return $this;
+    }
+
+    public function lockForUpdate(): SelectQueryBuilder
+    {
+        $this->queryBuilder->lockForUpdate();
+
+        return $this;
+    }
+
     public function getQueryBuilder(): SelectQueryBuilderInterface
     {
         return $this->queryBuilder;
@@ -147,9 +175,8 @@ class SelectQueryBuilder
     {
         $this->queryBuilder
             ->where(
-                function (ConditionBuilderInterface $where) use ($id) {
-                    $where->columnToValue($this->model->getPrimaryKey(), "=", $id);
-                }
+                ConditionBuilder::create()
+                    ->columnToValue($this->model->getPrimaryKey(), "=", $id)
             )
             ->limit(1);
 

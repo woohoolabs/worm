@@ -11,12 +11,18 @@ use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 class Executor
 {
     /**
+     * @var ConnectionInterface
+     */
+    private $connection;
+
+    /**
      * @var IdentityMap
      */
     private $identityMap;
 
-    public function __construct(IdentityMap $identityMap)
+    public function __construct(ConnectionInterface $connection, IdentityMap $identityMap)
     {
+        $this->connection = $connection;
         $this->identityMap = $identityMap;
     }
 
@@ -48,7 +54,7 @@ class Executor
         SelectQueryBuilderInterface $selectQueryBuilder,
         array $relationships
     ): array {
-        $entities = $selectQueryBuilder->fetchAll();
+        $entities = $selectQueryBuilder->fetchAll($this->connection);
 
         foreach ($entities as $entity) {
             if (isset($entity[$model->getPrimaryKey()]) === false) {
@@ -59,7 +65,6 @@ class Executor
         }
 
         return $this->matchRelationships(
-            $selectQueryBuilder->getConnection(),
             $model,
             $entities,
             $relationships
@@ -67,7 +72,6 @@ class Executor
     }
 
     private function matchRelationships(
-        ConnectionInterface $connection,
         ModelInterface $model,
         array $entities,
         array $relationships
@@ -78,8 +82,8 @@ class Executor
             /** @var RelationshipInterface $relationshipModel */
             $relationshipModel = $model->getRelationship($relationshipName);
 
-            $relationshipQuery = $relationshipModel->getQueryBuilder($model, $connection, $entities);
-            $relatedEntities = $relationshipQuery->fetchAll();
+            $relationshipQuery = $relationshipModel->getQueryBuilder($model, $entities);
+            $relatedEntities = $relationshipQuery->fetchAll($this->connection);
             $entities = $relationshipModel->matchRelationship(
                 $entities,
                 $relationshipName,
