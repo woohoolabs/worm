@@ -21,11 +21,6 @@ class ClassStudentModel extends AbstractModel
         return $this->id;
     }
 
-    public function isAutoIncremented(): bool
-    {
-        return true;
-    }
-
     protected function getRelationships(): array
     {
         return [];

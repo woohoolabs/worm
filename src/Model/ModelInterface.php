@@ -12,8 +12,6 @@ interface ModelInterface
 
     public function getPrimaryKey(): string;
 
-    public function isAutoIncremented(): bool;
-
     /**
      * @return string[]
      */

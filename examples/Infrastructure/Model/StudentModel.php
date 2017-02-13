@@ -14,23 +14,6 @@ class StudentModel extends AbstractModel
     public $gender;
     public $introduction;
 
-    /**
-     * @var ClassStudentModel
-     */
-    private $classStudentModel;
-
-    /**
-     * @var ClassModel
-     */
-    private $classModel;
-
-    public function __construct(ClassStudentModel $classStudentModel, ClassModel $classModel)
-    {
-        $this->classStudentModel = $classStudentModel;
-        $this->classModel = $classModel;
-        parent::__construct();
-    }
-
     public function getTable(): string
     {
         return "students";
@@ -41,24 +24,8 @@ class StudentModel extends AbstractModel
         return $this->id;
     }
 
-    public function isAutoIncremented(): bool
-    {
-        return true;
-    }
-
     protected function getRelationships(): array
     {
-        return [
-            "classes" => function () {
-                return $this->hasManyThrough(
-                    $this->id,
-                    $this->classStudentModel,
-                    $this->classStudentModel->student_id,
-                    $this->classStudentModel->class_id,
-                    $this->classModel,
-                    "id"
-                );
-            }
-        ];
+        return [];
     }
 }

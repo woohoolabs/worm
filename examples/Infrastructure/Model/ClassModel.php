@@ -9,16 +9,26 @@ class ClassModel extends AbstractModel
 {
     public $id;
     public $course_id;
+    public $room_id;
+    public $teacher_id;
+    public $students;
+    public $datetime;
 
     /**
-     * @var CourseModel
+     * @var ClassStudentModel
      */
-    private $courseModel;
+    private $classStudentModel;
 
-    public function __construct(CourseModel $courseModel)
+    /**
+     * @var StudentModel
+     */
+    private $studentModel;
+
+    public function __construct(ClassStudentModel $classStudentModel, StudentModel $studentModel)
     {
-        $this->courseModel = $courseModel;
         parent::__construct();
+        $this->classStudentModel = $classStudentModel;
+        $this->studentModel = $studentModel;
     }
 
     public function getTable(): string
@@ -31,16 +41,18 @@ class ClassModel extends AbstractModel
         return $this->id;
     }
 
-    public function isAutoIncremented(): bool
-    {
-        return true;
-    }
-
     protected function getRelationships(): array
     {
         return [
-            "courses" => function () {
-                return $this->belongsToOne($this->courseModel, $this->course_id, $this->courseModel->id);
+            "students" => function () {
+                return $this->hasManyThrough(
+                    $this->id,
+                    $this->classStudentModel,
+                    $this->classStudentModel->class_id,
+                    $this->classStudentModel->student_id,
+                    $this->studentModel,
+                    $this->studentModel->id
+                );
             }
         ];
     }

@@ -9,6 +9,9 @@ CHANGED:
 
 - Updated minimum Larva version requirement to v0.3.0
 - Optimized retrieval of relationships
+REMOVED:
+
+- `ModelInterface::isAutoIncremented()` method
 
 FIXED:
 

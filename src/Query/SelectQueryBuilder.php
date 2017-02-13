@@ -37,7 +37,7 @@ class SelectQueryBuilder
     {
         $this->model = $model;
         $this->executor = $executor;
-        $this->queryBuilder = new LarvaSelectQueryBuilder($connection);
+        $this->queryBuilder = new LarvaSelectQueryBuilder();
         $this->queryBuilder->from($model->getTable());
     }
 

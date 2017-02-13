@@ -21,10 +21,10 @@ class Worm
      */
     private $executor;
 
-    public function __construct(ConnectionInterface $connection)
+    public function __construct(ConnectionInterface $connection, IdentityMap $identityMap)
     {
         $this->connection = $connection;
-        $this->executor = new Executor($connection, new IdentityMap());
+        $this->executor = new Executor($connection, $identityMap);
     }
 
     public function queryModel(ModelInterface $model): SelectQueryBuilder

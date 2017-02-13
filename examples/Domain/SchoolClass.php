@@ -8,9 +8,9 @@ use DateTimeImmutable;
 class SchoolClass
 {
     /**
-     * @var Course
+     * @var int
      */
-    private $course;
+    private $id;
 
     /**
      * @var int
@@ -23,21 +23,30 @@ class SchoolClass
     private $teacherId;
 
     /**
+     * @var Student[]
+     */
+    private $students;
+
+    /**
      * @var DateTimeImmutable
      */
-    private $time;
+    private $datetime;
 
-    public function __construct(Course $course, int $roomId, int $teacherId, DateTimeImmutable $time)
+    /**
+     * @param Student[] $students
+     */
+    public function __construct(int $id, int $roomId, int $teacherId, array $students, DateTimeImmutable $time)
     {
-        $this->course = $course;
+        $this->id = $id;
         $this->roomId = $roomId;
         $this->teacherId = $teacherId;
-        $this->time = $time;
+        $this->students = $students;
+        $this->datetime = $time;
     }
 
-    public function getCourse(): Course
+    public function getId(): int
     {
-        return $this->course;
+        return $this->id;
     }
 
     public function getRoomId(): int
@@ -50,8 +59,16 @@ class SchoolClass
         return $this->teacherId;
     }
 
-    public function getTime(): DateTimeImmutable
+    /**
+     * @return Student[]
+     */
+    public function getStudents(): array
     {
-        return $this->time;
+        return $this->students;
+    }
+
+    public function getDatetime(): DateTimeImmutable
+    {
+        return $this->datetime;
     }
 }

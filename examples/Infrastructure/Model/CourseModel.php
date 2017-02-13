@@ -8,6 +8,22 @@ use WoohooLabs\Worm\Model\AbstractModel;
 class CourseModel extends AbstractModel
 {
     public $id;
+    public $name;
+    public $description;
+    public $credit;
+    public $language;
+    public $classes;
+
+    /**
+     * @var ClassModel
+     */
+    private $classModel;
+
+    public function __construct(ClassModel $classModel)
+    {
+        $this->classModel = $classModel;
+        parent::__construct();
+    }
 
     public function getTable(): string
     {
@@ -19,13 +35,14 @@ class CourseModel extends AbstractModel
         return $this->id;
     }
 
-    public function isAutoIncremented(): bool
-    {
-        return true;
-    }
-
     protected function getRelationships(): array
     {
-        return [];
+        return [
+            "classes" => $this->hasMany(
+                $this->classModel,
+                $this->classModel->course_id,
+                $this->id
+            )
+        ];
     }
 }

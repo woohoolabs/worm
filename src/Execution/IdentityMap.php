@@ -72,17 +72,15 @@ class IdentityMap
 
     /**
      * @param mixed $id
-     * @param callable $factory
-     * @return object
      */
-    public function createObject(string $type, $id, callable $factory)
+    public function createObject(string $type, $id, array $entity, callable $factory)
     {
         $object = $this->getObject($type, $id);
         if ($object) {
             return $object;
         }
 
-        $object = $factory();
+        $object = $factory($entity);
         $this->setObject($type, $id, $object);
 
         return $object;
