@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Query;
 
-use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder as LarvaSelectQueryBuilder;
@@ -33,7 +32,7 @@ class SelectQueryBuilder
      */
     private $relationships = [];
 
-    public function __construct(ModelInterface $model, ConnectionInterface $connection, Executor $executor)
+    public function __construct(ModelInterface $model, Executor $executor)
     {
         $this->model = $model;
         $this->executor = $executor;

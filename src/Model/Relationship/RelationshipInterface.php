@@ -9,10 +9,11 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 interface RelationshipInterface
 {
-    public function getQueryBuilder(
-        ModelInterface $model,
-        array $entities
-    ): SelectQueryBuilderInterface;
+    public function getParentModel(): ModelInterface;
+
+    public function getModel(): ModelInterface;
+
+    public function getQueryBuilder(array $entities): SelectQueryBuilderInterface;
 
     public function matchRelationship(
         array $entities,

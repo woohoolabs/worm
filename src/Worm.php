@@ -29,9 +29,7 @@ class Worm
 
     public function queryModel(ModelInterface $model): SelectQueryBuilder
     {
-        $queryBuilder = new SelectQueryBuilder($model, $this->connection, $this->executor);
-
-        return $queryBuilder;
+        return new SelectQueryBuilder($model, $this->executor);
     }
 
     public function getIdentityMap(): IdentityMap

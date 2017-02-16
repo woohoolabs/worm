@@ -13,26 +13,31 @@ abstract class AbstractRelationship implements RelationshipInterface
     /**
      * @var ModelInterface
      */
-    protected $model;
+    protected $parentModel;
 
     public function __construct(ModelInterface $model)
     {
-        $this->model = $model;
+        $this->parentModel = $model;
     }
 
-    protected function getWhereCondition(ModelInterface $model, array $entities): ConditionBuilderInterface
+    public function getParentModel(): ModelInterface
+    {
+        return $this->parentModel;
+    }
+
+    protected function getWhereCondition(string $prefix, string $foreignKey, array $entities): ConditionBuilderInterface
     {
         $values = [];
         foreach ($entities as $entity) {
-            if (isset($entity[$model->getPrimaryKey()]) === false) {
+            if (isset($entity[$this->parentModel->getPrimaryKey()]) === false) {
                 continue;
             }
 
-            $values[] = $entity[$model->getPrimaryKey()];
+            $values[] = $entity[$this->parentModel->getPrimaryKey()];
         }
 
         return ConditionBuilder::create()
-            ->inValues($model->getPrimaryKey(), $values, $model->getTable());
+            ->inValues($foreignKey, $values, $prefix);
     }
 
     protected function insertOneRelationship(
@@ -142,8 +147,8 @@ abstract class AbstractRelationship implements RelationshipInterface
 
         // Add relationship to the identity map
         $identityMap->addRelatedId(
-            $this->model->getTable(),
-            $entity[$this->model->getPrimaryKey()],
+            $this->parentModel->getTable(),
+            $entity[$this->parentModel->getPrimaryKey()],
             $relationshipName,
             $relatedModel->getTable(),
             $relatedEntityId

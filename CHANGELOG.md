@@ -15,7 +15,8 @@ REMOVED:
 
 FIXED:
 
-- Many-to-Many relationships can reference other fields than primary keys
+- Removed unnecessary joins when loading relationships
+- Many-to-Many relationships can reference fields other than primary keys
 
 ## 0.1.0 - 2017-02-03
 

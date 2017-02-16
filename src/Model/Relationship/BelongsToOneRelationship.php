@@ -38,25 +38,28 @@ class BelongsToOneRelationship extends AbstractRelationship
         $this->referencedKey = $referencedKey;
     }
 
-    public function getQueryBuilder(
-        ModelInterface $model,
-        array $entities
-    ): SelectQueryBuilderInterface {
+    public function getModel(): ModelInterface
+    {
+        return $this->relatedModel;
+    }
+
+    public function getQueryBuilder(array $entities): SelectQueryBuilderInterface
+    {
         return SelectQueryBuilder::create()
             ->selectColumn("*", $this->relatedModel->getTable())
             ->from($this->relatedModel->getTable())
-            ->join($model->getTable())
+            ->join($this->parentModel->getTable())
             ->on(
                 ConditionBuilder::create()
                     ->columnToColumn(
                         $this->foreignKey,
                         "=",
                         $this->referencedKey,
-                        $model->getTable(),
+                        $this->parentModel->getTable(),
                         $this->relatedModel->getTable()
                     )
             )
-            ->where($this->getWhereCondition($model, $entities));
+            ->where($this->getWhereCondition($this->relatedModel->getTable(), $this->foreignKey, $entities));
     }
 
     public function matchRelationship(
