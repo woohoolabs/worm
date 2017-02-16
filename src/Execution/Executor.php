@@ -57,11 +57,9 @@ class Executor
         $entities = $selectQueryBuilder->fetchAll($this->connection);
 
         foreach ($entities as $entity) {
-            if (isset($entity[$model->getPrimaryKey()]) === false) {
-                continue;
+            if (isset($entity[$model->getPrimaryKey()])) {
+                $this->identityMap->addId($model->getTable(), $entity[$model->getPrimaryKey()]);
             }
-
-            $this->identityMap->addId($model->getTable(), $entity[$model->getPrimaryKey()]);
         }
 
         return $this->matchRelationships(
@@ -76,14 +74,29 @@ class Executor
         array $entities,
         array $relationships
     ): array {
-        $relationshipModels = array_intersect($model->getRelationshipNames(), $relationships);
+        $relationshipNames = [];
+        foreach ($relationships as $key => $name) {
+            $relationshipNames[$key] = is_array($name) ? $key : $name;
+        }
 
-        foreach ($relationshipModels as $relationshipName) {
+        $relationshipModels = array_intersect($relationshipNames, $model->getRelationshipNames());
+
+        foreach ($relationshipModels as $relationshipKey => $relationshipName) {
+
             /** @var RelationshipInterface $relationshipModel */
             $relationshipModel = $model->getRelationship($relationshipName);
 
-            $relationshipQuery = $relationshipModel->getQueryBuilder($model, $entities);
+            $relationshipQuery = $relationshipModel->getQueryBuilder($entities);
             $relatedEntities = $relationshipQuery->fetchAll($this->connection);
+
+            if (is_array($relationships[$relationshipKey])) {
+                $relatedEntities = $this->matchRelationships(
+                    $relationshipModel->getModel(),
+                    $relatedEntities,
+                    $relationships[$relationshipKey]
+                );
+            }
+
             $entities = $relationshipModel->matchRelationship(
                 $entities,
                 $relationshipName,

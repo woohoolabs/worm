@@ -35,6 +35,13 @@ class CourseModel extends AbstractModel
         return $this->id;
     }
 
+    public function getAllRelationshipNames()
+    {
+        return [
+            "classes" => $this->classModel->getRelationshipNames()
+        ];
+    }
+
     protected function getRelationships(): array
     {
         return [

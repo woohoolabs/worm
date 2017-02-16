@@ -40,7 +40,7 @@ $courseModel = new CourseModel($classModel);
 // Query all courses
 $entities = $worm
     ->queryModel($courseModel)
-    ->withAllRelationships()
+    ->withRelationships($courseModel->getAllRelationshipNames())
     ->fetchAll();
 
 echo "<pre>";

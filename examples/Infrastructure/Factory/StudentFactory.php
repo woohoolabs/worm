@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Factory;
 
-use DateTimeImmutable;
 use WoohooLabs\Worm\Examples\Domain\Name;
 use WoohooLabs\Worm\Examples\Domain\Student;
 use WoohooLabs\Worm\Examples\Infrastructure\Model\StudentModel;
@@ -45,7 +44,7 @@ class StudentFactory extends AbstractFactory
                     $entity[$this->model->last_name]
                 ),
                 $entity[$this->model->introduction],
-                $entity[$this->model->birthday] ? new DateTimeImmutable($entity[$this->model->birthday]) : null,
+                $entity[$this->model->birthday] ?? null,
                 $entity[$this->model->gender] ?? null
             );
         };
