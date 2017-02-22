@@ -47,7 +47,7 @@ abstract class AbstractModel implements ModelInterface
     public function getRelationship(string $name): RelationshipInterface
     {
         if (isset($this->relationships[$name]) === false) {
-            throw new DomainException("Relationhip '$name' does not exist!");
+            throw new DomainException("Relationship '$name' does not exist!");
         }
 
         if (is_callable($this->relationships[$name])) {
@@ -55,6 +55,11 @@ abstract class AbstractModel implements ModelInterface
         }
 
         return $this->relationships[$name];
+    }
+
+    public function getId(array $entity)
+    {
+        return $entity[$this->getPrimaryKey()] ?? null;
     }
 
     protected function belongsToOne(

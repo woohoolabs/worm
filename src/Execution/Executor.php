@@ -57,8 +57,10 @@ class Executor
         $entities = $selectQueryBuilder->fetchAll($this->connection);
 
         foreach ($entities as $entity) {
-            if (isset($entity[$model->getPrimaryKey()])) {
-                $this->identityMap->addId($model->getTable(), $entity[$model->getPrimaryKey()]);
+            $id = $model->getId($entity);
+
+            if ($id !== null) {
+                $this->identityMap->addId($model->getTable(), $id);
             }
         }
 

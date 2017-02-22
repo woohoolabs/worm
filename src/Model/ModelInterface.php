@@ -21,4 +21,9 @@ interface ModelInterface
      * @throws DomainException
      */
     public function getRelationship(string $name): RelationshipInterface;
+
+    /**
+     * @return mixed
+     */
+    public function getId(array $entity);
 }

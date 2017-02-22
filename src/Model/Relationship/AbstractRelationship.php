@@ -29,11 +29,11 @@ abstract class AbstractRelationship implements RelationshipInterface
     {
         $values = [];
         foreach ($entities as $entity) {
-            if (isset($entity[$this->parentModel->getPrimaryKey()]) === false) {
-                continue;
-            }
+            $id = $this->parentModel->getId($entity);
 
-            $values[] = $entity[$this->parentModel->getPrimaryKey()];
+            if ($id !== null) {
+                $values[] = $id;
+            }
         }
 
         return ConditionBuilder::create()
@@ -100,6 +100,20 @@ abstract class AbstractRelationship implements RelationshipInterface
         return $entities;
     }
 
+    /**
+     * @return void
+     */
+    protected function setRelatedIds(IdentityMap $identityMap, array $entity, string $relationship, array $relatedIds)
+    {
+        $identityMap->setRelatedIds(
+            $this->getParentModel()->getTable(),
+            $this->getParentModel()->getId($entity),
+            $relationship,
+            $this->getModel()->getTable(),
+            $relatedIds
+        );
+    }
+
     private function getEntityMapForOne(array $entities, string $field)
     {
         $entityMap = [];
@@ -136,11 +150,10 @@ abstract class AbstractRelationship implements RelationshipInterface
         IdentityMap $identityMap
     ) {
         // Check for the ID of the related entity
-        if (isset($relatedEntity[$relatedModel->getPrimaryKey()]) === false) {
+        $relatedEntityId = $relatedModel->getId($relatedEntity);
+        if ($relatedEntityId === null) {
             return;
         }
-
-        $relatedEntityId = $relatedEntity[$relatedModel->getPrimaryKey()];
 
         // Add related entity to the identity map
         $identityMap->addId($relatedModel->getTable(), $relatedEntityId);
@@ -148,7 +161,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         // Add relationship to the identity map
         $identityMap->addRelatedId(
             $this->parentModel->getTable(),
-            $entity[$this->parentModel->getPrimaryKey()],
+            $this->parentModel->getId($entity),
             $relationshipName,
             $relatedModel->getTable(),
             $relatedEntityId

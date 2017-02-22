@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "^7.0.0",
-        "woohoolabs/larva": "^0.3.0"
+        "woohoolabs/larva": "dev-master as 0.3.0"
     },
     "require-dev": {
         "phpunit/PHPUnit": "^6.0.0",
