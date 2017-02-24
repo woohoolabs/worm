@@ -5,9 +5,9 @@ namespace WoohooLabs\Worm;
 
 use Traversable;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
+use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Execution\QueryExecutor;
-use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Query\SelectQueryBuilder;
 
