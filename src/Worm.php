@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm;
 
+use Traversable;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Execution\QueryExecutor;
@@ -64,7 +65,7 @@ class Worm
     }
 
     /**
-     * @param object $entity
+     * @param object|null $entity
      * @return void
      */
     public function save(ModelInterface $model, array $record, $entity)
@@ -73,7 +74,7 @@ class Worm
     }
 
     /**
-     * @param object $entity
+     * @param array|Traversable $relatedEntities
      * @return void
      */
     public function saveRelatedEntities(
@@ -81,9 +82,9 @@ class Worm
         string $relationship,
         array $record,
         array $relatedRecord,
-        $relatedEntity
+        $relatedEntities
     ) {
-        $this->persister->saveRelatedEntities($model, $relationship, $record, $relatedRecord, $relatedEntity);
+        $this->persister->saveRelatedEntities($model, $relationship, $record, $relatedRecord, $relatedEntities);
     }
 
     /**

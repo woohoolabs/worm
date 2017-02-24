@@ -29,7 +29,7 @@ class Persister
     }
 
     /**
-     * @param object $entity
+     * @param object|null $entity
      * @return void
      */
     public function save(ModelInterface $model, array $record, $entity)
@@ -54,7 +54,7 @@ class Persister
     }
 
     /**
-     * @param object $relatedEntity
+     * @param object|null $relatedEntity
      * @return void
      */
     public function saveRelatedEntity(
@@ -85,7 +85,7 @@ class Persister
     }
 
     /**
-     * @param object[] $relatedObjects
+     * @param object[]|null[] $relatedObjects
      * @return void
      */
     public function saveRelatedEntities(
@@ -120,7 +120,7 @@ class Persister
     }
 
     /**
-     * @param object $entity
+     * @param object|null $entity
      * @return void
      */
     private function insert(ModelInterface $model, array $record, $entity)
@@ -138,7 +138,7 @@ class Persister
     }
 
     /**
-     * @param object $entity
+     * @param object|null $entity
      * @return void
      */
     private function update(ModelInterface $model, array $record, $entity)

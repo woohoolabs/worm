@@ -14,7 +14,7 @@ class IdentityMap
     const STATE_DELETED = 2;
 
     /**
-     * @var object[]
+     * @var array
      */
     private $identityMap = [];
 
@@ -82,8 +82,8 @@ class IdentityMap
 
     /**
      * @param mixed $id
-     * @param object $object
-     * @return object
+     * @param object|null $object
+     * @return object|null
      */
     public function setObject(string $type, $id, $object)
     {
@@ -134,7 +134,7 @@ class IdentityMap
     /**
      * @param mixed $id
      */
-    public function getState(string $type, $id)
+    public function getState(string $type, $id): int
     {
         if ($this->hasId($type, $id) === false) {
             return self::STATE_NEW;

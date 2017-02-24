@@ -23,6 +23,9 @@ interface RelationshipInterface
         IdentityMap $identityMap
     ): array;
 
+    /**
+     * @return void
+     */
     public function addRelationshipToIdentityMap(
         IdentityMap $identityMap,
         string $relationshipName,
