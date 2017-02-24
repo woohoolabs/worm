@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
+use WoohooLabs\Worm\Examples\Domain\Course;
+use WoohooLabs\Worm\Examples\Domain\SchoolClass;
 use WoohooLabs\Worm\Model\AbstractModel;
 
 class ClassModel extends AbstractModel
@@ -39,6 +41,17 @@ class ClassModel extends AbstractModel
     public function getPrimaryKey(): string
     {
         return $this->id;
+    }
+
+    public function mapClass(Course $course, SchoolClass $class): array
+    {
+        return [
+            $this->id => $class->getId(),
+            $this->course_id => $course->getId(),
+            $this->room_id => $class->getRoomId(),
+            $this->teacher_id => $class->getTeacherId(),
+            $this->datetime => $class->getDatetime()->format("Y-m-d H:i:s")
+        ];
     }
 
     protected function getRelationships(): array

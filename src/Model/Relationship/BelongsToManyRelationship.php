@@ -16,11 +16,18 @@ class BelongsToManyRelationship extends BelongsToOneRelationship
         return $this->insertManyRelationship(
             $entities,
             $relationshipName,
-            $this->relatedModel,
             $relatedEntities,
             $this->referencedKey,
             $this->foreignKey,
             $identityMap
         );
+    }
+
+    public function addRelationshipToIdentityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $parentEntity
+    ) {
+        $this->addManyToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }

@@ -7,7 +7,7 @@ use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder as LarvaSelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
-use WoohooLabs\Worm\Execution\Executor;
+use WoohooLabs\Worm\Execution\QueryExecutor;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 class SelectQueryBuilder
@@ -18,9 +18,9 @@ class SelectQueryBuilder
     private $model;
 
     /**
-     * @var Executor
+     * @var QueryExecutor
      */
-    private $executor;
+    private $queryExecutor;
 
     /**
      * @var LarvaSelectQueryBuilder
@@ -32,10 +32,10 @@ class SelectQueryBuilder
      */
     private $relationships = [];
 
-    public function __construct(ModelInterface $model, Executor $executor)
+    public function __construct(ModelInterface $model, QueryExecutor $executor)
     {
         $this->model = $model;
-        $this->executor = $executor;
+        $this->queryExecutor = $executor;
         $this->queryBuilder = new LarvaSelectQueryBuilder();
         $this->queryBuilder->from($model->getTable());
     }
@@ -179,18 +179,18 @@ class SelectQueryBuilder
             )
             ->limit(1);
 
-        return $this->executor->fetchOne($this->model, $this->queryBuilder, $this->relationships);
+        return $this->queryExecutor->fetchOne($this->model, $this->queryBuilder, $this->relationships);
     }
 
     public function fetchFirst(): array
     {
         $this->queryBuilder->limit(1);
 
-        return $this->executor->fetchOne($this->model, $this->queryBuilder, $this->relationships);
+        return $this->queryExecutor->fetchOne($this->model, $this->queryBuilder, $this->relationships);
     }
 
     public function fetchAll(): array
     {
-        return $this->executor->fetchAll($this->model, $this->queryBuilder, $this->relationships);
+        return $this->queryExecutor->fetchAll($this->model, $this->queryBuilder, $this->relationships);
     }
 }

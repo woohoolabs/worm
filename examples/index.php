@@ -52,7 +52,6 @@ $courses = $courseRepository->getCourses();
 echo "<pre>";
 echo "Memory usage: " . (memory_get_peak_usage() / 1024 / 1024) . " MB";
 echo "<h1>Courses:</h1>";
-print_r($courses);
 
 // Modify some attributes of the first course
 $firstCourse = $courses[0];
@@ -60,8 +59,10 @@ $firstCourse->setName("Operating Systems Architecture 2");
 $firstCourse->setDescription("Very advanced topics");
 
 // Delete the second course
-unset($courses[1]);
+//$firstCourse->removeClass(1);
 
 $courseRepository->save($firstCourse);
+
+print_r($courseRepository->getCourses());
 
 echo "</pre>";

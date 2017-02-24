@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Model;
 
 use DomainException;
+use WoohooLabs\Worm\Execution\IdentityMap;
+use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 interface ModelInterface
@@ -25,5 +27,15 @@ interface ModelInterface
     /**
      * @return mixed
      */
-    public function getId(array $entity);
+    public function getId(array $record);
+
+    /**
+     * @return void
+     */
+    public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity);
+
+    /**
+     * @return void
+     */
+    public function cascadeDelete(Persister $persister, $id);
 }

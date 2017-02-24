@@ -3,8 +3,16 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Execution;
 
+use WoohooLabs\Worm\Model\ModelInterface;
+
 class IdentityMap
 {
+    const STATE_NEW = 0;
+
+    const STATE_MANAGED = 1;
+
+    const STATE_DELETED = 2;
+
     /**
      * @var object[]
      */
@@ -16,22 +24,24 @@ class IdentityMap
             /*"user" => [
                 [
                     1 => [
-                        null,
+                        1,
                         [
                             0 => [
                                 1,
                                 2
                             ],
-                        ]
+                        ],
+                        null,
                     ],
                     2 => [
-                        null,
+                        1,
                         [
                             0 => [
                                 3,
                                 4
                             ],
-                        ]
+                        ],
+                        null,
                     ],
                 ],
                 [
@@ -43,10 +53,10 @@ class IdentityMap
             ],
             "address" => [
                 [
-                    1 => [null, []],
-                    2 => [null, []],
-                    3 => [null, []],
-                    4 => [null, []],
+                    1 => [1, [], null],
+                    2 => [1, [], null],
+                    3 => [1, [], null],
+                    4 => [1, [], null],
                 ],
                 []
             ],*/
@@ -58,30 +68,44 @@ class IdentityMap
      */
     public function hasObject(string $type, $id): bool
     {
-        return isset($this->identityMap[$type]["ids"][$id][0]);
+        return isset($this->identityMap[$type]["ids"][$id][2]);
     }
 
     /**
      * @param mixed $id
-     * @return object
+     * @return object|null
      */
     public function getObject(string $type, $id)
     {
-        return $this->identityMap[$type]["ids"][$id][0] ?? null;
+        return $this->identityMap[$type]["ids"][$id][2] ?? null;
     }
 
     /**
      * @param mixed $id
+     * @param object $object
+     * @return object
      */
-    public function createObject(string $type, $id, array $entity, callable $factory)
+    public function setObject(string $type, $id, $object)
     {
+        return $this->identityMap[$type]["ids"][$id][2] = $object;
+    }
+
+    /**
+     * @return object
+     */
+    public function createObject(ModelInterface $model, array $entity, callable $factory)
+    {
+        $type = $model->getTable();
+        $id = $model->getId($entity);
+
         $object = $this->getObject($type, $id);
         if ($object) {
             return $object;
         }
 
         $object = $factory($entity);
-        $this->setObject($type, $id, $object);
+        $this->addId($type, $id, $object);
+        $model->addRelationshipsToIdentityMap($this, $entity);
 
         return $object;
     }
@@ -94,15 +118,52 @@ class IdentityMap
         return isset($this->identityMap[$type]["ids"][$id]);
     }
 
-    public function addId(string $type, $id)
+    /**
+     * @param mixed $id
+     * @return void
+     */
+    public function addId(string $type, $id, $object = null)
     {
-        if ($this->hasId($type, $id)) {
+        if ($this->getState($type, $id) === self::STATE_MANAGED) {
             return;
         }
 
-        $this->identityMap[$type]["ids"][$id] = [null, []];
+        $this->identityMap[$type]["ids"][$id] = [self::STATE_MANAGED, [], $object];
     }
 
+    /**
+     * @param mixed $id
+     */
+    public function getState(string $type, $id)
+    {
+        if ($this->hasId($type, $id) === false) {
+            return self::STATE_NEW;
+        }
+
+        return $this->identityMap[$type]["ids"][$id][0];
+    }
+
+    /**
+     * @param mixed $id
+     * @return void
+     */
+    public function setState(string $type, $id, int $state)
+    {
+        $this->identityMap[$type]["ids"][$id][0] = $state;
+    }
+
+    /**
+     * @param mixed $id
+     * @return void
+     */
+    public function removeId(string $type, $id)
+    {
+        unset($this->identityMap[$type]["ids"][$id]);
+    }
+
+    /**
+     * @param mixed $id
+     */
     public function hasRelatedId(string $type, $id, string $relationship, $relatedId): bool
     {
         $relatedIds = $this->getRelatedIds($type, $id, $relationship);
@@ -110,6 +171,43 @@ class IdentityMap
         return isset($relatedIds[$relatedId]);
     }
 
+    /**
+     * @param mixed $id
+     */
+    public function getRelatedIds(string $type, $id, string $relationship): array
+    {
+        $relationshipKey = $this->getRelationshipKey($type, $relationship);
+        if ($relationshipKey === null) {
+            return [];
+        }
+
+        return $this->identityMap[$type]["ids"][$id][1][$relationshipKey] ?? [];
+    }
+
+    /**
+     * @param mixed $id
+     * @param mixed[] $relatedIds
+     * @return void
+     */
+    public function setRelatedIds(string $type, $id, string $relationship, string $relatedType, array $relatedIds)
+    {
+        if ($this->hasId($type, $id) === false) {
+            return;
+        }
+
+        $relationshipKey = $this->getRelationshipKey($type, $relationship);
+        if ($relationshipKey === null) {
+            $relationshipKey = $this->setRelationship($type, $relationship, $relatedType);
+        }
+
+        $this->identityMap[$type]["ids"][$id][1][$relationshipKey] = array_flip($relatedIds);
+    }
+
+    /**
+     * @param mixed $id
+     * @param mixed $relatedId
+     * @return void
+     */
     public function addRelatedId(string $type, $id, string $relationship, string $relatedType, $relatedId)
     {
         if ($this->hasId($type, $id) === false) {
@@ -124,18 +222,28 @@ class IdentityMap
         $this->identityMap[$type]["ids"][$id][1][$relationshipKey][$relatedId] = $relatedId;
     }
 
+    /**
+     * @param mixed $id
+     * @param mixed $relatedId
+     * @return void
+     */
+    public function removeRelatedId(string $type, $id, string $relationship, $relatedId)
+    {
+        if ($this->hasId($type, $id) === false) {
+            return;
+        }
+
+        $relationshipKey = $this->getRelationshipKey($type, $relationship);
+        if ($relationshipKey === null) {
+            return;
+        }
+
+        unset($this->identityMap[$type]["ids"][$id][1][$relationshipKey][$relatedId]);
+    }
+
     public function getMap(): array
     {
         return $this->identityMap;
-    }
-
-    /**
-     * @param mixed $id
-     * @param object $object
-     */
-    private function setObject(string $type, $id, $object)
-    {
-        $this->identityMap[$type]["ids"][$id][0] = $object;
     }
 
     /**
@@ -156,15 +264,5 @@ class IdentityMap
         ];
 
         return $key;
-    }
-
-    private function getRelatedIds(string $type, $id, string $relationship): array
-    {
-        $relationshipKey = $this->getRelationshipKey($type, $relationship);
-        if ($relationshipKey === null) {
-            return [];
-        }
-
-        return $this->identityMap[$type]["ids"][$id][1][$relationshipKey] ?? [];
     }
 }

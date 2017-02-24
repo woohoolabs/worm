@@ -26,8 +26,7 @@ abstract class AbstractFactory
         }
 
         return $this->identityMap->createObject(
-            $model->getTable(),
-            $entity[$model->getPrimaryKey()],
+            $model,
             $entity,
             $factory
         );

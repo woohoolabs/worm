@@ -8,7 +8,7 @@ use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
-class Executor
+class QueryExecutor
 {
     /**
      * @var ConnectionInterface

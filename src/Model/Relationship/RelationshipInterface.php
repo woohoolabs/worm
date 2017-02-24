@@ -5,6 +5,7 @@ namespace WoohooLabs\Worm\Model\Relationship;
 
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
+use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 interface RelationshipInterface
@@ -21,4 +22,16 @@ interface RelationshipInterface
         array $relatedEntities,
         IdentityMap $identityMap
     ): array;
+
+    public function addRelationshipToIdentityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $parentEntity
+    );
+
+    /**
+     * @param mixed $parentId
+     * @return void
+     */
+    public function cascadeDelete(Persister $persister, string $relationshipName, $parentId);
 }

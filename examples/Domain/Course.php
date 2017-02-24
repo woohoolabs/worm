@@ -6,6 +6,11 @@ namespace WoohooLabs\Worm\Examples\Domain;
 class Course
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var
      */
     private $name;
@@ -33,13 +38,19 @@ class Course
     /**
      * @param SchoolClass[] $classes
      */
-    public function __construct(string $name, string $description, int $credit, string $language, array $classes)
+    public function __construct(int $id, string $name, string $description, int $credit, string $language, array $classes)
     {
+        $this->id = $id;
         $this->name = $name;
         $this->description = $description;
         $this->credit = $credit;
         $this->language = $language;
         $this->classes = $classes;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function setName(string $name)
@@ -78,5 +89,18 @@ class Course
     public function getClasses(): array
     {
         return $this->classes;
+    }
+
+    /**
+     * @return void
+     */
+    public function removeClass($id)
+    {
+        foreach ($this->classes as $key => $class) {
+            if ($class->getId() === $id) {
+                unset($this->classes[$key]);
+                return;
+            }
+        }
     }
 }

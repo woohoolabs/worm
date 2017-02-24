@@ -42,15 +42,16 @@ class HasManyThroughRelationship extends AbstractRelationship
     private $referencedKey2;
 
     public function __construct(
-        ModelInterface $model,
+        ModelInterface $parentModel,
         string $referencedKey1,
         ModelInterface $junctionModel,
         string $foreignKey1,
         string $foreignKey2,
         ModelInterface $relatedModel,
-        string $referencedKey2
+        string $referencedKey2,
+        bool $isCascadedDelete = false
     ) {
-        parent::__construct($model);
+        parent::__construct($parentModel, $isCascadedDelete);
         $this->referencedKey1 = $referencedKey1;
         $this->junctionModel = $junctionModel;
         $this->foreignKey1 = $foreignKey1;
@@ -93,7 +94,6 @@ class HasManyThroughRelationship extends AbstractRelationship
         return $this->insertManyRelationship(
             $entities,
             $relationshipName,
-            $this->relatedModel,
             $relatedEntities,
             $this->foreignKey1,
             $this->referencedKey1,
@@ -101,33 +101,11 @@ class HasManyThroughRelationship extends AbstractRelationship
         );
     }
 
-    public function getReferencedKey1(): string
-    {
-        return $this->referencedKey1;
-    }
-
-    public function getJunctionModel(): ModelInterface
-    {
-        return $this->junctionModel;
-    }
-
-    public function getForeignKey1(): string
-    {
-        return $this->foreignKey1;
-    }
-
-    public function getForeignKey2(): string
-    {
-        return $this->foreignKey2;
-    }
-
-    public function getRelatedModel(): ModelInterface
-    {
-        return $this->relatedModel;
-    }
-
-    public function getReferencedKey2(): string
-    {
-        return $this->referencedKey2;
+    public function addRelationshipToIdentityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $parentEntity
+    ) {
+        $this->addManyToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }

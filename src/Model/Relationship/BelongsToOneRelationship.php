@@ -27,12 +27,13 @@ class BelongsToOneRelationship extends AbstractRelationship
     protected $referencedKey;
 
     public function __construct(
-        ModelInterface $model,
+        ModelInterface $parentModel,
         ModelInterface $relatedModel,
         string $foreignKey,
-        string $referencedKey
+        string $referencedKey,
+        bool $isCascadedDelete = false
     ) {
-        parent::__construct($model);
+        parent::__construct($parentModel, $isCascadedDelete);
         $this->relatedModel = $relatedModel;
         $this->foreignKey = $foreignKey;
         $this->referencedKey = $referencedKey;
@@ -71,7 +72,6 @@ class BelongsToOneRelationship extends AbstractRelationship
         return $this->insertOneRelationship(
             $entities,
             $relationshipName,
-            $this->relatedModel,
             $relatedEntities,
             $this->referencedKey,
             $this->foreignKey,
@@ -79,18 +79,11 @@ class BelongsToOneRelationship extends AbstractRelationship
         );
     }
 
-    public function getRelatedModel(): ModelInterface
-    {
-        return $this->relatedModel;
-    }
-
-    public function getForeignKey(): string
-    {
-        return $this->foreignKey;
-    }
-
-    public function getReferencedKey(): string
-    {
-        return $this->referencedKey;
+    public function addRelationshipToIdentityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $parentEntity
+    ) {
+        $this->addOneToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }

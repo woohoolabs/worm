@@ -6,6 +6,7 @@ namespace WoohooLabs\Worm\Model\Relationship;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
+use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\ModelInterface;
 
 abstract class AbstractRelationship implements RelationshipInterface
@@ -15,14 +16,38 @@ abstract class AbstractRelationship implements RelationshipInterface
      */
     protected $parentModel;
 
-    public function __construct(ModelInterface $model)
+    /**
+     * @var bool
+     */
+    protected $cascadedDelete;
+
+    public function __construct(ModelInterface $parentModel, bool $isCascadedDelete)
     {
-        $this->parentModel = $model;
+        $this->parentModel = $parentModel;
+        $this->cascadedDelete = $isCascadedDelete;
     }
 
     public function getParentModel(): ModelInterface
     {
         return $this->parentModel;
+    }
+
+    public function cascadeDelete(Persister $persister, string $relationshipName, $parentId)
+    {
+        if ($this->cascadedDelete === false) {
+            return;
+        }
+
+        $identityMap = $persister->getIdentityMap();
+        $relatedIds = $identityMap->getRelatedIds($this->parentModel->getTable(), $parentId, $relationshipName);
+
+        foreach ($relatedIds as $relatedId) {
+            $type = $this->getModel()->getTable();
+            $identityMap->setState($type, $relatedId, IdentityMap::STATE_DELETED);
+            $identityMap->setObject($type, $relatedId, null);
+            $identityMap->removeRelatedId($type, $parentId, $relationshipName, $relatedId);
+            $this->getModel()->cascadeDelete($persister, $relatedId);
+        }
     }
 
     protected function getWhereCondition(string $prefix, string $foreignKey, array $entities): ConditionBuilderInterface
@@ -43,7 +68,6 @@ abstract class AbstractRelationship implements RelationshipInterface
     protected function insertOneRelationship(
         array $entities,
         string $relationshipName,
-        ModelInterface $relatedModel,
         array $relatedEntities,
         string $foreignKey,
         string $field,
@@ -63,7 +87,7 @@ abstract class AbstractRelationship implements RelationshipInterface
             $entities[$key][$relationshipName] = $relatedEntity;
 
             // Add the related entity to the identity map
-            $this->addToEntityMap($entity, $relationshipName, $relatedModel, $relatedEntity, $identityMap);
+            $this->addOneToEntityMap($identityMap, $relationshipName, $entity, $relatedEntity);
         }
 
         return $entities;
@@ -72,7 +96,6 @@ abstract class AbstractRelationship implements RelationshipInterface
     protected function insertManyRelationship(
         array $entities,
         string $relationshipName,
-        ModelInterface $relatedModel,
         array $relatedEntities,
         string $foreignKey,
         string $field,
@@ -92,25 +115,45 @@ abstract class AbstractRelationship implements RelationshipInterface
             $entities[$key][$relationshipName] = $relationship;
 
             // Add related entities to the identity map
-            foreach ($relationship as $relatedEntity) {
-                $this->addToEntityMap($entity, $relationshipName, $relatedModel, $relatedEntity, $identityMap);
-            }
+            $this->addManyToEntityMap($identityMap, $relationshipName, $entity, $relationship);
         }
 
         return $entities;
     }
 
-    /**
-     * @return void
-     */
-    protected function setRelatedIds(IdentityMap $identityMap, array $entity, string $relationship, array $relatedIds)
-    {
-        $identityMap->setRelatedIds(
-            $this->getParentModel()->getTable(),
-            $this->getParentModel()->getId($entity),
-            $relationship,
-            $this->getModel()->getTable(),
-            $relatedIds
+    protected function addManyToEntityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $entity,
+        array $relatedEntities
+    ) {
+        foreach ($relatedEntities as $relatedEntity) {
+            $this->addOneToEntityMap($identityMap, $relationshipName, $entity, $relatedEntity);
+        }
+    }
+
+    protected function addOneToEntityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $entity,
+        array $relatedEntity
+    ) {
+        $relatedEntityType = $this->getModel()->getTable();
+        $relatedEntityId = $this->getModel()->getId($relatedEntity);
+        if ($relatedEntityId === null) {
+            return;
+        }
+
+        // Add related entity to the identity map
+        $identityMap->addId($relatedEntityType, $relatedEntityId);
+
+        // Add relationship to the identity map
+        $identityMap->addRelatedId(
+            $this->parentModel->getTable(),
+            $this->parentModel->getId($entity),
+            $relationshipName,
+            $relatedEntityType,
+            $relatedEntityId
         );
     }
 
@@ -140,31 +183,5 @@ abstract class AbstractRelationship implements RelationshipInterface
         }
 
         return $entityMap;
-    }
-
-    private function addToEntityMap(
-        array $entity,
-        string $relationshipName,
-        ModelInterface $relatedModel,
-        array $relatedEntity,
-        IdentityMap $identityMap
-    ) {
-        // Check for the ID of the related entity
-        $relatedEntityId = $relatedModel->getId($relatedEntity);
-        if ($relatedEntityId === null) {
-            return;
-        }
-
-        // Add related entity to the identity map
-        $identityMap->addId($relatedModel->getTable(), $relatedEntityId);
-
-        // Add relationship to the identity map
-        $identityMap->addRelatedId(
-            $this->parentModel->getTable(),
-            $this->parentModel->getId($entity),
-            $relationshipName,
-            $relatedModel->getTable(),
-            $relatedEntityId
-        );
     }
 }

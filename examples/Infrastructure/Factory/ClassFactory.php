@@ -44,9 +44,9 @@ class ClassFactory extends AbstractFactory
     {
         $factory = function (array $entity): SchoolClass {
             return new SchoolClass(
-                $entity[$this->model->id],
-                $entity[$this->model->room_id],
-                $entity[$this->model->teacher_id],
+                (int) $entity[$this->model->id],
+                (int) $entity[$this->model->room_id],
+                (int) $entity[$this->model->teacher_id],
                 $this->studentFactory->createStudents($entity[$this->model->students] ?? []),
                 new DateTimeImmutable($entity[$this->model->datetime])
             );

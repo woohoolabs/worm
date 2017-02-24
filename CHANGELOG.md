@@ -2,6 +2,9 @@
 
 ADDED:
 
+- Ability to persist entities via `Worm::save()` and `Worm::delete()`
+- Ability to define if a relationship has `ON DELETE CASCADE` constraint
+
 CHANGED:
 
 REMOVED:

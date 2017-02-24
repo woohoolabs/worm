@@ -45,8 +45,24 @@ class CourseRepository extends AbstractRepository
      */
     public function save(Course $course)
     {
-        $entity = [];
+        $record = $this->courseModel->mapCourse($course);
 
-        $this->worm->save($this->courseModel, $entity, $course);
+        $classRecords = [];
+        foreach ($course->getClasses() as $class) {
+            $classRecords[] = $this->courseModel->getClassModel()->mapClass($course, $class);
+        }
+
+        $this->worm->beginTransaction();
+
+        $this->worm->save($this->courseModel, $record, $course);
+        $this->worm->saveRelatedEntities(
+            $this->courseModel,
+            $this->courseModel->classes,
+            $record,
+            $classRecords,
+            $course->getClasses()
+        );
+
+        $this->worm->rollback();
     }
 }

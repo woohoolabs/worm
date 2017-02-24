@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Model;
 
 use DomainException;
+use WoohooLabs\Worm\Execution\IdentityMap;
+use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\Relationship\BelongsToManyRelationship;
 use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyRelationship;
@@ -35,6 +37,9 @@ abstract class AbstractModel implements ModelInterface
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getRelationshipNames(): array
     {
         if (empty($this->relationships)) {
@@ -57,41 +62,73 @@ abstract class AbstractModel implements ModelInterface
         return $this->relationships[$name];
     }
 
-    public function getId(array $entity)
+    /**
+     * @return mixed|null
+     */
+    public function getId(array $record)
     {
-        return $entity[$this->getPrimaryKey()] ?? null;
+        return $record[$this->getPrimaryKey()] ?? null;
+    }
+
+    public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity)
+    {
+        $relationshipNames = $this->getRelationshipNames();
+        foreach ($relationshipNames as $relationshipName) {
+            if (empty($record[$relationshipName])) {
+                continue;
+            }
+
+            $relationship = $this->getRelationship($relationshipName);
+            $relationship->addRelationshipToIdentityMap($identityMap, $relationshipName, $entity);
+        }
+    }
+
+    /**
+     * @param mixed $id
+     * @return void
+     */
+    public function cascadeDelete(Persister $persister, $id)
+    {
+        foreach ($this->getRelationshipNames() as $relationshipName) {
+            $relationship = $this->getRelationship($relationshipName);
+            $relationship->cascadeDelete($persister, $relationshipName, $id);
+        }
     }
 
     protected function belongsToOne(
         ModelInterface $relatedModel,
         string $foreignKey,
-        string $referencedKey
+        string $referencedKey,
+        bool $isCascadedDelete = false
     ): BelongsToOneRelationship {
-        return new BelongsToOneRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+        return new BelongsToOneRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
     protected function belongsToMany(
         ModelInterface $relatedModel,
         string $foreignKey,
-        string $referencedKey
+        string $referencedKey,
+        bool $isCascadedDelete = false
     ): BelongsToManyRelationship {
-        return new BelongsToManyRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+        return new BelongsToManyRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
     protected function hasOne(
         ModelInterface $relatedModel,
         string $foreignKey,
-        string $referencedKey
+        string $referencedKey,
+        bool $isCascadedDelete = false
     ): HasOneRelationship {
-        return new HasOneRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+        return new HasOneRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
     protected function hasMany(
         ModelInterface $relatedModel,
         string $foreignKey,
-        string $referencedKey
+        string $referencedKey,
+        bool $isCascadedDelete = false
     ): HasManyRelationship {
-        return new HasManyRelationship($this, $relatedModel, $foreignKey, $referencedKey);
+        return new HasManyRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
     protected function hasManyThrough(
@@ -100,7 +137,8 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey1,
         string $foreignKey2,
         ModelInterface $referencedModel,
-        string $referencedKey2
+        string $referencedKey2,
+        bool $isCascadedDelete = false
     ): HasManyThroughRelationship {
         return new HasManyThroughRelationship(
             $this,
@@ -109,7 +147,8 @@ abstract class AbstractModel implements ModelInterface
             $foreignKey1,
             $foreignKey2,
             $referencedModel,
-            $referencedKey2
+            $referencedKey2,
+            $isCascadedDelete
         );
     }
 }

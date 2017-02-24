@@ -16,11 +16,18 @@ class HasManyRelationship extends HasOneRelationship
         return $this->insertManyRelationship(
             $entities,
             $relationshipName,
-            $this->relatedModel,
             $relatedEntities,
             $this->foreignKey,
             $this->referencedKey,
             $identityMap
         );
+    }
+
+    public function addRelationshipToIdentityMap(
+        IdentityMap $identityMap,
+        string $relationshipName,
+        array $parentEntity
+    ) {
+        $this->addManyToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }
