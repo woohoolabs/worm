@@ -17,7 +17,7 @@ use WoohooLabs\Worm\Worm;
 
 $identityMap = new IdentityMap();
 $worm = new Worm(
-    MySqlPdoConnection::create(
+    new MySqlPdoConnection(
         "mysql",
         (int) getenv("MYSQL_PORT"),
         getenv("MYSQL_DATABASE"),
