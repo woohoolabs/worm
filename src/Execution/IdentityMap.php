@@ -91,21 +91,32 @@ class IdentityMap
     }
 
     /**
-     * @return object
+     * @return mixed
      */
     public function createObject(ModelInterface $model, array $entity, callable $factory)
     {
         $type = $model->getTable();
         $id = $model->getId($entity);
 
+        $object = $this->createObjectFromId($type, $id, $factory);
+
+        $model->addRelationshipsToIdentityMap($this, $entity);
+
+        return $object;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function createObjectFromId(string $type, $id, callable $factory)
+    {
         $object = $this->getObject($type, $id);
         if ($object) {
             return $object;
         }
 
-        $object = $factory($entity);
+        $object = $factory();
         $this->addId($type, $id, $object);
-        $model->addRelationshipsToIdentityMap($this, $entity);
 
         return $object;
     }
