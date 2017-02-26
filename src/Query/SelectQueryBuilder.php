@@ -193,4 +193,9 @@ class SelectQueryBuilder
     {
         return $this->queryExecutor->fetchAll($this->model, $this->queryBuilder, $this->relationships);
     }
+
+    public function fetchColumn(): string
+    {
+        return $this->queryExecutor->fetchColumn($this->queryBuilder);
+    }
 }

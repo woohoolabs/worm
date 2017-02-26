@@ -44,6 +44,11 @@ class QueryExecutor
         return $this->createEntities($model, $selectQueryBuilder, $relationships);
     }
 
+    public function fetchColumn(SelectQueryBuilderInterface $selectQueryBuilder): string
+    {
+        return $selectQueryBuilder->fetchColumn($this->connection);
+    }
+
     public function getIdentityMap(): IdentityMap
     {
         return $this->identityMap;
