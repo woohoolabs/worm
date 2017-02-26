@@ -33,7 +33,7 @@ class CourseRepository extends AbstractRepository
     public function getCourses(): array
     {
         $courses = $this->worm
-            ->queryModel($this->courseModel)
+            ->query($this->courseModel)
             ->withRelationships($this->courseModel->getAllRelationshipNames())
             ->fetchAll();
 

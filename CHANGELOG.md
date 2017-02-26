@@ -9,6 +9,8 @@ ADDED:
 
 CHANGED:
 
+- Renamed `Worm::queryModel()` to `Worm::query()`
+
 REMOVED:
 
 FIXED:

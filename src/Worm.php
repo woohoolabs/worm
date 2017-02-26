@@ -35,7 +35,7 @@ class Worm
         $this->persister = new Persister($connection, $identityMap);
     }
 
-    public function queryModel(ModelInterface $model): SelectQueryBuilder
+    public function query(ModelInterface $model): SelectQueryBuilder
     {
         return new SelectQueryBuilder($model, $this->queryExecutor);
     }
