@@ -6,6 +6,7 @@ ADDED:
 - Ability to define if a relationship has `ON DELETE CASCADE` constraint
 - `IdentityMap::createObjectFromId` method
 - `SelectQueryBuilder::fetchColumn()` method
+- `Worm::saveRelatedEntity()` method
 
 CHANGED:
 

@@ -74,6 +74,20 @@ class Worm
     }
 
     /**
+     * @param object|null $relatedEntity
+     * @return void
+     */
+    public function saveRelatedEntity(
+        ModelInterface $model,
+        string $relationship,
+        array $record,
+        array $relatedRecord,
+        $relatedEntity
+    ) {
+        $this->persister->saveRelatedEntity($model, $relationship, $record, $relatedRecord, $relatedEntity);
+    }
+
+    /**
      * @param array|Traversable $relatedEntities
      * @return void
      */
