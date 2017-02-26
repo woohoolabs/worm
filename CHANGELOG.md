@@ -11,6 +11,10 @@ CHANGED:
 
 REMOVED:
 
+FIXED:
+
+- `WHERE` conditions won't be erased when using `SelectQueryBuilder::fetchById()`
+
 ## 0.2.0 - 2017-02-17
 
 ADDED:

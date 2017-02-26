@@ -173,7 +173,7 @@ class SelectQueryBuilder
     public function fetchById($id): array
     {
         $this->queryBuilder
-            ->where(
+            ->addWhereGroup(
                 ConditionBuilder::create()
                     ->columnToValue($this->model->getPrimaryKey(), "=", $id)
             )
