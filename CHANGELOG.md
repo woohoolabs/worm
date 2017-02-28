@@ -10,10 +10,13 @@ ADDED:
 - `Worm::saveRelatedEntity()` method
 - `Worm::transaction()` method
 - `SelectQueryBuilder::withAllTransitiveRelationships()` method
+- `SelectQueryBuilder::fetchCount()` method
 
 CHANGED:
 
 - Renamed `Worm::queryModel()` to `Worm::query()`
+- Updated minimum Larva version requirement to 0.4
+- Adapted to changes in Larva 0.4
 
 REMOVED:
 
@@ -31,7 +34,7 @@ ADDED:
 
 CHANGED:
 
-- Updated minimum Larva version requirement to v0.3.0
+- Updated minimum Larva version requirement to 0.3
 - Optimized retrieval of relationships
 
 REMOVED:

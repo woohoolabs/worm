@@ -44,7 +44,10 @@ class QueryExecutor
         return $this->createEntities($model, $selectQueryBuilder, $relationships);
     }
 
-    public function fetchColumn(SelectQueryBuilderInterface $selectQueryBuilder): string
+    /**
+     * @return mixed
+     */
+    public function fetchColumn(SelectQueryBuilderInterface $selectQueryBuilder)
     {
         return $selectQueryBuilder->fetchColumn($this->connection);
     }

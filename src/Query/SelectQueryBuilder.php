@@ -40,9 +40,23 @@ class SelectQueryBuilder
         $this->queryBuilder->from($model->getTable());
     }
 
-    public function select(array $select): SelectQueryBuilder
+    public function selectColumns(array $columns): SelectQueryBuilder
     {
-        $this->queryBuilder->select($select);
+        $this->queryBuilder->selectColumns($columns);
+
+        return $this;
+    }
+
+    public function selectColumn(string $column): SelectQueryBuilder
+    {
+        $this->queryBuilder->selectColumn($column);
+
+        return $this;
+    }
+
+    public function selectExpressions(array $expressions): SelectQueryBuilder
+    {
+        $this->queryBuilder->selectExpressions($expressions);
 
         return $this;
     }
@@ -50,13 +64,6 @@ class SelectQueryBuilder
     public function selectExpression(string $expression, string $alias = ""): SelectQueryBuilder
     {
         $this->queryBuilder->selectExpression($expression, $alias);
-
-        return $this;
-    }
-
-    public function selectColumn(string $column, string $prefix = "", string $alias = ""): SelectQueryBuilder
-    {
-        $this->queryBuilder->selectColumn($column, $prefix, $alias);
 
         return $this;
     }
@@ -201,8 +208,18 @@ class SelectQueryBuilder
         return $this->queryExecutor->fetchAll($this->model, $this->queryBuilder, $this->relationships);
     }
 
-    public function fetchColumn(): string
+    /**
+     * @return mixed
+     */
+    public function fetchColumn()
     {
+        return $this->queryExecutor->fetchColumn($this->queryBuilder);
+    }
+
+    public function fetchCount(string $column = "*"): int
+    {
+        $this->queryBuilder->selectCount($column);
+
         return $this->queryExecutor->fetchColumn($this->queryBuilder);
     }
 
