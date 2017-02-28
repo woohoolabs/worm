@@ -3,11 +3,13 @@
 ADDED:
 
 - Ability to persist entities via `Worm::save()` and `Worm::delete()`
+- Ability to persist related entities via `Worm::saveRelatedEntity()` and `Worm::saveRelatedEntities()`
 - Ability to define if a relationship has `ON DELETE CASCADE` constraint
 - `IdentityMap::createObjectFromId` method
 - `SelectQueryBuilder::fetchColumn()` method
 - `Worm::saveRelatedEntity()` method
 - `Worm::transaction()` method
+- `SelectQueryBuilder::withAllTransitiveRelationships()` method
 
 CHANGED:
 

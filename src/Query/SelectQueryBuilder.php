@@ -75,6 +75,13 @@ class SelectQueryBuilder
         return $this;
     }
 
+    public function withAllTransitiveRelationships(): SelectQueryBuilder
+    {
+        $this->relationships = $this->getModelRelationships($this->model);
+
+        return $this;
+    }
+
     public function withRelationships(array $relationships): SelectQueryBuilder
     {
         $this->relationships = $relationships;
@@ -197,5 +204,22 @@ class SelectQueryBuilder
     public function fetchColumn(): string
     {
         return $this->queryExecutor->fetchColumn($this->queryBuilder);
+    }
+
+    private function getModelRelationships(ModelInterface $model): array
+    {
+        $result = [];
+
+        foreach ($model->getRelationshipNames() as $relationshipName) {
+            $relationship = $model->getRelationship($relationshipName);
+
+            if (empty($relationship->getModel()->getRelationshipNames())) {
+                $result[] = $relationshipName;
+            } else {
+                $result[$relationshipName] = $this->getModelRelationships($relationship->getModel());
+            }
+        }
+
+        return $result;
     }
 }
