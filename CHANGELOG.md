@@ -7,6 +7,7 @@ ADDED:
 - `IdentityMap::createObjectFromId` method
 - `SelectQueryBuilder::fetchColumn()` method
 - `Worm::saveRelatedEntity()` method
+- `Worm::transaction()` method
 
 CHANGED:
 

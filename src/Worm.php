@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm;
 
+use Throwable;
 use Traversable;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
@@ -38,6 +39,23 @@ class Worm
     public function query(ModelInterface $model): SelectQueryBuilder
     {
         return new SelectQueryBuilder($model, $this->queryExecutor);
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
+    public function transaction(callable $callback)
+    {
+        try {
+            $this->getConnection()->beginTransaction();
+            $callback();
+            $this->getConnection()->commit();
+        } catch (Throwable $e) {
+            $this->getConnection()->rollback();
+
+            throw $e;
+        }
     }
 
     /**
