@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Execution;
 
 use WoohooLabs\Larva\Connection\ConnectionInterface;
+use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilderInterface;
+use WoohooLabs\Larva\Query\Insert\InsertQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
+use WoohooLabs\Larva\Query\Update\UpdateQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
@@ -28,28 +31,43 @@ class QueryExecutor
 
     public function fetchOne(
         ModelInterface $model,
-        SelectQueryBuilderInterface $selectQueryBuilder,
+        SelectQueryBuilderInterface $queryBuilder,
         array $relationships
     ): array {
-        $entities = $this->createEntities($model, $selectQueryBuilder, $relationships);
+        $entities = $this->createEntities($model, $queryBuilder, $relationships);
 
         return empty($entities) ? [] : $entities[0];
     }
 
     public function fetchAll(
         ModelInterface $model,
-        SelectQueryBuilderInterface $selectQueryBuilder,
+        SelectQueryBuilderInterface $queryBuilder,
         array $relationships
     ): array {
-        return $this->createEntities($model, $selectQueryBuilder, $relationships);
+        return $this->createEntities($model, $queryBuilder, $relationships);
     }
 
     /**
      * @return mixed
      */
-    public function fetchColumn(SelectQueryBuilderInterface $selectQueryBuilder)
+    public function fetchColumn(SelectQueryBuilderInterface $queryBuilder)
     {
-        return $selectQueryBuilder->fetchColumn($this->connection);
+        return $queryBuilder->fetchColumn($this->connection);
+    }
+
+    public function insert(InsertQueryBuilderInterface $queryBuilder): bool
+    {
+        return $queryBuilder->execute($this->connection);
+    }
+
+    public function update(UpdateQueryBuilderInterface $queryBuilder): bool
+    {
+        return $queryBuilder->execute($this->connection);
+    }
+
+    public function delete(DeleteQueryBuilderInterface $queryBuilder): bool
+    {
+        return $queryBuilder->execute($this->connection);
     }
 
     public function getIdentityMap(): IdentityMap

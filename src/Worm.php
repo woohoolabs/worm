@@ -10,7 +10,10 @@ use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Execution\QueryExecutor;
 use WoohooLabs\Worm\Model\ModelInterface;
+use WoohooLabs\Worm\Query\DeleteQueryBuilder;
+use WoohooLabs\Worm\Query\InsertQueryBuilder;
 use WoohooLabs\Worm\Query\SelectQueryBuilder;
+use WoohooLabs\Worm\Query\UpdateQueryBuilder;
 
 class Worm
 {
@@ -39,6 +42,21 @@ class Worm
     public function query(ModelInterface $model): SelectQueryBuilder
     {
         return new SelectQueryBuilder($model, $this->queryExecutor);
+    }
+
+    public function queryInsert(ModelInterface $model): InsertQueryBuilder
+    {
+        return new InsertQueryBuilder($model, $this->queryExecutor);
+    }
+
+    public function queryUpdate(ModelInterface $model): UpdateQueryBuilder
+    {
+        return new UpdateQueryBuilder($model, $this->queryExecutor);
+    }
+
+    public function queryDelete(ModelInterface $model): DeleteQueryBuilder
+    {
+        return new DeleteQueryBuilder($model, $this->queryExecutor);
     }
 
     /**
