@@ -10,7 +10,6 @@ ADDED:
 - `Worm::transaction()` method
 - `Worm::queryInsert()`, `Worm::queryUpdate()` and `Worm::queryDelete()` methods
 - `SelectQueryBuilder::withAllTransitiveRelationships()` method
-- 
 
 CHANGED:
 
