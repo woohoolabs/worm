@@ -70,7 +70,7 @@ class UpdateQueryBuilder
      * @param mixed $id
      * @return bool
      */
-    public function updateById($id): bool
+    public function executeById($id): bool
     {
         $this->queryBuilder
             ->addWhereGroup(
