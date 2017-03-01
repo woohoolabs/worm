@@ -18,6 +18,11 @@ class DeleteQueryBuilder
     private $model;
 
     /**
+     * @var QueryExecutor
+     */
+    private $queryExecutor;
+
+    /**
      * @var LarvaDeleteQueryBuilder
      */
     private $queryBuilder;

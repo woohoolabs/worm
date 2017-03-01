@@ -18,6 +18,11 @@ class UpdateQueryBuilder
     private $model;
 
     /**
+     * @var QueryExecutor
+     */
+    private $queryExecutor;
+
+    /**
      * @var LarvaUpdateQueryBuilder
      */
     private $queryBuilder;

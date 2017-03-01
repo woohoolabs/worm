@@ -12,9 +12,9 @@ use WoohooLabs\Worm\Model\ModelInterface;
 class InsertQueryBuilder
 {
     /**
-     * @var ModelInterface
+     * @var QueryExecutor
      */
-    private $model;
+    private $queryExecutor;
 
     /**
      * @var LarvaInsertQueryBuilder
@@ -23,7 +23,6 @@ class InsertQueryBuilder
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {
-        $this->model = $model;
         $this->queryExecutor = $executor;
         $this->queryBuilder = new LarvaInsertQueryBuilder();
         $this->queryBuilder->into($model->getTable());
