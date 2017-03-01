@@ -6,16 +6,16 @@ ADDED:
 - Ability to persist related entities via `Worm::saveRelatedEntity()` and `Worm::saveRelatedEntities()`
 - Ability to define if a relationship has `ON DELETE CASCADE` constraint
 - `IdentityMap::createObjectFromId` method
-- `SelectQueryBuilder::fetchColumn()` and `SelectQueryBuilder::fetchCount()` methods
 - `Worm::transaction()` method
 - `Worm::queryInsert()`, `Worm::queryUpdate()` and `Worm::queryDelete()` methods
+- `SelectQueryBuilder::fetchColumn()` and `SelectQueryBuilder::fetchCount()` methods
 - `SelectQueryBuilder::withAllTransitiveRelationships()` method
 
 CHANGED:
 
 - Renamed `Worm::queryModel()` to `Worm::query()`
 - Updated minimum Larva version requirement to 0.4
-- Adapted to changes in Larva 0.4
+- Adapted interfaces to changes in Larva 0.4
 
 REMOVED:
 
