@@ -6,6 +6,7 @@ namespace WoohooLabs\Worm\Execution;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Insert\InsertQueryBuilderInterface;
+use WoohooLabs\Larva\Query\QueryBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Update\UpdateQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
@@ -68,6 +69,16 @@ class QueryExecutor
     public function delete(DeleteQueryBuilderInterface $queryBuilder): bool
     {
         return $queryBuilder->execute($this->connection);
+    }
+
+    public function getSql(QueryBuilderInterface $queryBuilder): string
+    {
+        return $queryBuilder->getSql($this->connection);
+    }
+
+    public function getParams(QueryBuilderInterface $queryBuilder): array
+    {
+        return $queryBuilder->getParams($this->connection);
     }
 
     public function getIdentityMap(): IdentityMap

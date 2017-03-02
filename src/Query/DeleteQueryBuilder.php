@@ -73,4 +73,14 @@ class DeleteQueryBuilder
 
         return $this->queryExecutor->delete($this->queryBuilder);
     }
+
+    public function getSql(): string
+    {
+        return $this->queryExecutor->getSql($this->queryBuilder);
+    }
+
+    public function getParams(): array
+    {
+        return $this->queryExecutor->getParams($this->queryBuilder);
+    }
 }

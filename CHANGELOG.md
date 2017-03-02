@@ -10,6 +10,7 @@ ADDED:
 - `Worm::queryInsert()`, `Worm::queryUpdate()` and `Worm::queryDelete()` methods
 - `SelectQueryBuilder::fetchColumn()` and `SelectQueryBuilder::fetchCount()` methods
 - `SelectQueryBuilder::withAllTransitiveRelationships()` method
+- `getSql()` and `getParams()` methods to query builders
 
 CHANGED:
 
