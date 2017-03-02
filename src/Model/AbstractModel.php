@@ -18,7 +18,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @var array
      */
-    private $relationships = [];
+    private $relationships = false;
 
     /**
      * @return callable[]
@@ -28,6 +28,7 @@ abstract class AbstractModel implements ModelInterface
     public function __construct()
     {
         $variables = get_object_vars($this);
+
         foreach ($variables as $variable => $value) {
             if ($value !== null) {
                 continue;
@@ -42,7 +43,7 @@ abstract class AbstractModel implements ModelInterface
      */
     public function getRelationshipNames(): array
     {
-        if (empty($this->relationships)) {
+        if ($this->relationships === false) {
             $this->relationships = $this->getRelationships();
         }
 
@@ -51,6 +52,10 @@ abstract class AbstractModel implements ModelInterface
 
     public function getRelationship(string $name): RelationshipInterface
     {
+        if ($this->relationships === false) {
+            $this->relationships = $this->getRelationships();
+        }
+
         if (isset($this->relationships[$name]) === false) {
             throw new DomainException("Relationship '$name' does not exist!");
         }
