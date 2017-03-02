@@ -16,6 +16,11 @@ interface RelationshipInterface
 
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface;
 
+    /**
+     * @return void
+     */
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder);
+
     public function matchRelationship(
         array $entities,
         string $relationshipName,

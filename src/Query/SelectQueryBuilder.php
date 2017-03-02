@@ -110,6 +110,26 @@ class SelectQueryBuilder
         return $this;
     }
 
+    public function whereHas(string $relationshipName, ConditionBuilderInterface $conditionBuilder): SelectQueryBuilder
+    {
+        $relationship = $this->model->getRelationship($relationshipName);
+
+        $subselect = LarvaSelectQueryBuilder::create()
+            ->selectExpression("1")
+            ->from($relationship->getModel()->getTable())
+            ->where(
+                $conditionBuilder
+            );
+        $relationship->connectToParent($subselect);
+
+        $this->queryBuilder->addWhereGroup(
+            ConditionBuilder::create()
+                ->exists($subselect)
+        );
+
+        return $this;
+    }
+
     public function groupBy(string $attribute): SelectQueryBuilder
     {
         $this->queryBuilder->groupBy($attribute);

@@ -63,6 +63,21 @@ class BelongsToOneRelationship extends AbstractRelationship
             ->where($this->getWhereCondition($this->relatedModel->getTable(), $this->foreignKey, $entities));
     }
 
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder)
+    {
+        $selectQueryBuilder
+            ->addWhereGroup(
+                ConditionBuilder::create()
+                    ->columnToColumn(
+                        $this->foreignKey,
+                        "=",
+                        $this->referencedKey,
+                        $this->relatedModel->getTable(),
+                        $this->parentModel->getTable()
+                    )
+            );
+    }
+
     public function matchRelationship(
         array $entities,
         string $relationshipName,

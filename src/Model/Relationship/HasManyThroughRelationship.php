@@ -85,6 +85,29 @@ class HasManyThroughRelationship extends AbstractRelationship
             ->where($this->getWhereCondition($this->junctionModel->getTable(), $this->foreignKey1, $entities));
     }
 
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder)
+    {
+        $selectQueryBuilder
+            ->join($this->junctionModel->getTable())
+            ->on(
+                ConditionBuilder::create()
+                    ->columnToColumn(
+                        $this->foreignKey1,
+                        "=",
+                        $this->referencedKey1,
+                        $this->junctionModel->getTable(),
+                        $this->parentModel->getTable()
+                    )
+                    ->columnToColumn(
+                        $this->foreignKey2,
+                        "=",
+                        $this->referencedKey2,
+                        $this->junctionModel->getTable(),
+                        $this->relatedModel->getTable()
+                    )
+            );
+    }
+
     public function matchRelationship(
         array $entities,
         string $relationshipName,

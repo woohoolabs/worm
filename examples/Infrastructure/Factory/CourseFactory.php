@@ -41,7 +41,7 @@ class CourseFactory extends AbstractFactory
 
     public function createCourse(array $entity): Course
     {
-        $factory = function (array $entity): Course {
+        $factory = function () use ($entity): Course {
             return new Course(
                 (int) $entity[$this->model->id],
                 $entity[$this->model->name],

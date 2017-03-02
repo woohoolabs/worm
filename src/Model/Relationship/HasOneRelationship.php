@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model\Relationship;
 
+use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
@@ -49,6 +50,21 @@ class HasOneRelationship extends AbstractRelationship
             ->selectColumn("*")
             ->from($this->relatedModel->getTable())
             ->where($this->getWhereCondition($this->relatedModel->getTable(), $this->foreignKey, $entities));
+    }
+
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder)
+    {
+        $selectQueryBuilder
+            ->addWhereGroup(
+                ConditionBuilder::create()
+                    ->columnToColumn(
+                        $this->foreignKey,
+                        "=",
+                        $this->referencedKey,
+                        $this->relatedModel->getTable(),
+                        $this->parentModel->getTable()
+                    )
+            );
     }
 
     public function matchRelationship(

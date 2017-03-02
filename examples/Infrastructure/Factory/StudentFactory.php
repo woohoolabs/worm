@@ -36,7 +36,7 @@ class StudentFactory extends AbstractFactory
 
     public function createStudent(array $entity): Student
     {
-        $factory = function (array $entity): Student {
+        $factory = function () use ($entity): Student {
             return new Student(
                 $entity[$this->model->id],
                 new Name(

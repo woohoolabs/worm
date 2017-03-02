@@ -46,8 +46,8 @@ $courseFactory = new CourseFactory($identityMap, $courseModel, $classFactory);
 // Create repository
 $courseRepository = new CourseRepository($worm, $courseModel, $courseFactory);
 
-// Get courses
-$courses = $courseRepository->getCourses();
+// Get courses which have classes in room number 1
+$courses = $courseRepository->getCoursesInRoom(1);
 
 echo "<pre>";
 echo "Memory usage: " . (memory_get_peak_usage() / 1024 / 1024) . " MB";
@@ -63,6 +63,6 @@ $firstCourse->setDescription("Very advanced topics");
 
 $courseRepository->save($firstCourse);
 
-print_r($courseRepository->getCourses());
+print_r($courseRepository->getCoursesInRoom(1));
 
 echo "</pre>";

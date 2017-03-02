@@ -42,7 +42,7 @@ class ClassFactory extends AbstractFactory
 
     public function createClass(array $entity): SchoolClass
     {
-        $factory = function (array $entity): SchoolClass {
+        $factory = function () use ($entity): SchoolClass {
             return new SchoolClass(
                 (int) $entity[$this->model->id],
                 (int) $entity[$this->model->room_id],

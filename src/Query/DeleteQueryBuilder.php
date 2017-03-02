@@ -7,6 +7,7 @@ use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilder as LarvaDeleteQueryBuilder;
 use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilderInterface;
+use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Worm\Execution\QueryExecutor;
 use WoohooLabs\Worm\Model\ModelInterface;
 
@@ -45,6 +46,26 @@ class DeleteQueryBuilder
     public function addWhereGroup(ConditionBuilderInterface $where): DeleteQueryBuilder
     {
         $this->queryBuilder->addWhereGroup($where);
+
+        return $this;
+    }
+
+    public function whereHas(string $relationshipName, ConditionBuilderInterface $conditionBuilder): DeleteQueryBuilder
+    {
+        $relationship = $this->model->getRelationship($relationshipName);
+
+        $subselect = SelectQueryBuilder::create()
+            ->selectExpression("1")
+            ->from($relationship->getModel()->getTable())
+            ->where(
+                $conditionBuilder
+            );
+        $relationship->connectToParent($subselect);
+
+        $this->queryBuilder->addWhereGroup(
+            ConditionBuilder::create()
+                ->exists($subselect)
+        );
 
         return $this;
     }

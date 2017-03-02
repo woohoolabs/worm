@@ -5,6 +5,7 @@ namespace WoohooLabs\Worm\Query;
 
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
+use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Update\UpdateQueryBuilder as LarvaUpdateQueryBuilder;
 use WoohooLabs\Larva\Query\Update\UpdateQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\QueryExecutor;
@@ -52,6 +53,28 @@ class UpdateQueryBuilder
     public function addWhereGroup(ConditionBuilderInterface $where): UpdateQueryBuilder
     {
         $this->queryBuilder->addWhereGroup($where);
+
+        return $this;
+    }
+
+    public function whereHas(
+        string $relationshipName,
+        ConditionBuilderInterface $conditionBuilder
+    ): UpdateQueryBuilder {
+        $relationship = $this->model->getRelationship($relationshipName);
+
+        $subselect = SelectQueryBuilder::create()
+            ->selectExpression("1")
+            ->from($relationship->getModel()->getTable())
+            ->where(
+                $conditionBuilder
+            );
+        $relationship->connectToParent($subselect);
+
+        $this->queryBuilder->addWhereGroup(
+            ConditionBuilder::create()
+                ->exists($subselect)
+        );
 
         return $this;
     }

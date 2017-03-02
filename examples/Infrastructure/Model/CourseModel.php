@@ -18,7 +18,7 @@ class CourseModel extends AbstractModel
     /**
      * @var ClassModel
      */
-    private $classModel;
+    public $classModel;
 
     public function __construct(ClassModel $classModel)
     {
@@ -34,13 +34,6 @@ class CourseModel extends AbstractModel
     public function getPrimaryKey(): string
     {
         return $this->id;
-    }
-
-    public function getAllRelationshipNames()
-    {
-        return [
-            "classes" => $this->classModel->getRelationshipNames()
-        ];
     }
 
     public function getClassModel(): ClassModel

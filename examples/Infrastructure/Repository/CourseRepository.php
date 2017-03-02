@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Repository;
 
+use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Worm\Examples\Domain\Course;
 use WoohooLabs\Worm\Examples\Infrastructure\Factory\CourseFactory;
 use WoohooLabs\Worm\Examples\Infrastructure\Model\CourseModel;
@@ -13,28 +14,33 @@ class CourseRepository extends AbstractRepository
     /**
      * @var CourseModel
      */
-    private $courseModel;
+    private $model;
 
     /**
      * @var CourseFactory
      */
     private $courseFactory;
 
-    public function __construct(Worm $worm, CourseModel $courseModel, CourseFactory $courseFactory)
+    public function __construct(Worm $worm, CourseModel $model, CourseFactory $factory)
     {
         parent::__construct($worm);
-        $this->courseModel = $courseModel;
-        $this->courseFactory = $courseFactory;
+        $this->model = $model;
+        $this->courseFactory = $factory;
     }
 
     /**
      * @return Course[]
      */
-    public function getCourses(): array
+    public function getCoursesInRoom($roomNumber): array
     {
         $courses = $this->worm
-            ->query($this->courseModel)
-            ->withRelationships($this->courseModel->getAllRelationshipNames())
+            ->query($this->model)
+            ->withAllTransitiveRelationships()
+            ->whereHas(
+                $this->model->classes,
+                ConditionBuilder::create()
+                    ->columnToValue($this->model->classModel->room_id, "=", $roomNumber)
+            )
             ->fetchAll();
 
         return $this->courseFactory->createCourses($courses);
@@ -45,19 +51,19 @@ class CourseRepository extends AbstractRepository
      */
     public function save(Course $course)
     {
-        $record = $this->courseModel->mapCourse($course);
+        $record = $this->model->mapCourse($course);
 
         $classRecords = [];
         foreach ($course->getClasses() as $class) {
-            $classRecords[] = $this->courseModel->getClassModel()->mapClass($course, $class);
+            $classRecords[] = $this->model->getClassModel()->mapClass($course, $class);
         }
 
         $this->worm->beginTransaction();
 
-        $this->worm->save($this->courseModel, $record, $course);
+        $this->worm->save($this->model, $record, $course);
         $this->worm->saveRelatedEntities(
-            $this->courseModel,
-            $this->courseModel->classes,
+            $this->model,
+            $this->model->classes,
             $record,
             $classRecords,
             $course->getClasses()
