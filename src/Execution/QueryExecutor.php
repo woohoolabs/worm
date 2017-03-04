@@ -113,6 +113,10 @@ class QueryExecutor
         array $entities,
         array $relationships
     ): array {
+        if (empty($entities)) {
+            return $entities;
+        }
+
         $relationshipNames = [];
         foreach ($relationships as $key => $name) {
             $relationshipNames[$key] = is_array($name) ? $key : $name;
