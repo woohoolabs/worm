@@ -50,14 +50,16 @@ abstract class AbstractRelationship implements RelationshipInterface
         }
     }
 
-    protected function getWhereCondition(string $prefix, string $foreignKey, array $entities): ConditionBuilderInterface
-    {
+    protected function getWhereCondition(
+        array $entities,
+        string $entityKey,
+        string $prefix,
+        string $foreignKey
+    ): ConditionBuilderInterface {
         $values = [];
         foreach ($entities as $entity) {
-            $id = $this->parentModel->getId($entity);
-
-            if ($id !== null) {
-                $values[] = $id;
+            if (isset($entity[$entityKey])) {
+                $values[] = $entity[$entityKey];
             }
         }
 

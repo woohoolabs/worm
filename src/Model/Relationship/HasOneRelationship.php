@@ -49,7 +49,14 @@ class HasOneRelationship extends AbstractRelationship
         return SelectQueryBuilder::create()
             ->selectColumn("*")
             ->from($this->relatedModel->getTable())
-            ->where($this->getWhereCondition($this->relatedModel->getTable(), $this->foreignKey, $entities));
+            ->where(
+                $this->getWhereCondition(
+                    $entities,
+                    $this->referencedKey,
+                    $this->relatedModel->getTable(),
+                    $this->foreignKey
+                )
+            );
     }
 
     public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder)
