@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Query;
 
-use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
-use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilder as LarvaSelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\QueryExecutor;
@@ -96,36 +94,16 @@ class SelectQueryBuilder
         return $this;
     }
 
-    public function where(ConditionBuilderInterface $where): SelectQueryBuilder
+    public function where(ConditionBuilder $where): SelectQueryBuilder
     {
-        $this->queryBuilder->where($where);
+        $this->queryBuilder->where($where->getConditionBuilder());
 
         return $this;
     }
 
-    public function addWhereGroup(ConditionBuilderInterface $where): SelectQueryBuilder
+    public function addWhereGroup(ConditionBuilder $where): SelectQueryBuilder
     {
-        $this->queryBuilder->addWhereGroup($where);
-
-        return $this;
-    }
-
-    public function whereHas(string $relationshipName, ConditionBuilderInterface $conditionBuilder): SelectQueryBuilder
-    {
-        $relationship = $this->model->getRelationship($relationshipName);
-
-        $subselect = LarvaSelectQueryBuilder::create()
-            ->selectExpression("1")
-            ->from($relationship->getModel()->getTable())
-            ->where(
-                $conditionBuilder
-            );
-        $relationship->connectToParent($subselect);
-
-        $this->queryBuilder->addWhereGroup(
-            ConditionBuilder::create()
-                ->exists($subselect)
-        );
+        $this->queryBuilder->addWhereGroup($where->getConditionBuilder());
 
         return $this;
     }
@@ -144,16 +122,16 @@ class SelectQueryBuilder
         return $this;
     }
 
-    public function having(ConditionBuilderInterface $having): SelectQueryBuilder
+    public function having(ConditionBuilder $having): SelectQueryBuilder
     {
-        $this->queryBuilder->having($having);
+        $this->queryBuilder->having($having->getConditionBuilder());
 
         return $this;
     }
 
-    public function addHavingGroup(ConditionBuilderInterface $having): SelectQueryBuilder
+    public function addHavingGroup(ConditionBuilder $having): SelectQueryBuilder
     {
-        $this->queryBuilder->addHavingGroup($having);
+        $this->queryBuilder->addHavingGroup($having->getConditionBuilder());
 
         return $this;
     }
@@ -206,7 +184,7 @@ class SelectQueryBuilder
 
     public function fetchById($id): array
     {
-        $this->queryBuilder
+        $this
             ->addWhereGroup(
                 ConditionBuilder::create()
                     ->columnToValue($this->model->getPrimaryKey(), "=", $id)

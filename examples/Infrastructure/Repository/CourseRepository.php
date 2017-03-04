@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Repository;
 
-use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Worm\Examples\Domain\Course;
 use WoohooLabs\Worm\Examples\Infrastructure\Factory\CourseFactory;
 use WoohooLabs\Worm\Examples\Infrastructure\Model\CourseModel;
+use WoohooLabs\Worm\Query\ConditionBuilder;
 use WoohooLabs\Worm\Worm;
 
 class CourseRepository extends AbstractRepository
@@ -36,10 +36,13 @@ class CourseRepository extends AbstractRepository
         $courses = $this->worm
             ->query($this->model)
             ->withAllTransitiveRelationships()
-            ->whereHas(
-                $this->model->classes,
-                ConditionBuilder::create()
-                    ->columnToValue($this->model->classModel->room_id, "=", $roomNumber)
+            ->where(
+                ConditionBuilder::create($this->model)
+                    ->has(
+                        $this->model->classes,
+                        ConditionBuilder::create()
+                            ->columnToValue($this->model->classModel->room_id, "=", $roomNumber)
+                    )
             )
             ->fetchAll();
 

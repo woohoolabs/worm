@@ -10,12 +10,12 @@ ADDED:
 - `Worm::queryInsert()`, `Worm::queryUpdate()` and `Worm::queryDelete()` methods
 - `SelectQueryBuilder::fetchColumn()` and `SelectQueryBuilder::fetchCount()` methods
 - `SelectQueryBuilder::withAllTransitiveRelationships()` method
-- `SelectQueryBuilder::whereHas()` method
 - `getSql()` and `getParams()` methods to query builders
 
 CHANGED:
 
 - Renamed `Worm::queryModel()` to `Worm::query()`
+- A newly added `ConditionBuilder` class is used by query builders instead of its Larva counterpart
 - Updated minimum Larva version requirement to 0.4
 - Adapted interfaces to changes in Larva 0.4
 

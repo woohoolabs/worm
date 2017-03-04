@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Query;
 
-use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
-use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilder as LarvaDeleteQueryBuilder;
 use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilderInterface;
-use WoohooLabs\Larva\Query\Select\SelectQueryBuilder as LarvaSelectQueryBuilder;
 use WoohooLabs\Worm\Execution\QueryExecutor;
 use WoohooLabs\Worm\Model\ModelInterface;
 
@@ -36,36 +33,16 @@ class DeleteQueryBuilder
         $this->queryBuilder->from($model->getTable());
     }
 
-    public function where(ConditionBuilderInterface $where): DeleteQueryBuilder
+    public function where(ConditionBuilder $where): DeleteQueryBuilder
     {
-        $this->queryBuilder->where($where);
+        $this->queryBuilder->where($where->getConditionBuilder());
 
         return $this;
     }
 
-    public function addWhereGroup(ConditionBuilderInterface $where): DeleteQueryBuilder
+    public function addWhereGroup(ConditionBuilder $where): DeleteQueryBuilder
     {
-        $this->queryBuilder->addWhereGroup($where);
-
-        return $this;
-    }
-
-    public function whereHas(string $relationshipName, ConditionBuilderInterface $conditionBuilder): DeleteQueryBuilder
-    {
-        $relationship = $this->model->getRelationship($relationshipName);
-
-        $subselect = LarvaSelectQueryBuilder::create()
-            ->selectExpression("1")
-            ->from($relationship->getModel()->getTable())
-            ->where(
-                $conditionBuilder
-            );
-        $relationship->connectToParent($subselect);
-
-        $this->queryBuilder->addWhereGroup(
-            ConditionBuilder::create()
-                ->exists($subselect)
-        );
+        $this->queryBuilder->addWhereGroup($where->getConditionBuilder());
 
         return $this;
     }
@@ -86,11 +63,10 @@ class DeleteQueryBuilder
      */
     public function executeById($id): bool
     {
-        $this->queryBuilder
-            ->addWhereGroup(
-                ConditionBuilder::create()
-                    ->columnToValue($this->model->getPrimaryKey(), "=", $id)
-            );
+        $this->addWhereGroup(
+            ConditionBuilder::create()
+                ->columnToValue($this->model->getPrimaryKey(), "=", $id)
+        );
 
         return $this->queryExecutor->delete($this->queryBuilder);
     }
