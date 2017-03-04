@@ -6,7 +6,7 @@ namespace WoohooLabs\Worm\Query;
 use LogicException;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder as LarvaConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
-use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
+use WoohooLabs\Larva\Query\Select\SelectQueryBuilder as LarvaSelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
 
@@ -216,7 +216,7 @@ class ConditionBuilder
 
         $relationship = $this->model->getRelationship($relationshipName);
 
-        $subselect = SelectQueryBuilder::create()
+        $subselect = LarvaSelectQueryBuilder::create()
             ->selectExpression("1")
             ->from($relationship->getModel()->getTable())
             ->where(
