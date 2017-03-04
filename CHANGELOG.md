@@ -25,6 +25,7 @@ FIXED:
 
 - `WHERE` conditions won't be erased when using `SelectQueryBuilder::fetchById()`
 - Fetching relationships of an empty list of entities won't raise syntax error
+- Retrieving belongs-to relationships won't raise exception
 
 ## 0.2.0 - 2017-02-17
 
