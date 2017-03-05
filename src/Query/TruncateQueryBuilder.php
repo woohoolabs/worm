@@ -11,11 +11,6 @@ use WoohooLabs\Worm\Model\ModelInterface;
 class TruncateQueryBuilder
 {
     /**
-     * @var ModelInterface
-     */
-    private $model;
-
-    /**
      * @var QueryExecutor
      */
     private $queryExecutor;
@@ -27,7 +22,6 @@ class TruncateQueryBuilder
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {
-        $this->model = $model;
         $this->queryExecutor = $executor;
         $this->queryBuilder = new LarvaTruncateQueryBuilder();
         $this->queryBuilder->table($model->getTable());
