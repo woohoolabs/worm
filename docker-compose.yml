@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-    nginx:
+    worm-nginx:
         image: nginx:1.11-alpine
         container_name: worm-nginx
         networks:
@@ -18,7 +18,7 @@ services:
         depends_on:
             - php-fpm
 
-    php-fpm:
+    worm-php-fpm:
         image: woohoolabs/php:3.1.4
         container_name: worm-php-fpm
         networks:
@@ -31,7 +31,7 @@ services:
         depends_on:
             - mysql
 
-    mysql:
+    worm-mysql:
         image: mysql:5.7
         container_name: worm-mysql
         ports:

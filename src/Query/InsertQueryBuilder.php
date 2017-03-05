@@ -49,7 +49,7 @@ class InsertQueryBuilder
 
         $values = [];
         foreach ($fields as $record) {
-            $values = array_values($record);
+            $values[] = array_values($record);
         }
 
         $this->queryBuilder->columns($columns);

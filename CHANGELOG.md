@@ -8,6 +8,12 @@ REMOVED:
 
 FIXED:
 
+## 0.4.1 - 2017-03-05
+
+FIXED:
+
+- `InsertQueryBuilder::multipleFields()` caused exception
+
 ## 0.4.0 - 2017-03-05
 
 ADDED:
