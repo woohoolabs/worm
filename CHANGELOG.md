@@ -1,11 +1,21 @@
-## 0.3.0 - unreleased
+## 0.5.0 - unreleased
+
+ADDED:
+
+CHANGED:
+
+REMOVED:
+
+FIXED:
+
+## 0.4.0 - 2017-03-05
 
 ADDED:
 
 - Ability to persist entities via `Worm::save()` and `Worm::delete()`
 - Ability to persist related entities via `Worm::saveRelatedEntity()` and `Worm::saveRelatedEntities()`
 - Ability to define if a relationship has `ON DELETE CASCADE` constraint
-- `IdentityMap::createObjectFromId` method
+- `IdentityMap::createObjectFromId()` method
 - `Worm::transaction()` method
 - `Worm::queryInsert()`, `Worm::queryUpdate()` and `Worm::queryDelete()` methods
 - `SelectQueryBuilder::fetchColumn()` and `SelectQueryBuilder::fetchCount()` methods
@@ -18,8 +28,6 @@ CHANGED:
 - A newly added `ConditionBuilder` class is used by query builders instead of its Larva counterpart
 - Updated minimum Larva version requirement to 0.4
 - Adapted interfaces to changes in Larva 0.4
-
-REMOVED:
 
 FIXED:
 
