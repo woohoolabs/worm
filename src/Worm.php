@@ -13,6 +13,7 @@ use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Query\DeleteQueryBuilder;
 use WoohooLabs\Worm\Query\InsertQueryBuilder;
 use WoohooLabs\Worm\Query\SelectQueryBuilder;
+use WoohooLabs\Worm\Query\TruncateQueryBuilder;
 use WoohooLabs\Worm\Query\UpdateQueryBuilder;
 
 class Worm
@@ -57,6 +58,11 @@ class Worm
     public function queryDelete(ModelInterface $model): DeleteQueryBuilder
     {
         return new DeleteQueryBuilder($model, $this->queryExecutor);
+    }
+
+    public function queryTruncate(ModelInterface $model): TruncateQueryBuilder
+    {
+        return new TruncateQueryBuilder($model, $this->queryExecutor);
     }
 
     /**

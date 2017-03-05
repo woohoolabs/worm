@@ -8,6 +8,7 @@ use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Insert\InsertQueryBuilderInterface;
 use WoohooLabs\Larva\Query\QueryBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
+use WoohooLabs\Larva\Query\Truncate\TruncateQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Update\UpdateQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
@@ -67,6 +68,11 @@ class QueryExecutor
     }
 
     public function delete(DeleteQueryBuilderInterface $queryBuilder): bool
+    {
+        return $queryBuilder->execute($this->connection);
+    }
+
+    public function truncate(TruncateQueryBuilderInterface $queryBuilder): bool
     {
         return $queryBuilder->execute($this->connection);
     }

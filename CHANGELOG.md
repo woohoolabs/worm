@@ -2,6 +2,8 @@
 
 ADDED:
 
+- `Worm::queryTruncate()`
+
 CHANGED:
 
 REMOVED:
