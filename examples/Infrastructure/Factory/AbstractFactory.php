@@ -21,7 +21,7 @@ abstract class AbstractFactory
 
     protected function createObject(ModelInterface $model, array $entity, callable $factory)
     {
-        if (isset($entity[$model->getPrimaryKey()]) === false) {
+        if ($model->getId($entity) === null) {
             throw new LogicException("The ID of the record must be present!");
         }
 

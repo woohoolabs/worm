@@ -22,7 +22,7 @@ class IdentityMap
     {
         $this->identityMap = [
             /*"user" => [
-                [
+                "ids" => [
                     1 => [
                         1,
                         [
@@ -44,7 +44,7 @@ class IdentityMap
                         null,
                     ],
                 ],
-                [
+                "rels" => [
                     "addresses" => [
                         "key" => 0,
                         "type" => "address",
@@ -52,42 +52,37 @@ class IdentityMap
                 ]
             ],
             "address" => [
-                [
+                "ids" => [
                     1 => [1, [], null],
                     2 => [1, [], null],
                     3 => [1, [], null],
                     4 => [1, [], null],
                 ],
-                []
+                "rels" => []
             ],*/
         ];
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function hasObject(string $type, $id): bool
+    public function hasObject(string $type, string $hash): bool
     {
-        return isset($this->identityMap[$type]["ids"][$id][2]);
+        return isset($this->identityMap[$type]["ids"][$hash][2]);
     }
 
     /**
-     * @param mixed $id
      * @return object|null
      */
-    public function getObject(string $type, $id)
+    public function getObject(string $type, string $hash)
     {
-        return $this->identityMap[$type]["ids"][$id][2] ?? null;
+        return $this->identityMap[$type]["ids"][$hash][2] ?? null;
     }
 
     /**
-     * @param mixed $id
      * @param object|null $object
      * @return object|null
      */
-    public function setObject(string $type, $id, $object)
+    public function setObject(string $type, string $hash, $object)
     {
-        return $this->identityMap[$type]["ids"][$id][2] = $object;
+        return $this->identityMap[$type]["ids"][$hash][2] = $object;
     }
 
     /**
@@ -96,9 +91,9 @@ class IdentityMap
     public function createObject(ModelInterface $model, array $entity, callable $factory)
     {
         $type = $model->getTable();
-        $id = $model->getId($entity);
+        $hash = $model->getHash($entity);
 
-        $object = $this->createObjectFromId($type, $id, $factory);
+        $object = $this->createObjectFromHash($type, $hash, $factory);
 
         $model->addRelationshipsToIdentityMap($this, $entity);
 
@@ -108,101 +103,91 @@ class IdentityMap
     /**
      * @return mixed
      */
-    public function createObjectFromId(string $type, $id, callable $factory)
+    public function createObjectFromHash(string $type, string $hash, callable $factory)
     {
-        $object = $this->getObject($type, $id);
+        $object = $this->getObject($type, $hash);
         if ($object) {
             return $object;
         }
 
         $object = $factory();
-        $this->addId($type, $id, $object);
+        $this->addIdentity($type, $hash, $object);
 
         return $object;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function hasId(string $type, $id): bool
+    public function hasIdentity(string $type, string $hash): bool
     {
-        return isset($this->identityMap[$type]["ids"][$id]);
+        return isset($this->identityMap[$type]["ids"][$hash]);
     }
 
     /**
-     * @param mixed $id
      * @return void
      */
-    public function addId(string $type, $id, $object = null)
+    public function addIdentity(string $type, string $hash, $object = null)
     {
-        if ($this->getState($type, $id) === self::STATE_MANAGED) {
+        if ($this->getState($type, $hash) === self::STATE_MANAGED) {
             return;
         }
 
-        $this->identityMap[$type]["ids"][$id] = [self::STATE_MANAGED, [], $object];
+        $this->identityMap[$type]["ids"][$hash] = [self::STATE_MANAGED, [], $object];
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function getState(string $type, $id): int
+    public function getState(string $type, string $hash): int
     {
-        if ($this->hasId($type, $id) === false) {
+        if ($this->hasIdentity($type, $hash) === false) {
             return self::STATE_NEW;
         }
 
-        return $this->identityMap[$type]["ids"][$id][0];
+        return $this->identityMap[$type]["ids"][$hash][0];
     }
 
     /**
-     * @param mixed $id
      * @return void
      */
-    public function setState(string $type, $id, int $state)
+    public function setState(string $type, string $hash, int $state)
     {
-        $this->identityMap[$type]["ids"][$id][0] = $state;
+        $this->identityMap[$type]["ids"][$hash][0] = $state;
     }
 
     /**
-     * @param mixed $id
      * @return void
      */
-    public function removeId(string $type, $id)
+    public function removeIdentity(string $type, string $hash)
     {
-        unset($this->identityMap[$type]["ids"][$id]);
+        unset($this->identityMap[$type]["ids"][$hash]);
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function hasRelatedId(string $type, $id, string $relationship, $relatedId): bool
+    public function hasRelatedIdentity(string $type, string $hash, string $relationship, string $relatedHash): bool
     {
-        $relatedIds = $this->getRelatedIds($type, $id, $relationship);
+        $relatedIds = $this->getRelatedIds($type, $hash, $relationship);
 
-        return isset($relatedIds[$relatedId]);
+        return isset($relatedIds[$relatedHash]);
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function getRelatedIds(string $type, $id, string $relationship): array
+    public function getRelatedIds(string $type, string $hash, string $relationship): array
     {
         $relationshipKey = $this->getRelationshipKey($type, $relationship);
         if ($relationshipKey === null) {
             return [];
         }
 
-        return $this->identityMap[$type]["ids"][$id][1][$relationshipKey] ?? [];
+        return $this->identityMap[$type]["ids"][$hash][1][$relationshipKey] ?? [];
     }
 
     /**
-     * @param mixed $id
-     * @param mixed[] $relatedIds
+     * @var mixed $relatedId
      * @return void
      */
-    public function setRelatedIds(string $type, $id, string $relationship, string $relatedType, array $relatedIds)
-    {
-        if ($this->hasId($type, $id) === false) {
+    public function addRelatedIdentity(
+        string $type,
+        string $hash,
+        string $relationship,
+        string $relatedType,
+        string $relatedHash,
+        $relatedId
+    ) {
+        if ($this->hasIdentity($type, $hash) === false) {
             return;
         }
 
@@ -211,36 +196,15 @@ class IdentityMap
             $relationshipKey = $this->setRelationship($type, $relationship, $relatedType);
         }
 
-        $this->identityMap[$type]["ids"][$id][1][$relationshipKey] = array_flip($relatedIds);
+        $this->identityMap[$type]["ids"][$hash][1][$relationshipKey][$relatedHash] = $relatedId;
     }
 
     /**
-     * @param mixed $id
-     * @param mixed $relatedId
      * @return void
      */
-    public function addRelatedId(string $type, $id, string $relationship, string $relatedType, $relatedId)
+    public function removeRelatedIdentity(string $type, string $hash, string $relationship, string $relatedHash)
     {
-        if ($this->hasId($type, $id) === false) {
-            return;
-        }
-
-        $relationshipKey = $this->getRelationshipKey($type, $relationship);
-        if ($relationshipKey === null) {
-            $relationshipKey = $this->setRelationship($type, $relationship, $relatedType);
-        }
-
-        $this->identityMap[$type]["ids"][$id][1][$relationshipKey][$relatedId] = $relatedId;
-    }
-
-    /**
-     * @param mixed $id
-     * @param mixed $relatedId
-     * @return void
-     */
-    public function removeRelatedId(string $type, $id, string $relationship, $relatedId)
-    {
-        if ($this->hasId($type, $id) === false) {
+        if ($this->hasIdentity($type, $hash) === false) {
             return;
         }
 
@@ -249,7 +213,7 @@ class IdentityMap
             return;
         }
 
-        unset($this->identityMap[$type]["ids"][$id][1][$relationshipKey][$relatedId]);
+        unset($this->identityMap[$type]["ids"][$hash][1][$relationshipKey][$relatedHash]);
     }
 
     public function getMap(): array
@@ -258,7 +222,7 @@ class IdentityMap
     }
 
     /**
-     * @return mixed|null
+     * @return int|null
      */
     private function getRelationshipKey(string $type, string $relationship)
     {

@@ -100,10 +100,10 @@ class QueryExecutor
         $entities = $selectQueryBuilder->fetchAll($this->connection);
 
         foreach ($entities as $entity) {
-            $id = $model->getId($entity);
+            $hash = $model->getHash($entity);
 
-            if ($id !== null) {
-                $this->identityMap->addId($model->getTable(), $id);
+            if ($hash !== "") {
+                $this->identityMap->addIdentity($model->getTable(), $hash);
             }
         }
 

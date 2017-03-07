@@ -38,9 +38,9 @@ class ClassModel extends AbstractModel
         return "classes";
     }
 
-    public function getPrimaryKey(): string
+    public function getPrimaryKeys(): array
     {
-        return $this->id;
+        return [$this->id];
     }
 
     public function mapClass(Course $course, SchoolClass $class): array

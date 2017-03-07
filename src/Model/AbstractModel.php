@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Model;
 
 use DomainException;
+use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
+use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\Relationship\BelongsToManyRelationship;
@@ -62,11 +64,69 @@ abstract class AbstractModel implements ModelInterface
     }
 
     /**
-     * @return mixed|null
+     * @return mixed|mixed[]|null
      */
     public function getId(array $record)
     {
-        return $record[$this->getPrimaryKey()] ?? null;
+        $primaryKeys = $this->getPrimaryKeys();
+
+        // Simple primary key
+        if (count($primaryKeys) === 1) {
+            return $record[$primaryKeys[0]] ?? null;
+        }
+
+        // Composite primary key
+        $id = [];
+        foreach ($primaryKeys as $primaryKey) {
+            if (isset($record[$primaryKey]) === false) {
+                return null;
+            }
+
+            $id[$primaryKey] = $record[$primaryKey];
+        }
+
+        return $id;
+    }
+
+    public function getHash(array $record): string
+    {
+        $id = "";
+        foreach ($this->getPrimaryKeys() as $primaryKey) {
+            $id .=  ((string) $record[$primaryKey] ?? "") . ".";
+        }
+
+        return $id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function getHashFromId($id): string
+    {
+        if (is_array($id)) {
+            return $this->getHash($id);
+        }
+
+        return $id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function createConditionBuilder($id): ConditionBuilderInterface
+    {
+        $primaryKeys = $this->getPrimaryKeys();
+
+        if (is_array($id) === false) {
+            $id = [reset($primaryKeys) => $id];
+        }
+
+        $conditionBuilder = ConditionBuilder::create();
+        foreach ($primaryKeys as $primaryKey) {
+            $conditionBuilder->columnToValue($primaryKey, "=", $id[$primaryKey] ?? null);
+        }
+
+        return $conditionBuilder;
     }
 
     public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity)

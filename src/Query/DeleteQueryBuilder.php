@@ -63,10 +63,8 @@ class DeleteQueryBuilder
      */
     public function executeById($id): bool
     {
-        $this->addWhereGroup(
-            ConditionBuilder::create()
-                ->columnToValue($this->model->getPrimaryKey(), "=", $id)
-        );
+        $this->queryBuilder
+            ->addWhereGroup($this->model->createConditionBuilder($id));
 
         return $this->queryExecutor->delete($this->queryBuilder);
     }

@@ -41,11 +41,11 @@ abstract class AbstractRelationship implements RelationshipInterface
         $identityMap = $persister->getIdentityMap();
         $relatedIds = $identityMap->getRelatedIds($this->parentModel->getTable(), $parentId, $relationshipName);
 
-        foreach ($relatedIds as $relatedId) {
+        foreach ($relatedIds as $relatedHash => $relatedId) {
             $type = $this->getModel()->getTable();
-            $identityMap->setState($type, $relatedId, IdentityMap::STATE_DELETED);
-            $identityMap->setObject($type, $relatedId, null);
-            $identityMap->removeRelatedId($type, $parentId, $relationshipName, $relatedId);
+            $identityMap->setState($type, $relatedHash, IdentityMap::STATE_DELETED);
+            $identityMap->setObject($type, $relatedHash, null);
+            $identityMap->removeRelatedIdentity($type, $parentId, $relationshipName, $relatedHash);
             $this->getModel()->cascadeDelete($persister, $relatedId);
         }
     }
@@ -141,20 +141,22 @@ abstract class AbstractRelationship implements RelationshipInterface
         array $relatedEntity
     ) {
         $relatedEntityType = $this->getModel()->getTable();
+        $relatedEntityHash = $this->getModel()->getHash($relatedEntity);
         $relatedEntityId = $this->getModel()->getId($relatedEntity);
-        if ($relatedEntityId === null) {
+        if ($relatedEntityHash === "") {
             return;
         }
 
         // Add related entity to the identity map
-        $identityMap->addId($relatedEntityType, $relatedEntityId);
+        $identityMap->addIdentity($relatedEntityType, $relatedEntityHash);
 
         // Add relationship to the identity map
-        $identityMap->addRelatedId(
+        $identityMap->addRelatedIdentity(
             $this->parentModel->getTable(),
-            $this->parentModel->getId($entity),
+            $this->parentModel->getHash($entity),
             $relationshipName,
             $relatedEntityType,
+            $relatedEntityHash,
             $relatedEntityId
         );
     }

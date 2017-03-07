@@ -184,11 +184,8 @@ class SelectQueryBuilder
 
     public function fetchById($id): array
     {
-        $this
-            ->addWhereGroup(
-                ConditionBuilder::create()
-                    ->columnToValue($this->model->getPrimaryKey(), "=", $id)
-            )
+        $this->queryBuilder
+            ->addWhereGroup($this->model->createConditionBuilder($id))
             ->limit(1);
 
         return $this->queryExecutor->fetchOne($this->model, $this->queryBuilder, $this->relationships);

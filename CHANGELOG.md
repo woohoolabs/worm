@@ -2,9 +2,12 @@
 
 ADDED:
 
+- Support for composite primary keys
 - `Worm::queryTruncate()`
 
 CHANGED:
+
+- `ModelInterface::getPrimaryKey(): string` was changed to `ModelInterface::getPrimaryKeys(): array`
 
 REMOVED:
 

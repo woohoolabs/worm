@@ -19,9 +19,9 @@ class StudentModel extends AbstractModel
         return "students";
     }
 
-    public function getPrimaryKey(): string
+    public function getPrimaryKeys(): array
     {
-        return $this->id;
+        return [$this->id];
     }
 
     protected function getRelationships(): array
