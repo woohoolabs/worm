@@ -92,7 +92,7 @@ abstract class AbstractModel implements ModelInterface
     {
         $id = "";
         foreach ($this->getPrimaryKeys() as $primaryKey) {
-            $id .=  ((string) $record[$primaryKey] ?? "") . ".";
+            $id .= ((string) $record[$primaryKey] ?? "") . ".";
         }
 
         return $id;
@@ -107,7 +107,7 @@ abstract class AbstractModel implements ModelInterface
             return $this->getHash($id);
         }
 
-        return $id;
+        return $id . ".";
     }
 
     /**
