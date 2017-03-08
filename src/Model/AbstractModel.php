@@ -122,7 +122,10 @@ abstract class AbstractModel implements ModelInterface
         }
 
         $conditionBuilder = ConditionBuilder::create();
-        foreach ($primaryKeys as $primaryKey) {
+        foreach ($primaryKeys as $k => $primaryKey) {
+            if ($k !== 0) {
+                $conditionBuilder->and();
+            }
             $conditionBuilder->columnToValue($primaryKey, "=", $id[$primaryKey] ?? null);
         }
 
