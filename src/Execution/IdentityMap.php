@@ -187,9 +187,7 @@ class IdentityMap
         string $relatedHash,
         $relatedId
     ) {
-        if ($this->hasIdentity($type, $hash) === false) {
-            return;
-        }
+        $this->addIdentity($type, $hash);
 
         $relationshipKey = $this->getRelationshipKey($type, $relationship);
         if ($relationshipKey === null) {

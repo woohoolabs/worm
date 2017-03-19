@@ -13,6 +13,8 @@ REMOVED:
 
 FIXED:
 
+- Identities are added to the Identity Map in the correct order when fetching relationships of multiple levels
+
 ## 0.4.1 - 2017-03-05
 
 FIXED:
