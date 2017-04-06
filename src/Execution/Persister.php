@@ -108,7 +108,13 @@ class Persister
 
         $type = $model->getTable();
         $hash = $model->getHash($record);
-        $deletedIds = array_diff($this->identityMap->getRelatedIds($type, $hash, $relationship), $relatedIds);
+
+        $relatedHashes = [];
+        foreach ($relatedIds as $relatedId) {
+            $relatedHashes[$relatedModel->getHashFromId($relatedId)] = true;
+        }
+        $deletedIds = array_diff_key($this->identityMap->getRelatedIds($type, $hash, $relationship), $relatedHashes);
+
         foreach ($deletedIds as $deletedId) {
             $this->delete($relatedModel, $deletedId);
         }
