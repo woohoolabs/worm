@@ -47,19 +47,8 @@ class BelongsToOneRelationship extends AbstractRelationship
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface
     {
         return SelectQueryBuilder::create()
-            ->selectColumn("*", $this->relatedModel->getTable())
+            ->selectColumn("*")
             ->from($this->relatedModel->getTable())
-            ->join($this->parentModel->getTable())
-            ->on(
-                ConditionBuilder::create()
-                    ->columnToColumn(
-                        $this->foreignKey,
-                        "=",
-                        $this->referencedKey,
-                        $this->parentModel->getTable(),
-                        $this->relatedModel->getTable()
-                    )
-            )
             ->where(
                 $this->getWhereCondition(
                     $entities,

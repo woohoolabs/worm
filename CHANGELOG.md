@@ -8,6 +8,7 @@ ADDED:
 CHANGED:
 
 - `ModelInterface::getPrimaryKey(): string` was changed to `ModelInterface::getPrimaryKeys(): array`
+- Optimized retrieval of "belongs-to" relationships
 
 REMOVED:
 
