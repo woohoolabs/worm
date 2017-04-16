@@ -63,6 +63,10 @@ abstract class AbstractRelationship implements RelationshipInterface
             }
         }
 
+        if (empty($values)) {
+            $values[] = null;
+        }
+
         return ConditionBuilder::create()
             ->inValues($foreignKey, $values, $prefix);
     }

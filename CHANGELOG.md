@@ -15,6 +15,7 @@ REMOVED:
 FIXED:
 
 - Identities are added to the Identity Map in the correct order when fetching relationships of multiple levels
+- Handle null foreign keys properly
 
 ## 0.4.1 - 2017-03-05
 
