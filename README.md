@@ -1,5 +1,7 @@
 # Woohoo Labs. Worm
 
+[![Join the chat at https://gitter.im/woohoolabs/worm](https://badges.gitter.im/woohoolabs/worm.svg)](https://gitter.im/woohoolabs/worm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
