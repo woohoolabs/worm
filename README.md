@@ -6,6 +6,7 @@
 [![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
+[![Gitter][ico-gitter]][link-gitter]
 
 **Woohoo Labs. Worm is an efficient and minimal ORM enabling data mapping.**
 
@@ -19,6 +20,7 @@
 * [Versioning](#versioning)
 * [Change Log](#change-log)
 * [Contributing](#contributing)
+* [Support](#support)
 * [Credits](#credits)
 * [License](#license)
 
@@ -54,6 +56,10 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
+## Support
+
+Please see [SUPPORT](SUPPORT.md) for details.
+
 ## Credits
 
 - [Máté Kocsis][link-author]
@@ -69,6 +75,7 @@ The MIT License (MIT). Please see the [License File](LICENSE.md) for more inform
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/woohoolabs/worm.svg
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/woohoolabs/worm.svg
 [ico-downloads]: https://img.shields.io/packagist/dt/woohoolabs/worm.svg
+[ico-gitter]: https://badges.gitter.im/woohoolabs/worm.svg
 
 [link-packagist]: https://packagist.org/packages/woohoolabs/worm
 [link-travis]: https://travis-ci.org/woohoolabs/worm
@@ -77,3 +84,4 @@ The MIT License (MIT). Please see the [License File](LICENSE.md) for more inform
 [link-downloads]: https://packagist.org/packages/woohoolabs/worm
 [link-author]: https://github.com/kocsismate
 [link-contributors]: ../../contributors
+[link-gitter]: https://gitter.im/woohoolabs/worm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
