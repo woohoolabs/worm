@@ -66,7 +66,6 @@ class UpdateQueryBuilder
 
     /**
      * @param mixed $id
-     * @return bool
      */
     public function executeById($id): bool
     {

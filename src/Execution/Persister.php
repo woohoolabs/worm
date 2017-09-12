@@ -29,9 +29,8 @@ class Persister
 
     /**
      * @param object|null $entity
-     * @return void
      */
-    public function save(ModelInterface $model, array $record, $entity)
+    public function save(ModelInterface $model, array $record, $entity): void
     {
         $type = $model->getTable();
         $hash = $model->getHash($record);
@@ -45,16 +44,14 @@ class Persister
 
     /**
      * @param mixed $id
-     * @return void
      */
-    public function delete(ModelInterface $model, $id)
+    public function delete(ModelInterface $model, $id): void
     {
         $this->doDelete($model, $id);
     }
 
     /**
      * @param object|null $relatedEntity
-     * @return void
      */
     public function saveRelatedEntity(
         ModelInterface $model,
@@ -62,7 +59,7 @@ class Persister
         array $record,
         array $relatedRecord,
         $relatedEntity
-    ) {
+    ): void {
         $type = $model->getTable();
         $hash = $model->getHash($record);
 
@@ -87,7 +84,6 @@ class Persister
 
     /**
      * @param object[]|null[] $relatedObjects
-     * @return void
      */
     public function saveRelatedEntities(
         ModelInterface $model,
@@ -95,7 +91,7 @@ class Persister
         array $record,
         array $relatedRecords,
         $relatedObjects
-    ) {
+    ): void {
         $relatedModel = $model->getRelationship($relationship)->getModel();
 
         $relatedIds = [];
@@ -127,9 +123,8 @@ class Persister
 
     /**
      * @param object|null $entity
-     * @return void
      */
-    private function insert(ModelInterface $model, array $record, $entity)
+    private function insert(ModelInterface $model, array $record, $entity): void
     {
         $query = InsertQueryBuilder::create()
             ->into($model->getTable())
@@ -145,9 +140,8 @@ class Persister
 
     /**
      * @param object|null $entity
-     * @return void
      */
-    private function update(ModelInterface $model, array $record, string $hash, $entity)
+    private function update(ModelInterface $model, array $record, string $hash, $entity): void
     {
         $type = $model->getTable();
         $id = $model->getId($record);
@@ -168,9 +162,8 @@ class Persister
 
     /**
      * @param mixed $id
-     * @return void
      */
-    private function doDelete(ModelInterface $model, $id)
+    private function doDelete(ModelInterface $model, $id): void
     {
         $type = $model->getTable();
         $hash = $model->getHashFromId($id);

@@ -147,9 +147,8 @@ abstract class AbstractModel implements ModelInterface
 
     /**
      * @param mixed $id
-     * @return void
      */
-    public function cascadeDelete(Persister $persister, $id)
+    public function cascadeDelete(Persister $persister, $id): void
     {
         foreach ($this->getRelationshipNames() as $relationshipName) {
             $relationship = $this->getRelationship($relationshipName);

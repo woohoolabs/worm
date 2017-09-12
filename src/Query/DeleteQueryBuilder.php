@@ -59,7 +59,6 @@ class DeleteQueryBuilder
 
     /**
      * @param mixed $id
-     * @return bool
      */
     public function executeById($id): bool
     {

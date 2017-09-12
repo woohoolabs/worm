@@ -121,10 +121,7 @@ class IdentityMap
         return isset($this->identityMap[$type]["ids"][$hash]);
     }
 
-    /**
-     * @return void
-     */
-    public function addIdentity(string $type, string $hash, $object = null)
+    public function addIdentity(string $type, string $hash, $object = null): void
     {
         if ($this->getState($type, $hash) === self::STATE_MANAGED) {
             return;
@@ -142,18 +139,12 @@ class IdentityMap
         return $this->identityMap[$type]["ids"][$hash][0];
     }
 
-    /**
-     * @return void
-     */
-    public function setState(string $type, string $hash, int $state)
+    public function setState(string $type, string $hash, int $state): void
     {
         $this->identityMap[$type]["ids"][$hash][0] = $state;
     }
 
-    /**
-     * @return void
-     */
-    public function removeIdentity(string $type, string $hash)
+    public function removeIdentity(string $type, string $hash): void
     {
         unset($this->identityMap[$type]["ids"][$hash]);
     }
@@ -177,7 +168,6 @@ class IdentityMap
 
     /**
      * @var mixed $relatedId
-     * @return void
      */
     public function addRelatedIdentity(
         string $type,
@@ -186,7 +176,7 @@ class IdentityMap
         string $relatedType,
         string $relatedHash,
         $relatedId
-    ) {
+    ): void {
         $this->addIdentity($type, $hash);
 
         $relationshipKey = $this->getRelationshipKey($type, $relationship);
@@ -197,10 +187,7 @@ class IdentityMap
         $this->identityMap[$type]["ids"][$hash][1][$relationshipKey][$relatedHash] = $relatedId;
     }
 
-    /**
-     * @return void
-     */
-    public function removeRelatedIdentity(string $type, string $hash, string $relationship, string $relatedHash)
+    public function removeRelatedIdentity(string $type, string $hash, string $relationship, string $relatedHash): void
     {
         if ($this->hasIdentity($type, $hash) === false) {
             return;
@@ -219,10 +206,7 @@ class IdentityMap
         return $this->identityMap;
     }
 
-    /**
-     * @return int|null
-     */
-    private function getRelationshipKey(string $type, string $relationship)
+    private function getRelationshipKey(string $type, string $relationship): ?int
     {
         return $this->identityMap[$type]["rels"][$relationship]["key"] ?? null;
     }

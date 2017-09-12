@@ -45,13 +45,7 @@ interface ModelInterface
      */
     public function createConditionBuilder($id): ConditionBuilderInterface;
 
-    /**
-     * @return void
-     */
-    public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity);
+    public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity): void;
 
-    /**
-     * @return void
-     */
-    public function cascadeDelete(Persister $persister, $id);
+    public function cascadeDelete(Persister $persister, $id): void;
 }

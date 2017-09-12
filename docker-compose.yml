@@ -2,7 +2,7 @@ version: '2'
 
 services:
     worm-nginx:
-        image: nginx:1.11-alpine
+        image: nginx:1.13-alpine
         container_name: worm-nginx
         networks:
             - worm
@@ -19,7 +19,7 @@ services:
             - worm-php-fpm
 
     worm-php-fpm:
-        image: woohoolabs/php:3.1.4
+        image: woohoolabs/php:3.2
         container_name: worm-php-fpm
         networks:
             - worm

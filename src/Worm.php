@@ -66,10 +66,9 @@ class Worm
     }
 
     /**
-     * @return void
      * @throws Throwable
      */
-    public function transaction(callable $callback)
+    public function transaction(callable $callback): void
     {
         try {
             $this->getConnection()->beginTransaction();
@@ -82,42 +81,31 @@ class Worm
         }
     }
 
-    /**
-     * @return void
-     */
-    public function beginTransaction()
+    public function beginTransaction(): void
     {
         $this->connection->beginTransaction();
     }
 
-    /**
-     * @return void
-     */
-    public function commit()
+    public function commit(): void
     {
         $this->connection->commit();
     }
 
-    /**
-     * @return void
-     */
-    public function rollback()
+    public function rollback(): void
     {
         $this->connection->rollback();
     }
 
     /**
      * @param object|null $entity
-     * @return void
      */
-    public function save(ModelInterface $model, array $record, $entity)
+    public function save(ModelInterface $model, array $record, $entity): void
     {
         $this->persister->save($model, $record, $entity);
     }
 
     /**
      * @param object|null $relatedEntity
-     * @return void
      */
     public function saveRelatedEntity(
         ModelInterface $model,
@@ -125,13 +113,12 @@ class Worm
         array $record,
         array $relatedRecord,
         $relatedEntity
-    ) {
+    ): void {
         $this->persister->saveRelatedEntity($model, $relationship, $record, $relatedRecord, $relatedEntity);
     }
 
     /**
-     * @param array|Traversable $relatedEntities
-     * @return void
+     * @param iterable $relatedEntities
      */
     public function saveRelatedEntities(
         ModelInterface $model,
@@ -139,15 +126,14 @@ class Worm
         array $record,
         array $relatedRecord,
         $relatedEntities
-    ) {
+    ): void {
         $this->persister->saveRelatedEntities($model, $relationship, $record, $relatedRecord, $relatedEntities);
     }
 
     /**
      * @param mixed $id
-     * @return void
      */
-    public function delete(ModelInterface $model, $id)
+    public function delete(ModelInterface $model, $id): void
     {
         $this->persister->delete($model, $id);
     }

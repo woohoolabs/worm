@@ -7,6 +7,8 @@ ADDED:
 
 CHANGED:
 
+- Increased minimum PHP version requirement to 7.1
+- Updated minimum Larva version requirement to 0.5
 - `ModelInterface::getPrimaryKey(): string` was changed to `ModelInterface::getPrimaryKeys(): array`
 - Optimized retrieval of "belongs-to" relationships
 

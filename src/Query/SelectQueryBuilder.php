@@ -143,20 +143,14 @@ class SelectQueryBuilder
         return $this;
     }
 
-    /**
-     * @param int|null $limit
-     */
-    public function limit($limit): SelectQueryBuilder
+    public function limit(?int $limit): SelectQueryBuilder
     {
         $this->queryBuilder->limit($limit);
 
         return $this;
     }
 
-    /**
-     * @param int|null $offset
-     */
-    public function offset($offset): SelectQueryBuilder
+    public function offset(?int $offset): SelectQueryBuilder
     {
         $this->queryBuilder->offset($offset);
 

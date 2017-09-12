@@ -16,10 +16,7 @@ interface RelationshipInterface
 
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface;
 
-    /**
-     * @return void
-     */
-    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder);
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder): void;
 
     public function matchRelationship(
         array $entities,
@@ -28,18 +25,14 @@ interface RelationshipInterface
         IdentityMap $identityMap
     ): array;
 
-    /**
-     * @return void
-     */
     public function addRelationshipToIdentityMap(
         IdentityMap $identityMap,
         string $relationshipName,
         array $parentEntity
-    );
+    ): void;
 
     /**
      * @param mixed $parentId
-     * @return void
      */
-    public function cascadeDelete(Persister $persister, string $relationshipName, $parentId);
+    public function cascadeDelete(Persister $persister, string $relationshipName, $parentId): void;
 }
