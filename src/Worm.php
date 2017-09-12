@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm;
 
 use Throwable;
-use Traversable;
 use WoohooLabs\Larva\Connection\ConnectionInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;

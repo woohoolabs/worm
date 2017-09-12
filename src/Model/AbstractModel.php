@@ -92,7 +92,7 @@ abstract class AbstractModel implements ModelInterface
     {
         $id = "";
         foreach ($this->getPrimaryKeys() as $primaryKey) {
-            $id .= ((string) $record[$primaryKey] ?? "") . ".";
+            $id .= ((string) ($record[$primaryKey] ?? "")) . ".";
         }
 
         return $id;
@@ -132,7 +132,7 @@ abstract class AbstractModel implements ModelInterface
         return $conditionBuilder;
     }
 
-    public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity)
+    public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity): void
     {
         $relationshipNames = $this->getRelationshipNames();
         foreach ($relationshipNames as $relationshipName) {
