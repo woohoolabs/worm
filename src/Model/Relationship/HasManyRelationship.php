@@ -27,7 +27,7 @@ class HasManyRelationship extends HasOneRelationship
         IdentityMap $identityMap,
         string $relationshipName,
         array $parentEntity
-    ) {
+    ): void {
         $this->addManyToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }

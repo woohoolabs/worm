@@ -92,7 +92,7 @@ class HasManyThroughRelationship extends AbstractRelationship
             );
     }
 
-    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder)
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder): void
     {
         $selectQueryBuilder
             ->join($this->junctionModel->getTable())
@@ -135,7 +135,7 @@ class HasManyThroughRelationship extends AbstractRelationship
         IdentityMap $identityMap,
         string $relationshipName,
         array $parentEntity
-    ) {
+    ): void {
         $this->addManyToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }

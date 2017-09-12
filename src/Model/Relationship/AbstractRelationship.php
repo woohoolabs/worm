@@ -143,7 +143,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         string $relationshipName,
         array $entity,
         array $relatedEntity
-    ) {
+    ): array {
         $relatedEntityType = $this->getModel()->getTable();
         $relatedEntityHash = $this->getModel()->getHash($relatedEntity);
         $relatedEntityId = $this->getModel()->getId($relatedEntity);
@@ -165,7 +165,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         );
     }
 
-    private function getEntityMapForOne(array $entities, string $field)
+    private function getEntityMapForOne(array $entities, string $field): array
     {
         $entityMap = [];
         foreach ($entities as $entity) {
@@ -179,7 +179,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         return $entityMap;
     }
 
-    private function getEntityMapForMany(array $entities, string $field)
+    private function getEntityMapForMany(array $entities, string $field): array
     {
         $entityMap = [];
         foreach ($entities as $entity) {

@@ -59,7 +59,7 @@ class BelongsToOneRelationship extends AbstractRelationship
             );
     }
 
-    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder)
+    public function connectToParent(SelectQueryBuilderInterface $selectQueryBuilder): void
     {
         $selectQueryBuilder
             ->addWhereGroup(
@@ -94,7 +94,7 @@ class BelongsToOneRelationship extends AbstractRelationship
         IdentityMap $identityMap,
         string $relationshipName,
         array $parentEntity
-    ) {
+    ): void {
         $this->addOneToEntityMap($identityMap, $relationshipName, $parentEntity, $parentEntity[$relationshipName]);
     }
 }
