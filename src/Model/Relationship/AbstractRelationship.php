@@ -143,7 +143,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         string $relationshipName,
         array $entity,
         array $relatedEntity
-    ): array {
+    ): void {
         $relatedEntityType = $this->getModel()->getTable();
         $relatedEntityHash = $this->getModel()->getHash($relatedEntity);
         $relatedEntityId = $this->getModel()->getId($relatedEntity);
