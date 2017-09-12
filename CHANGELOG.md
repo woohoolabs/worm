@@ -1,4 +1,14 @@
-## 0.5.0 - unreleased
+## 0.6.0 - unreleased
+
+ADDED:
+
+CHANGED:
+
+REMOVED:
+
+FIXED:
+
+## 0.5.0 - 2017-09-12
 
 ADDED:
 
@@ -11,8 +21,6 @@ CHANGED:
 - Updated minimum Larva version requirement to 0.5
 - `ModelInterface::getPrimaryKey(): string` was changed to `ModelInterface::getPrimaryKeys(): array`
 - Optimized retrieval of "belongs-to" relationships
-
-REMOVED:
 
 FIXED:
 
