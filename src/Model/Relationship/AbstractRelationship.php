@@ -32,7 +32,7 @@ abstract class AbstractRelationship implements RelationshipInterface
         return $this->parentModel;
     }
 
-    public function cascadeDelete(Persister $persister, string $relationshipName, $parentId)
+    public function cascadeDelete(Persister $persister, string $relationshipName, $parentId): void
     {
         if ($this->cascadedDelete === false) {
             return;
