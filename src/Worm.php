@@ -117,14 +117,14 @@ class Worm
     }
 
     /**
-     * @param iterable $relatedEntities
+     * @param object[]|null[] $relatedEntities
      */
     public function saveRelatedEntities(
         ModelInterface $model,
         string $relationship,
         array $record,
         array $relatedRecord,
-        $relatedEntities
+        iterable $relatedEntities
     ): void {
         $this->persister->saveRelatedEntities($model, $relationship, $record, $relatedRecord, $relatedEntities);
     }

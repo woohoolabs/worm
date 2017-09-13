@@ -209,7 +209,7 @@ class SelectQueryBuilder
     {
         $this->queryBuilder->selectCount($column);
 
-        return $this->queryExecutor->fetchColumn($this->queryBuilder);
+        return (int) $this->queryExecutor->fetchColumn($this->queryBuilder);
     }
 
     public function getSql(): string

@@ -136,7 +136,7 @@ abstract class AbstractModel implements ModelInterface
     {
         $relationshipNames = $this->getRelationshipNames();
         foreach ($relationshipNames as $relationshipName) {
-            if (empty($record[$relationshipName])) {
+            if (empty($entity[$relationshipName])) {
                 continue;
             }
 
