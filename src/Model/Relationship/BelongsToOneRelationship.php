@@ -45,7 +45,9 @@ class BelongsToOneRelationship extends AbstractRelationship
 
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface
     {
-        return $this->queryBuilder
+        $queryBuilder = clone $this->queryBuilder;
+
+        return $queryBuilder
             ->selectColumn("*")
             ->from($this->relatedModel->getTable())
             ->addWhereGroup(

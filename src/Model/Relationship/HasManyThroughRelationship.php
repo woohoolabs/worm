@@ -66,7 +66,9 @@ class HasManyThroughRelationship extends AbstractRelationship
 
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface
     {
-        return $this->queryBuilder
+        $queryBuilder = clone $this->queryBuilder;
+
+        return $queryBuilder
             ->selectColumn("*", $this->relatedModel->getTable())
             ->selectColumn("*", $this->junctionModel->getTable())
             ->from($this->relatedModel->getTable())
