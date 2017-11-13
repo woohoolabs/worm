@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Model\Relationship;
 
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
-use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
@@ -46,10 +45,10 @@ class BelongsToOneRelationship extends AbstractRelationship
 
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface
     {
-        return SelectQueryBuilder::create()
+        return $this->queryBuilder
             ->selectColumn("*")
             ->from($this->relatedModel->getTable())
-            ->where(
+            ->addWhereGroup(
                 $this->getWhereCondition(
                     $entities,
                     $this->foreignKey,

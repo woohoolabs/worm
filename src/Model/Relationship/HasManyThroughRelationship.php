@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Model\Relationship;
 
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
-use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Model\ModelInterface;
@@ -67,7 +66,7 @@ class HasManyThroughRelationship extends AbstractRelationship
 
     public function getQueryBuilder(array $entities): SelectQueryBuilderInterface
     {
-        return SelectQueryBuilder::create()
+        return $this->queryBuilder
             ->selectColumn("*", $this->relatedModel->getTable())
             ->selectColumn("*", $this->junctionModel->getTable())
             ->from($this->relatedModel->getTable())
@@ -82,7 +81,7 @@ class HasManyThroughRelationship extends AbstractRelationship
                         $this->relatedModel->getTable()
                     )
             )
-            ->where(
+            ->addWhereGroup(
                 $this->getWhereCondition(
                     $entities,
                     $this->referencedKey1,

@@ -2,6 +2,8 @@
 
 ADDED:
 
+- Support for building relationships
+
 CHANGED:
 
 REMOVED:

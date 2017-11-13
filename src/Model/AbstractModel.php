@@ -13,6 +13,7 @@ use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasOneRelationship;
+use WoohooLabs\Worm\Model\Relationship\RelationshipBuilderInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 abstract class AbstractModel implements ModelInterface
@@ -161,7 +162,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): BelongsToOneRelationship {
+    ): RelationshipBuilderInterface {
         return new BelongsToOneRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -170,7 +171,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): BelongsToManyRelationship {
+    ): RelationshipBuilderInterface {
         return new BelongsToManyRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -179,7 +180,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): HasOneRelationship {
+    ): RelationshipBuilderInterface {
         return new HasOneRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -188,7 +189,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): HasManyRelationship {
+    ): RelationshipBuilderInterface {
         return new HasManyRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -200,7 +201,7 @@ abstract class AbstractModel implements ModelInterface
         ModelInterface $referencedModel,
         string $referencedKey2,
         bool $isCascadedDelete = false
-    ): HasManyThroughRelationship {
+    ): RelationshipBuilderInterface {
         return new HasManyThroughRelationship(
             $this,
             $referencedKey1,

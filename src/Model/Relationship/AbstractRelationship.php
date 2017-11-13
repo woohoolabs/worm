@@ -5,11 +5,12 @@ namespace WoohooLabs\Worm\Model\Relationship;
 
 use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
+use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\ModelInterface;
 
-abstract class AbstractRelationship implements RelationshipInterface
+abstract class AbstractRelationship implements RelationshipInterface, RelationshipBuilderInterface
 {
     /**
      * @var ModelInterface
@@ -21,10 +22,79 @@ abstract class AbstractRelationship implements RelationshipInterface
      */
     protected $cascadedDelete;
 
+    /**
+     * @var SelectQueryBuilder
+     */
+    protected $queryBuilder;
+
     public function __construct(ModelInterface $parentModel, bool $isCascadedDelete)
     {
         $this->parentModel = $parentModel;
         $this->cascadedDelete = $isCascadedDelete;
+        $this->queryBuilder = new SelectQueryBuilder();
+    }
+
+    public function distinct(bool $isDistinct = true): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->distinct($isDistinct);
+
+        return $this;
+    }
+
+    public function where(ConditionBuilderInterface $where): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->where($where);
+
+        return $this;
+    }
+
+    public function addWhereGroup(ConditionBuilderInterface $where, string $operator = "AND"): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->addWhereGroup($where, $operator);
+
+        return $this;
+    }
+
+    public function groupBy(string $attribute): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->groupBy($attribute);
+
+        return $this;
+    }
+
+    public function groupByAttributes(array $attributes): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->groupByAttributes($attributes);
+
+        return $this;
+    }
+
+    public function having(ConditionBuilderInterface $having): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->having($having);
+
+        return $this;
+    }
+
+    public function orderBy(string $attribute, string $direction = "ASC"): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->orderBy($attribute, $direction);
+
+        return $this;
+    }
+
+    public function limit(?int $limit): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->limit($limit);
+
+        return $this;
+    }
+
+    public function offset(?int $offset): RelationshipBuilderInterface
+    {
+        $this->queryBuilder->offset($offset);
+
+        return $this;
     }
 
     public function getParentModel(): ModelInterface
