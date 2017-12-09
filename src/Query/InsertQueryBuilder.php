@@ -84,4 +84,9 @@ class InsertQueryBuilder
     {
         return $this->queryExecutor->getParams($this->queryBuilder);
     }
+
+    public function __clone()
+    {
+        $this->queryBuilder = clone $this->queryBuilder;
+    }
 }

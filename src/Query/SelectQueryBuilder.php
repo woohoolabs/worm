@@ -238,4 +238,9 @@ class SelectQueryBuilder
 
         return $result;
     }
+
+    public function __clone()
+    {
+        $this->queryBuilder = clone $this->queryBuilder;
+    }
 }

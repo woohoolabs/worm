@@ -255,4 +255,9 @@ class ConditionBuilder
     {
         return $this->conditionBuilder;
     }
+
+    public function __clone()
+    {
+        $this->conditionBuilder = clone $this->conditionBuilder;
+    }
 }

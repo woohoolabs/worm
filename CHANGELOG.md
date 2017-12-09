@@ -10,6 +10,8 @@ REMOVED:
 
 FIXED:
 
+- Cloning query builders
+
 ## 0.5.0 - 2017-09-12
 
 ADDED:
