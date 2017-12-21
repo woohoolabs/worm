@@ -138,7 +138,7 @@ class SelectQueryBuilder
 
     public function orderBy(string $attribute, string $direction = "ASC"): SelectQueryBuilder
     {
-        $this->queryBuilder->orderBy($attribute, $direction);
+        $this->queryBuilder->orderByAttribute($attribute, $direction);
 
         return $this;
     }

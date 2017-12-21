@@ -78,7 +78,7 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
 
     public function orderBy(string $attribute, string $direction = "ASC"): RelationshipBuilderInterface
     {
-        $this->queryBuilder->orderBy($attribute, $direction);
+        $this->queryBuilder->orderByAttribute($attribute, $direction);
 
         return $this;
     }
