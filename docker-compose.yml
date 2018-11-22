@@ -13,8 +13,6 @@ services:
         env_file:
             - .env
         command: /code/build/container/nginx/run.sh
-        env_file:
-            - .env
         depends_on:
             - worm-php-fpm
 
