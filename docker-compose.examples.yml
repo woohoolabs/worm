@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+    worm-examples-nginx:
+        image: nginx:1.13-alpine
+        container_name: worm-examples-nginx
+        networks:
+            - worm-examples
+        volumes:
+            - .:/code
+        ports:
+            - "$HOST_WEB_PORT:80"
+        env_file:
+            - .env
+        command: /code/build/container/nginx/run.sh
+        depends_on:
+            - worm-examples-php-fpm
+
+    worm-examples-php-fpm:
+        image: woohoolabs/php:3.2
+        container_name: worm-examples-php-fpm
+        networks:
+            - worm-examples
+        volumes:
+            - .:/code
+        env_file:
+            - .env
+        command: /code/build/container/php-fpm/run.sh
+        depends_on:
+            - worm-examples-mysql
+
+    worm-examples-mysql:
+        image: mysql:5.7
+        container_name: worm-examples-mysql
+        ports:
+            - "$HOST_MYSQL_PORT:3306"
+        networks:
+            - worm-examples
+        volumes:
+            - mysql-data:/var/lib/mysql
+        env_file:
+            - .env
+
+networks:
+    worm-examples:
+
+volumes:
+    mysql-data:
+        driver: local

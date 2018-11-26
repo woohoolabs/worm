@@ -1,49 +1,9 @@
 version: '2'
 
 services:
-    worm-nginx:
-        image: nginx:1.13-alpine
-        container_name: worm-nginx
-        networks:
-            - worm
-        volumes:
-            - .:/code
-        ports:
-            - "$HOST_WEB_PORT:80"
-        env_file:
-            - .env
-        command: /code/build/container/nginx/run.sh
-        depends_on:
-            - worm-php-fpm
-
-    worm-php-fpm:
+    worm-php:
         image: woohoolabs/php:3.2
-        container_name: worm-php-fpm
-        networks:
-            - worm
+        container_name: worm-php
         volumes:
             - .:/code
-        env_file:
-            - .env
-        command: /code/build/container/php-fpm/run.sh
-        depends_on:
-            - worm-mysql
-
-    worm-mysql:
-        image: mysql:5.7
-        container_name: worm-mysql
-        ports:
-            - "$HOST_MYSQL_PORT:3306"
-        networks:
-            - worm
-        volumes:
-            - mysql-data:/var/lib/mysql
-        env_file:
-            - .env
-
-networks:
-    worm:
-
-volumes:
-    mysql-data:
-        driver: local
+        command: /bin/bash -c "cd /code; php vendor/bin/phpunit"
