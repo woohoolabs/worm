@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Execution;
 
 use WoohooLabs\Worm\Model\ModelInterface;
+use function count;
 
 class IdentityMap
 {
-    const STATE_NEW = 0;
+    public const STATE_NEW = 0;
 
-    const STATE_MANAGED = 1;
+    public const STATE_MANAGED = 1;
 
-    const STATE_DELETED = 2;
+    public const STATE_DELETED = 2;
 
     /**
      * @var array

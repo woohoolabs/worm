@@ -7,7 +7,6 @@ ADDED:
 CHANGED:
 
 - Require PHPUnit 7.0 minimally to run tests
-- Run Travis tests on PHP 7.3 too
 
 REMOVED:
 

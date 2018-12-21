@@ -12,6 +12,8 @@ use WoohooLabs\Larva\Query\Truncate\TruncateQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Update\UpdateQueryBuilderInterface;
 use WoohooLabs\Worm\Model\ModelInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
+use function array_intersect;
+use function is_array;
 
 class QueryExecutor
 {

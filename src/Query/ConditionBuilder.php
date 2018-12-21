@@ -22,12 +22,12 @@ class ConditionBuilder
      */
     private $conditionBuilder;
 
-    public static function create(ModelInterface $model = null): ConditionBuilder
+    public static function create(?ModelInterface $model = null): ConditionBuilder
     {
         return new ConditionBuilder($model);
     }
 
-    public function __construct(ModelInterface $model = null)
+    public function __construct(?ModelInterface $model = null)
     {
         $this->model = $model;
         $this->conditionBuilder = new LarvaConditionBuilder();

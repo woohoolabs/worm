@@ -15,6 +15,12 @@ use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasOneRelationship;
 use WoohooLabs\Worm\Model\Relationship\RelationshipBuilderInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
+use function array_keys;
+use function count;
+use function get_object_vars;
+use function is_array;
+use function is_callable;
+use function reset;
 
 abstract class AbstractModel implements ModelInterface
 {
@@ -93,7 +99,7 @@ abstract class AbstractModel implements ModelInterface
     {
         $id = "";
         foreach ($this->getPrimaryKeys() as $primaryKey) {
-            $id .= ((string) ($record[$primaryKey] ?? "")) . ".";
+            $id .= (string) ($record[$primaryKey] ?? "") . ".";
         }
 
         return $id;

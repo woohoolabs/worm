@@ -8,6 +8,8 @@ use WoohooLabs\Larva\Query\Insert\InsertQueryBuilderInterface;
 use WoohooLabs\Larva\Query\Select\SelectQueryBuilderInterface;
 use WoohooLabs\Worm\Execution\QueryExecutor;
 use WoohooLabs\Worm\Model\ModelInterface;
+use function array_keys;
+use function array_values;
 
 class InsertQueryBuilder
 {
