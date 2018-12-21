@@ -16,6 +16,7 @@ ADDED:
 
 CHANGED:
 
+- Updated Larva to 0.6
 - Require PHPUnit 7.0 minimally to run tests
 - Apply the Woohoo Labs. Coding Standard
 
