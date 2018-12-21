@@ -1,4 +1,14 @@
-## 0.6.0 - unreleased
+## 0.7.0 - unreleased
+
+ADDED:
+
+CHANGED:
+
+REMOVED:
+
+FIXED:
+
+## 0.6.0 - 2018-12-21
 
 ADDED:
 
@@ -7,8 +17,7 @@ ADDED:
 CHANGED:
 
 - Require PHPUnit 7.0 minimally to run tests
-
-REMOVED:
+- Apply the Woohoo Labs. Coding Standard
 
 FIXED:
 
