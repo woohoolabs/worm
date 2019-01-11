@@ -24,10 +24,10 @@ phpstan:
 	docker-compose run --rm worm-php /bin/bash -c "cd /code && ./vendor/bin/phpstan analyse --level 7 src"
 
 cs:
-	docker-compose run --rm worm-php /code/vendor/bin/phpcs --standard=/var/www/phpcs.xml
+	docker-compose run --rm worm-php /code/vendor/bin/phpcs --standard=/code/phpcs.xml
 
 cs-fix:
-	docker-compose run --rm worm-php /code/vendor/bin/phpcbf --standard=/var/www/phpcs.xml
+	docker-compose run --rm worm-php /code/vendor/bin/phpcbf --standard=/code/phpcs.xml
 
 composer-install:
 	docker run --rm --interactive --tty --volume $(PWD):/app --user $(id -u):$(id -g) composer install --ignore-platform-reqs
