@@ -107,7 +107,7 @@ class IdentityMap
     public function createObjectFromHash(string $type, string $hash, callable $factory)
     {
         $object = $this->getObject($type, $hash);
-        if ($object) {
+        if ($object !== null) {
             return $object;
         }
 
@@ -122,6 +122,9 @@ class IdentityMap
         return isset($this->identityMap[$type]["ids"][$hash]);
     }
 
+    /**
+     * @param mixed $object
+     */
     public function addIdentity(string $type, string $hash, $object = null): void
     {
         if ($this->getState($type, $hash) === self::STATE_MANAGED) {
@@ -168,7 +171,7 @@ class IdentityMap
     }
 
     /**
-     * @var mixed $relatedId
+     * @param mixed $relatedId
      */
     public function addRelatedIdentity(
         string $type,

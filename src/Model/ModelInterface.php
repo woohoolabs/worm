@@ -47,5 +47,8 @@ interface ModelInterface
 
     public function addRelationshipsToIdentityMap(IdentityMap $identityMap, array $entity): void;
 
+    /**
+     * @param mixed $id
+     */
     public function cascadeDelete(Persister $persister, $id): void;
 }

@@ -86,7 +86,7 @@ class Persister
     }
 
     /**
-     * @param object[]|null[] $relatedObjects
+     * @param iterable|object[]|null[] $relatedObjects
      */
     public function saveRelatedEntities(
         ModelInterface $model,

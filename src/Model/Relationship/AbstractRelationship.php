@@ -102,6 +102,9 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
         return $this->parentModel;
     }
 
+    /**
+     * @param mixed $parentId
+     */
     public function cascadeDelete(Persister $persister, string $relationshipName, $parentId): void
     {
         if ($this->cascadedDelete === false) {
@@ -202,7 +205,7 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
         string $relationshipName,
         array $entity,
         array $relatedEntities
-    ) {
+    ): void {
         foreach ($relatedEntities as $relatedEntity) {
             $this->addOneToEntityMap($identityMap, $relationshipName, $entity, $relatedEntity);
         }

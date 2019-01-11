@@ -27,7 +27,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @var array
      */
-    private $relationships = false;
+    private $relationships = [];
 
     /**
      * @return callable[]

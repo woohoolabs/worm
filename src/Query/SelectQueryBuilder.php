@@ -176,6 +176,9 @@ class SelectQueryBuilder
         return $this->queryBuilder;
     }
 
+    /**
+     * @param mixed $id
+     */
     public function fetchById($id): array
     {
         $this->queryBuilder
