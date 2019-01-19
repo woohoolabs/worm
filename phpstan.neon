@@ -2,6 +2,7 @@ parameters:
     bootstrap: vendor/autoload.php
     ignoreErrors:
         - '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+        - '#^Variable property access on \$this\(WoohooLabs\\Worm\\Model\\AbstractModel\)\.$#'
 
 includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
