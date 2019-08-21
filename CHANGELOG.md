@@ -4,6 +4,11 @@ ADDED:
 
 CHANGED:
 
+- Increased minimum PHP version requirement to 7.4 as property type declarations were added
+- Updated Larva to 0.7
+- Updated dev dependencies
+- Improved static analysis
+
 REMOVED:
 
 FIXED:
