@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WoohooLabs\Worm\Tests\Connection;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use WoohooLabs\Worm\Execution\IdentityMap;
 
 class IdentityMapTest extends TestCase
@@ -24,7 +25,7 @@ class IdentityMapTest extends TestCase
     public function hasObjectWhenTrue(): void
     {
         $identityMap = new IdentityMap();
-        $identityMap->addIdentity("abc", "123");
+        $identityMap->addIdentity("abc", "123", new stdClass());
 
         $this->assertTrue($identityMap->hasObject("abc", "123"));
     }

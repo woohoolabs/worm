@@ -15,6 +15,7 @@ use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasOneRelationship;
 use WoohooLabs\Worm\Model\Relationship\RelationshipBuilderInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
+use function array_key_exists;
 use function array_keys;
 use function count;
 use function get_object_vars;
