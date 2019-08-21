@@ -17,10 +17,7 @@ class ConditionBuilder
      */
     private $model;
 
-    /**
-     * @var LarvaConditionBuilder
-     */
-    private $conditionBuilder;
+    private LarvaConditionBuilder $conditionBuilder;
 
     public static function create(?ModelInterface $model = null): ConditionBuilder
     {

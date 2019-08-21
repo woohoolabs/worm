@@ -10,15 +10,8 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class TruncateQueryBuilder
 {
-    /**
-     * @var QueryExecutor
-     */
-    private $queryExecutor;
-
-    /**
-     * @var LarvaTruncateQueryBuilder
-     */
-    private $queryBuilder;
+    private QueryExecutor $queryExecutor;
+    private LarvaTruncateQueryBuilder $queryBuilder;
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {

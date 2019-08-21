@@ -10,20 +10,9 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class SelectQueryBuilder
 {
-    /**
-     * @var ModelInterface
-     */
-    private $model;
-
-    /**
-     * @var QueryExecutor
-     */
-    private $queryExecutor;
-
-    /**
-     * @var LarvaSelectQueryBuilder
-     */
-    private $queryBuilder;
+    private ModelInterface $model;
+    private QueryExecutor $queryExecutor;
+    private LarvaSelectQueryBuilder $queryBuilder;
 
     /**
      * @var array

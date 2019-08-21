@@ -10,20 +10,9 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class UpdateQueryBuilder
 {
-    /**
-     * @var ModelInterface
-     */
-    private $model;
-
-    /**
-     * @var QueryExecutor
-     */
-    private $queryExecutor;
-
-    /**
-     * @var LarvaUpdateQueryBuilder
-     */
-    private $queryBuilder;
+    private ModelInterface $model;
+    private QueryExecutor $queryExecutor;
+    private LarvaUpdateQueryBuilder $queryBuilder;
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {

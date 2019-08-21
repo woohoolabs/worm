@@ -10,20 +10,9 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class DeleteQueryBuilder
 {
-    /**
-     * @var ModelInterface
-     */
-    private $model;
-
-    /**
-     * @var QueryExecutor
-     */
-    private $queryExecutor;
-
-    /**
-     * @var LarvaDeleteQueryBuilder
-     */
-    private $queryBuilder;
+    private ModelInterface $model;
+    private QueryExecutor $queryExecutor;
+    private LarvaDeleteQueryBuilder $queryBuilder;
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {

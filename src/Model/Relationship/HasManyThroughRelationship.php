@@ -10,35 +10,12 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class HasManyThroughRelationship extends AbstractRelationship
 {
-    /**
-     * @var string
-     */
-    private $referencedKey1;
-
-    /**
-     * @var ModelInterface
-     */
-    private $junctionModel;
-
-    /**
-     * @var string
-     */
-    private $foreignKey1;
-
-    /**
-     * @var string
-     */
-    private $foreignKey2;
-
-    /**
-     * @var ModelInterface
-     */
-    private $relatedModel;
-
-    /**
-     * @var string
-     */
-    private $referencedKey2;
+    private string $referencedKey1;
+    private ModelInterface $junctionModel;
+    private string $foreignKey1;
+    private string $foreignKey2;
+    private ModelInterface $relatedModel;
+    private string $referencedKey2;
 
     public function __construct(
         ModelInterface $parentModel,

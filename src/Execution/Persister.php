@@ -14,15 +14,8 @@ use function array_values;
 
 class Persister
 {
-    /**
-     * @var ConnectionInterface
-     */
-    private $connection;
-
-    /**
-     * @var IdentityMap
-     */
-    private $identityMap;
+    private ConnectionInterface $connection;
+    private IdentityMap $identityMap;
 
     public function __construct(ConnectionInterface $connection, IdentityMap $identityMap)
     {

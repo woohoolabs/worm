@@ -12,20 +12,9 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 abstract class AbstractRelationship implements RelationshipInterface, RelationshipBuilderInterface
 {
-    /**
-     * @var ModelInterface
-     */
-    protected $parentModel;
-
-    /**
-     * @var bool
-     */
-    protected $cascadedDelete;
-
-    /**
-     * @var SelectQueryBuilder
-     */
-    protected $queryBuilder;
+    protected ModelInterface $parentModel;
+    protected bool $cascadedDelete;
+    protected SelectQueryBuilder $queryBuilder;
 
     public function __construct(ModelInterface $parentModel, bool $isCascadedDelete)
     {

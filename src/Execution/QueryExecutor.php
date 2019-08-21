@@ -17,15 +17,8 @@ use function is_array;
 
 class QueryExecutor
 {
-    /**
-     * @var ConnectionInterface
-     */
-    private $connection;
-
-    /**
-     * @var IdentityMap
-     */
-    private $identityMap;
+    private ConnectionInterface $connection;
+    private IdentityMap $identityMap;
 
     public function __construct(ConnectionInterface $connection, IdentityMap $identityMap)
     {

@@ -17,20 +17,9 @@ use WoohooLabs\Worm\Query\UpdateQueryBuilder;
 
 class Worm
 {
-    /**
-     * @var ConnectionInterface
-     */
-    private $connection;
-
-    /**
-     * @var QueryExecutor
-     */
-    private $queryExecutor;
-
-    /**
-     * @var Persister
-     */
-    private $persister;
+    private ConnectionInterface $connection;
+    private QueryExecutor $queryExecutor;
+    private Persister $persister;
 
     public function __construct(ConnectionInterface $connection, IdentityMap $identityMap)
     {

@@ -13,15 +13,8 @@ use function array_values;
 
 class InsertQueryBuilder
 {
-    /**
-     * @var QueryExecutor
-     */
-    private $queryExecutor;
-
-    /**
-     * @var LarvaInsertQueryBuilder
-     */
-    private $queryBuilder;
+    private QueryExecutor $queryExecutor;
+    private LarvaInsertQueryBuilder $queryBuilder;
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {

@@ -9,15 +9,9 @@ use function count;
 class IdentityMap
 {
     public const STATE_NEW = 0;
-
     public const STATE_MANAGED = 1;
-
     public const STATE_DELETED = 2;
-
-    /**
-     * @var array
-     */
-    private $identityMap = [];
+    private array $identityMap = [];
 
     public function __construct()
     {
@@ -157,7 +151,7 @@ class IdentityMap
     {
         $relatedIds = $this->getRelatedIds($type, $hash, $relationship);
 
-        return isset($relatedIds[$relatedHash]);
+        return array_key_exists($relatedHash, $relatedIds);
     }
 
     public function getRelatedIds(string $type, string $hash, string $relationship): array

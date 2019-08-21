@@ -24,10 +24,7 @@ use function reset;
 
 abstract class AbstractModel implements ModelInterface
 {
-    /**
-     * @var array
-     */
-    private $relationships = [];
+    private array $relationships = [];
 
     /**
      * @return callable[]

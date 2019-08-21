@@ -10,20 +10,9 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class BelongsToOneRelationship extends AbstractRelationship
 {
-    /**
-     * @var ModelInterface
-     */
-    protected $relatedModel;
-
-    /**
-     * @var string
-     */
-    protected $foreignKey;
-
-    /**
-     * @var string
-     */
-    protected $referencedKey;
+    protected ModelInterface $relatedModel;
+    protected string $foreignKey;
+    protected string $referencedKey;
 
     public function __construct(
         ModelInterface $parentModel,
