@@ -2,7 +2,7 @@ version: '2'
 
 services:
     worm-examples-nginx:
-        image: nginx:1.13-alpine
+        image: nginx:1.17-alpine
         container_name: worm-examples-nginx
         networks:
             - worm-examples
@@ -17,7 +17,7 @@ services:
             - worm-examples-php-fpm
 
     worm-examples-php-fpm:
-        image: woohoolabs/php:3.2
+        image: woohoolabs/php-fpm:7.4.0beta2
         container_name: worm-examples-php-fpm
         networks:
             - worm-examples
@@ -30,7 +30,7 @@ services:
             - worm-examples-mysql
 
     worm-examples-mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         container_name: worm-examples-mysql
         ports:
             - "$HOST_MYSQL_PORT:3306"
