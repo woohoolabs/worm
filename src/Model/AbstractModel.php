@@ -56,7 +56,7 @@ abstract class AbstractModel implements ModelInterface
 
     public function getRelationship(string $name): RelationshipInterface
     {
-        if (isset($this->relationships[$name]) === false) {
+        if (array_key_exists($name, $this->relationships) === false) {
             throw new DomainException("Relationship '$name' does not exist!");
         }
 
@@ -82,7 +82,7 @@ abstract class AbstractModel implements ModelInterface
         // Composite primary key
         $id = [];
         foreach ($primaryKeys as $primaryKey) {
-            if (isset($record[$primaryKey]) === false) {
+            if (array_key_exists($primaryKey, $record) === false) {
                 return null;
             }
 
@@ -140,7 +140,7 @@ abstract class AbstractModel implements ModelInterface
     {
         $relationshipNames = $this->getRelationshipNames();
         foreach ($relationshipNames as $relationshipName) {
-            if (empty($entity[$relationshipName])) {
+            if (array_key_exists($relationshipName, $entity) === false) {
                 continue;
             }
 

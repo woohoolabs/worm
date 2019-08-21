@@ -33,7 +33,7 @@ class QueryExecutor
     ): array {
         $entities = $this->createEntities($model, $queryBuilder, $relationships);
 
-        return empty($entities) ? [] : $entities[0];
+        return $entities[0] ?? [];
     }
 
     public function fetchAll(
@@ -114,7 +114,7 @@ class QueryExecutor
         array $entities,
         array $relationships
     ): array {
-        if (empty($entities)) {
+        if ($entities === []) {
             return $entities;
         }
 

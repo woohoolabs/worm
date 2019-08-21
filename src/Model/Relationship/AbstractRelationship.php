@@ -120,12 +120,12 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
     ): ConditionBuilderInterface {
         $values = [];
         foreach ($entities as $entity) {
-            if (isset($entity[$entityKey])) {
+            if (array_key_exists($entityKey, $entity)) {
                 $values[] = $entity[$entityKey];
             }
         }
 
-        if (empty($values)) {
+        if ($values === []) {
             $values[] = null;
         }
 
@@ -231,7 +231,7 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
     {
         $entityMap = [];
         foreach ($entities as $entity) {
-            if (isset($entity[$field]) === false) {
+            if (array_key_exists($field, $entity) === false) {
                 continue;
             }
 
@@ -245,7 +245,7 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
     {
         $entityMap = [];
         foreach ($entities as $entity) {
-            if (isset($entity[$field]) === false) {
+            if (array_key_exists($field, $entity) === false) {
                 continue;
             }
 

@@ -221,7 +221,7 @@ class SelectQueryBuilder
         foreach ($model->getRelationshipNames() as $relationshipName) {
             $relationship = $model->getRelationship($relationshipName);
 
-            if (empty($relationship->getModel()->getRelationshipNames())) {
+            if ($relationship->getModel()->getRelationshipNames() === []) {
                 $result[] = $relationshipName;
             } else {
                 $result[$relationshipName] = $this->getModelRelationships($relationship->getModel());

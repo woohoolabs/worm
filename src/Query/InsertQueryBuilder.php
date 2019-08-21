@@ -36,7 +36,7 @@ class InsertQueryBuilder
 
     public function multipleFields(array $fields): InsertQueryBuilder
     {
-        if (empty($fields) || empty($fields[0])) {
+        if ($fields  === [] || array_key_exists(0, $fields) === false) {
             return $this;
         }
 
