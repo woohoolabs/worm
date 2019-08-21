@@ -1,4 +1,4 @@
-## 0.7.0 - unreleased
+## 0.8.0 - unreleased
 
 ADDED:
 
@@ -12,6 +12,15 @@ CHANGED:
 REMOVED:
 
 FIXED:
+
+## 0.7.0 - 2019-08-21
+
+CHANGED:
+
+- Increased minimum PHP version requirement to 7.4 as property type declarations were added
+- Updated Larva to 0.7
+- Updated dev dependencies
+- Improved static analysis
 
 ## 0.6.0 - 2018-12-21
 
