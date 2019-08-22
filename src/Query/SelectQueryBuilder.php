@@ -14,9 +14,7 @@ class SelectQueryBuilder
     private QueryExecutor $queryExecutor;
     private LarvaSelectQueryBuilder $queryBuilder;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $relationships = [];
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)

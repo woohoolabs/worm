@@ -12,9 +12,7 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class ConditionBuilder
 {
-    /**
-     * @var ModelInterface|null
-     */
+    /** @var ModelInterface|null */
     private $model;
 
     private LarvaConditionBuilder $conditionBuilder;
