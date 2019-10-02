@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WoohooLabs\Worm\Tests\Connection;
+namespace WoohooLabs\Worm\Tests\Execution;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
