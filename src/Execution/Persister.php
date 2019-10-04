@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Execution;
@@ -8,6 +9,7 @@ use WoohooLabs\Larva\Query\Delete\DeleteQueryBuilder;
 use WoohooLabs\Larva\Query\Insert\InsertQueryBuilder;
 use WoohooLabs\Larva\Query\Update\UpdateQueryBuilder;
 use WoohooLabs\Worm\Model\ModelInterface;
+
 use function array_diff_key;
 use function array_keys;
 use function array_values;

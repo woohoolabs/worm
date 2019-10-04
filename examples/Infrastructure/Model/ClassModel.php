@@ -16,15 +16,8 @@ class ClassModel extends AbstractModel
     public $students;
     public $datetime;
 
-    /**
-     * @var ClassStudentModel
-     */
-    private $classStudentModel;
-
-    /**
-     * @var StudentModel
-     */
-    private $studentModel;
+    private ClassStudentModel $classStudentModel;
+    private StudentModel $studentModel;
 
     public function __construct(ClassStudentModel $classStudentModel, StudentModel $studentModel)
     {

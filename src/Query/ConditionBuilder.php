@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Query;
@@ -12,9 +13,7 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 class ConditionBuilder
 {
-    /** @var ModelInterface|null */
-    private $model;
-
+    private ?ModelInterface $model;
     private LarvaConditionBuilder $conditionBuilder;
 
     public static function create(?ModelInterface $model = null): ConditionBuilder

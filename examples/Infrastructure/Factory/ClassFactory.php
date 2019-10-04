@@ -10,15 +10,8 @@ use WoohooLabs\Worm\Execution\IdentityMap;
 
 class ClassFactory extends AbstractFactory
 {
-    /**
-     * @var ClassModel
-     */
-    private $model;
-
-    /**
-     * @var StudentFactory
-     */
-    private $studentFactory;
+    private ClassModel $model;
+    private StudentFactory $studentFactory;
 
     public function __construct(IdentityMap $identityMap, ClassModel $model, StudentFactory $studentFactory)
     {

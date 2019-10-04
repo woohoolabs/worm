@@ -5,15 +5,8 @@ namespace WoohooLabs\Worm\Examples\Domain;
 
 class Name
 {
-    /**
-     * @var string
-     */
-    private $firstName;
-
-    /**
-     * @var string
-     */
-    private $lastName;
+    private string $firstName;
+    private string $lastName;
 
     public function __construct(string $firstName, string $lastName)
     {

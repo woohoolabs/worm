@@ -11,15 +11,9 @@ use WoohooLabs\Worm\Worm;
 
 class CourseRepository extends AbstractRepository
 {
-    /**
-     * @var CourseModel
-     */
-    private $model;
+    private CourseModel $model;
 
-    /**
-     * @var CourseFactory
-     */
-    private $courseFactory;
+    private CourseFactory $courseFactory;
 
     public function __construct(Worm $worm, CourseModel $model, CourseFactory $factory)
     {

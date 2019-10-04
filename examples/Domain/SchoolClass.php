@@ -7,29 +7,12 @@ use DateTimeImmutable;
 
 class SchoolClass
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var int
-     */
-    private $roomId;
-
-    /**
-     * @var int
-     */
-    private $teacherId;
-
-    /**
-     * @var Student[]
-     */
-    private $students;
-
-    /**
-     * @var DateTimeImmutable
-     */
+    private int $id;
+    private int $roomId;
+    private int $teacherId;
+    /** @var Student[] */
+    private array $students;
+    /** @var DateTimeImmutable */
     private $datetime;
 
     /**

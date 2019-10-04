@@ -9,10 +9,7 @@ use WoohooLabs\Worm\Model\ModelInterface;
 
 abstract class AbstractFactory
 {
-    /**
-     * @var IdentityMap
-     */
-    private $identityMap;
+    private IdentityMap $identityMap;
 
     public function __construct(IdentityMap $identityMap)
     {

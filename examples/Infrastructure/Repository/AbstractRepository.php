@@ -7,10 +7,7 @@ use WoohooLabs\Worm\Worm;
 
 abstract class AbstractRepository
 {
-    /**
-     * @var Worm
-     */
-    protected $worm;
+    protected Worm $worm;
 
     public function __construct(Worm $worm)
     {

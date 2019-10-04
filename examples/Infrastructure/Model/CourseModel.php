@@ -14,11 +14,7 @@ class CourseModel extends AbstractModel
     public $credit;
     public $language;
     public $classes;
-
-    /**
-     * @var ClassModel
-     */
-    public $classModel;
+    public ClassModel $classModel;
 
     public function __construct(ClassModel $classModel)
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Model\Relationship;
@@ -9,6 +10,7 @@ use WoohooLabs\Larva\Query\Select\SelectQueryBuilder;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;
 use WoohooLabs\Worm\Model\ModelInterface;
+
 use function array_key_exists;
 
 abstract class AbstractRelationship implements RelationshipInterface, RelationshipBuilderInterface

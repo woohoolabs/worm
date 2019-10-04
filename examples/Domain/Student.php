@@ -5,30 +5,11 @@ namespace WoohooLabs\Worm\Examples\Domain;
 
 class Student
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var Name
-     */
-    private $name;
-
-    /**
-     * @var string|null
-     */
-    private $birthday;
-
-    /**
-     * @var string|null
-     */
-    private $gender;
-
-    /**
-     * @var string
-     */
-    private $introduction;
+    private int $id;
+    private Name $name;
+    private ?string $birthday;
+    private ?string $gender;
+    private string $introduction;
 
     public function __construct(int $id, Name $name, string $introduction, string $birthday = null, string $gender = null)
     {

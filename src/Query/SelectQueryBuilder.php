@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Query;
@@ -13,9 +14,7 @@ class SelectQueryBuilder
     private ModelInterface $model;
     private QueryExecutor $queryExecutor;
     private LarvaSelectQueryBuilder $queryBuilder;
-
-    /** @var array */
-    private $relationships = [];
+    private array $relationships = [];
 
     public function __construct(ModelInterface $model, QueryExecutor $executor)
     {

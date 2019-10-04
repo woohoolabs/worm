@@ -5,35 +5,13 @@ namespace WoohooLabs\Worm\Examples\Domain;
 
 class Course
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var int
-     */
-    private $credit;
-
-    /**
-     * @var string
-     */
-    private $language;
-
-    /**
-     * @var SchoolClass[]
-     */
-    private $classes;
+    private int $id;
+    private string $name;
+    private string $description;
+    private int $credit;
+    private string $language;
+    /** @var SchoolClass[] */
+    private array $classes;
 
     /**
      * @param SchoolClass[] $classes
