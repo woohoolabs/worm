@@ -17,7 +17,7 @@ services:
             - worm-examples-php-fpm
 
     worm-examples-php-fpm:
-        image: woohoolabs/php-fpm:7.4.0beta2
+        image: woohoolabs/php-fpm:7.4.0
         container_name: worm-examples-php-fpm
         networks:
             - worm-examples
