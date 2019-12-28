@@ -1,5 +1,6 @@
 parameters:
     bootstrap: vendor/autoload.php
+    checkMissingIterableValueType: false
     ignoreErrors:
         - '#^Variable property access on \$this\(WoohooLabs\\Worm\\Model\\AbstractModel\)\.$#'
         - '#^Dynamic call to static method PHPUnit\\Framework\\.*$#'
