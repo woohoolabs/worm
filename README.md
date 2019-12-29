@@ -1,12 +1,12 @@
 # Woohoo Labs. Worm
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Latest Version on Packagist][ico-version]][link-version]
 [![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
+[![Build Status][ico-build]][link-build]
+[![Coverage Status][ico-coverage]][link-coverage]
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Gitter][ico-gitter]][link-gitter]
+[![Gitter][ico-support]][link-support]
 
 **Woohoo Labs. Worm is an efficient and minimal ORM enabling data mapping.**
 
@@ -87,17 +87,17 @@ The MIT License (MIT). Please see the [License File](LICENSE.md) for more inform
 
 [ico-version]: https://img.shields.io/packagist/v/woohoolabs/worm.svg
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
-[ico-travis]: https://img.shields.io/travis/woohoolabs/worm/master.svg
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/woohoolabs/worm.svg
+[ico-build]: https://img.shields.io/github/workflow/status/woohoolabs/worm/Continuous%20Integration
+[ico-coverage]: https://img.shields.io/codecov/c/github/woohoolabs/worm
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/woohoolabs/worm.svg
 [ico-downloads]: https://img.shields.io/packagist/dt/woohoolabs/worm.svg
-[ico-gitter]: https://badges.gitter.im/woohoolabs/worm.svg
+[ico-support]: https://badges.gitter.im/woohoolabs/worm.svg
 
-[link-packagist]: https://packagist.org/packages/woohoolabs/worm
-[link-travis]: https://travis-ci.org/woohoolabs/worm
-[link-scrutinizer]: https://scrutinizer-ci.com/g/woohoolabs/worm/code-structure
+[link-version]: https://packagist.org/packages/woohoolabs/worm
+[link-build]: https://travis-ci.org/woohoolabs/worm
+[link-coverage]: https://scrutinizer-ci.com/g/woohoolabs/worm/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/woohoolabs/worm
 [link-downloads]: https://packagist.org/packages/woohoolabs/worm
 [link-author]: https://github.com/kocsismate
 [link-contributors]: ../../contributors
-[link-gitter]: https://gitter.im/woohoolabs/worm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+[link-support]: https://gitter.im/woohoolabs/worm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
