@@ -94,7 +94,7 @@ The MIT License (MIT). Please see the [License File](LICENSE.md) for more inform
 [ico-support]: https://badges.gitter.im/woohoolabs/worm.svg
 
 [link-version]: https://packagist.org/packages/woohoolabs/worm
-[link-build]: https://travis-ci.org/woohoolabs/worm
+[link-build]: https://github.com/woohoolabs/worm/actions
 [link-coverage]: https://scrutinizer-ci.com/g/woohoolabs/worm/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/woohoolabs/worm
 [link-downloads]: https://packagist.org/packages/woohoolabs/worm
