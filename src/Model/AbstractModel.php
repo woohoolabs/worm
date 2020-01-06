@@ -9,12 +9,12 @@ use WoohooLabs\Larva\Query\Condition\ConditionBuilder;
 use WoohooLabs\Larva\Query\Condition\ConditionBuilderInterface;
 use WoohooLabs\Worm\Execution\IdentityMap;
 use WoohooLabs\Worm\Execution\Persister;
+use WoohooLabs\Worm\Model\Relationship\AbstractRelationship;
 use WoohooLabs\Worm\Model\Relationship\BelongsToManyRelationship;
 use WoohooLabs\Worm\Model\Relationship\BelongsToOneRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasManyThroughRelationship;
 use WoohooLabs\Worm\Model\Relationship\HasOneRelationship;
-use WoohooLabs\Worm\Model\Relationship\RelationshipBuilderInterface;
 use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 use function array_key_exists;
@@ -27,10 +27,11 @@ use function reset;
 
 abstract class AbstractModel implements ModelInterface
 {
-    private array $relationships = [];
+    /** @var array<string, AbstractRelationship|callable<AbstractRelationship>> */
+    private array $relationships;
 
     /**
-     * @return callable[]
+     * @return array<string, callable<AbstractRelationship>>
      */
     abstract protected function getRelationships(): array;
 
@@ -168,7 +169,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): RelationshipBuilderInterface {
+    ): AbstractRelationship {
         return new BelongsToOneRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -177,7 +178,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): RelationshipBuilderInterface {
+    ): AbstractRelationship {
         return new BelongsToManyRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -186,7 +187,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): RelationshipBuilderInterface {
+    ): AbstractRelationship {
         return new HasOneRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -195,7 +196,7 @@ abstract class AbstractModel implements ModelInterface
         string $foreignKey,
         string $referencedKey,
         bool $isCascadedDelete = false
-    ): RelationshipBuilderInterface {
+    ): AbstractRelationship {
         return new HasManyRelationship($this, $relatedModel, $foreignKey, $referencedKey, $isCascadedDelete);
     }
 
@@ -207,7 +208,7 @@ abstract class AbstractModel implements ModelInterface
         ModelInterface $referencedModel,
         string $referencedKey2,
         bool $isCascadedDelete = false
-    ): RelationshipBuilderInterface {
+    ): AbstractRelationship {
         return new HasManyThroughRelationship(
             $this,
             $referencedKey1,
