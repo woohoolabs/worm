@@ -8,6 +8,10 @@ REMOVED:
 
 FIXED:
 
+## 0.7.2 - 2020-01-06
+
+FIXED:
+
 - AbstractModel::getRelationships() return type
 - AbstractModel::belongsTo*() and AbstractModel::has*() return types
 
