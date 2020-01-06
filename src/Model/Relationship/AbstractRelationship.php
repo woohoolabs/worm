@@ -89,6 +89,11 @@ abstract class AbstractRelationship implements RelationshipInterface, Relationsh
         return $this;
     }
 
+    public function toRelationship(): RelationshipInterface
+    {
+        return $this;
+    }
+
     public function getParentModel(): ModelInterface
     {
         return $this->parentModel;

@@ -8,12 +8,23 @@ REMOVED:
 
 FIXED:
 
+## 0.7.3 - 2020-01-06
+
+ADDED:
+
+- `RelationshipBuilderInterface::toRelationship()` method in order to build relationships type safely
+
+FIXED:
+
+- `AbstractModel::getRelationships()` return type
+- `AbstractModel::belongsTo*()` and AbstractModel::has*() return types
+
 ## 0.7.2 - 2020-01-06
 
 FIXED:
 
-- AbstractModel::getRelationships() return type
-- AbstractModel::belongsTo*() and AbstractModel::has*() return types
+- `AbstractModel::getRelationships()` return type
+- `AbstractModel::belongsTo*()` and AbstractModel::has*() return types
 
 ## 0.7.1 - 2019-10-04
 

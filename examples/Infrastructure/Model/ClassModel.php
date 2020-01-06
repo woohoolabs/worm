@@ -7,7 +7,7 @@ namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 use WoohooLabs\Worm\Examples\Domain\Course;
 use WoohooLabs\Worm\Examples\Domain\SchoolClass;
 use WoohooLabs\Worm\Model\AbstractModel;
-use WoohooLabs\Worm\Model\Relationship\AbstractRelationship;
+use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 class ClassModel extends AbstractModel
 {
@@ -52,15 +52,17 @@ class ClassModel extends AbstractModel
     protected function getRelationships(): array
     {
         return [
-            "students" => function (): AbstractRelationship {
-                return $this->hasManyThrough(
-                    $this->id,
-                    $this->classStudentModel,
-                    $this->classStudentModel->class_id,
-                    $this->classStudentModel->student_id,
-                    $this->studentModel,
-                    $this->studentModel->id
-                );
+            "students" => function (): RelationshipInterface {
+                return $this
+                    ->hasManyThrough(
+                        $this->id,
+                        $this->classStudentModel,
+                        $this->classStudentModel->class_id,
+                        $this->classStudentModel->student_id,
+                        $this->studentModel,
+                        $this->studentModel->id
+                    )
+                    ->toRelationship();
             },
         ];
     }

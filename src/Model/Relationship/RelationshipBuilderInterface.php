@@ -25,4 +25,6 @@ interface RelationshipBuilderInterface
     public function limit(?int $limit): RelationshipBuilderInterface;
 
     public function offset(?int $offset): RelationshipBuilderInterface;
+
+    public function toRelationship(): RelationshipInterface;
 }

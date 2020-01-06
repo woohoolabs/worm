@@ -6,7 +6,7 @@ namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Examples\Domain\Course;
 use WoohooLabs\Worm\Model\AbstractModel;
-use WoohooLabs\Worm\Model\Relationship\AbstractRelationship;
+use WoohooLabs\Worm\Model\Relationship\RelationshipInterface;
 
 class CourseModel extends AbstractModel
 {
@@ -58,13 +58,10 @@ class CourseModel extends AbstractModel
     protected function getRelationships(): array
     {
         return [
-            "students" => function (): AbstractRelationship {
-                return $this->hasMany(
-                    $this->classModel,
-                    $this->classModel->course_id,
-                    $this->id,
-                    true
-                );
+            "students" => function (): RelationshipInterface {
+                return $this
+                    ->hasMany($this->classModel, $this->classModel->course_id, $this->id, true)
+                    ->toRelationship();
             },
         ];
     }
