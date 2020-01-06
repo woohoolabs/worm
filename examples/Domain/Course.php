@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Domain;
@@ -69,14 +70,12 @@ class Course
         return $this->classes;
     }
 
-    /**
-     * @return void
-     */
-    public function removeClass($id)
+    public function removeClass($id): void
     {
         foreach ($this->classes as $key => $class) {
             if ($class->getId() === $id) {
                 unset($this->classes[$key]);
+
                 return;
             }
         }

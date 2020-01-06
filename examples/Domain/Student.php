@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Domain;
@@ -11,7 +12,7 @@ class Student
     private ?string $gender;
     private string $introduction;
 
-    public function __construct(int $id, Name $name, string $introduction, string $birthday = null, string $gender = null)
+    public function __construct(int $id, Name $name, string $introduction, ?string $birthday = null, ?string $gender = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -30,18 +31,12 @@ class Student
         return $this->name;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getBirthday()
+    public function getBirthday(): ?string
     {
         return $this->birthday;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getGender()
+    public function getGender(): ?string
     {
         return $this->gender;
     }

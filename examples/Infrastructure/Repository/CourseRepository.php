@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Repository;
@@ -12,7 +13,6 @@ use WoohooLabs\Worm\Worm;
 class CourseRepository extends AbstractRepository
 {
     private CourseModel $model;
-
     private CourseFactory $courseFactory;
 
     public function __construct(Worm $worm, CourseModel $model, CourseFactory $factory)
@@ -25,7 +25,7 @@ class CourseRepository extends AbstractRepository
     /**
      * @return Course[]
      */
-    public function getCoursesInRoom($roomNumber): array
+    public function getCoursesInRoom(int $roomNumber): array
     {
         $courses = $this->worm
             ->query($this->model)

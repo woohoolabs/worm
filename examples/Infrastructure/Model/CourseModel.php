@@ -1,18 +1,26 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Model;
 
 use WoohooLabs\Worm\Examples\Domain\Course;
 use WoohooLabs\Worm\Model\AbstractModel;
+use WoohooLabs\Worm\Model\Relationship\AbstractRelationship;
 
 class CourseModel extends AbstractModel
 {
+    /** @var string */
     public $id;
+    /** @var string */
     public $name;
+    /** @var string */
     public $description;
+    /** @var string */
     public $credit;
+    /** @var string */
     public $language;
+    /** @var string */
     public $classes;
     public ClassModel $classModel;
 
@@ -50,12 +58,14 @@ class CourseModel extends AbstractModel
     protected function getRelationships(): array
     {
         return [
-            "classes" => $this->hasMany(
-                $this->classModel,
-                $this->classModel->course_id,
-                $this->id,
-                true
-            )
+            "students" => function (): AbstractRelationship {
+                return $this->hasMany(
+                    $this->classModel,
+                    $this->classModel->course_id,
+                    $this->id,
+                    true
+                );
+            },
         ];
     }
 }

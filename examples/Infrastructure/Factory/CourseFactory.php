@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Factory;
@@ -6,6 +7,8 @@ namespace WoohooLabs\Worm\Examples\Infrastructure\Factory;
 use WoohooLabs\Worm\Examples\Domain\Course;
 use WoohooLabs\Worm\Examples\Infrastructure\Model\CourseModel;
 use WoohooLabs\Worm\Execution\IdentityMap;
+
+use function array_map;
 
 class CourseFactory extends AbstractFactory
 {

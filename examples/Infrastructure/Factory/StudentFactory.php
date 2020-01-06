@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Factory;
@@ -7,6 +8,8 @@ use WoohooLabs\Worm\Examples\Domain\Name;
 use WoohooLabs\Worm\Examples\Domain\Student;
 use WoohooLabs\Worm\Examples\Infrastructure\Model\StudentModel;
 use WoohooLabs\Worm\Execution\IdentityMap;
+
+use function array_map;
 
 class StudentFactory extends AbstractFactory
 {
@@ -24,7 +27,7 @@ class StudentFactory extends AbstractFactory
     public function createStudents(array $entities): array
     {
         return array_map(
-            function (array $entity) {
+            function (array $entity): Student {
                 return $this->createStudent($entity);
             },
             $entities

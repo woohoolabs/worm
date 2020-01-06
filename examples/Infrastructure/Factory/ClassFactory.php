@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WoohooLabs\Worm\Examples\Infrastructure\Factory;
@@ -7,6 +8,8 @@ use DateTimeImmutable;
 use WoohooLabs\Worm\Examples\Domain\SchoolClass;
 use WoohooLabs\Worm\Examples\Infrastructure\Model\ClassModel;
 use WoohooLabs\Worm\Execution\IdentityMap;
+
+use function array_map;
 
 class ClassFactory extends AbstractFactory
 {
@@ -26,7 +29,7 @@ class ClassFactory extends AbstractFactory
     public function createClasses(array $entities): array
     {
         return array_map(
-            function (array $entity) {
+            function (array $entity): SchoolClass {
                 return $this->createClass($entity);
             },
             $entities
