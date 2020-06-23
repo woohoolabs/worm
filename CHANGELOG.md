@@ -13,6 +13,7 @@ FIXED:
 ADDED:
 
 - Support for PHP 8
+- Support for PHPUnit 9
 
 ## 0.7.3 - 2020-01-06
 
