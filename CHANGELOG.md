@@ -8,6 +8,12 @@ REMOVED:
 
 FIXED:
 
+## 0.7.4 - 2020-06-23
+
+ADDED:
+
+- Support for PHP 8
+
 ## 0.7.3 - 2020-01-06
 
 ADDED:
