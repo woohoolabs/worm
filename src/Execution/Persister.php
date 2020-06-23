@@ -81,14 +81,14 @@ class Persister
     }
 
     /**
-     * @param iterable|object[]|null[] $relatedObjects
+     * @param array<object|null> $relatedObjects
      */
     public function saveRelatedEntities(
         ModelInterface $model,
         string $relationship,
         array $record,
         array $relatedRecords,
-        $relatedObjects
+        array $relatedObjects
     ): void {
         $relatedModel = $model->getRelationship($relationship)->getModel();
 
