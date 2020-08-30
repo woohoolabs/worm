@@ -89,10 +89,10 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@master
 
-      - name: "Install PHP {{ matrix.php-version }}"
+      - name: "Install PHP ${{ matrix.php-version }}"
         uses: shivammathur/setup-php@v2
         with:
-          php-version: {{ matrix.php-version }}
+          php-version: ${{ matrix.php-version }}
           extensions: mbstring, mysql, xml
           tools: composer:v2
 
