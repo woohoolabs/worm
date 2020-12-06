@@ -2,7 +2,7 @@ version: '2'
 
 services:
     worm-php:
-        image: woohoolabs/php-fpm:7.4.0
+        image: woohoolabs/php-fpm:7.4
         container_name: worm-php
         volumes:
             - .:/code
