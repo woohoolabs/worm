@@ -44,6 +44,7 @@
         "phpcs": "phpcs"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "platform-check": false
     }
 }
